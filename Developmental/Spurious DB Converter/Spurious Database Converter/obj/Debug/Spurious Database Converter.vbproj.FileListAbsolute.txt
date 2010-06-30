@@ -1,0 +1,12 @@
+C:\Users\Pierce\Desktop\Projects\Visual Basic\Spurious Database Converter\Spurious Database Converter\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\Pierce\Desktop\Projects\Visual Basic\Spurious Database Converter\Spurious Database Converter\obj\Debug\WindowsApplication1.Form1.resources
+C:\Users\Pierce\Desktop\Projects\Visual Basic\Spurious Database Converter\Spurious Database Converter\obj\Debug\WindowsApplication1.Form2.resources
+C:\Users\Pierce\Desktop\Projects\Visual Basic\Spurious Database Converter\Spurious Database Converter\obj\Debug\WindowsApplication1.Resources.resources
+C:\Users\Pierce\Desktop\Projects\Visual Basic\Spurious Database Converter\Spurious Database Converter\obj\Debug\Spurious Database Converter.vbproj.GenerateResource.Cache
+C:\Users\Pierce\Desktop\Projects\Visual Basic\Spurious Database Converter\Spurious Database Converter\bin\Debug\Spurious Database Converter.exe
+C:\Users\Pierce\Desktop\Projects\Visual Basic\Spurious Database Converter\Spurious Database Converter\bin\Debug\Spurious Database Converter.pdb
+C:\Users\Pierce\Desktop\Projects\Visual Basic\Spurious Database Converter\Spurious Database Converter\bin\Debug\Spurious Database Converter.xml
+C:\Users\Pierce\Desktop\Projects\Visual Basic\Spurious Database Converter\Spurious Database Converter\bin\Debug\MySql.Data.dll
+C:\Users\Pierce\Desktop\Projects\Visual Basic\Spurious Database Converter\Spurious Database Converter\obj\Debug\Spurious Database Converter.exe
+C:\Users\Pierce\Desktop\Projects\Visual Basic\Spurious Database Converter\Spurious Database Converter\obj\Debug\Spurious Database Converter.xml
+C:\Users\Pierce\Desktop\Projects\Visual Basic\Spurious Database Converter\Spurious Database Converter\obj\Debug\Spurious Database Converter.pdb
