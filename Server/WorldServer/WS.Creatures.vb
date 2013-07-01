@@ -1166,7 +1166,7 @@ Public Module WS_Creatures
 
             SeenBy.Clear()
         End Sub
-        Public Sub MoveCell()
+Public Sub MoveCell()
             If CellX <> GetMapTileX(positionX) OrElse CellY <> GetMapTileY(positionY) Then
                 Maps(MapID).Tiles(CellX, CellY).CreaturesHere.Remove(GUID)
                 GetMapTile(positionX, positionY, CellX, CellY)
@@ -1181,6 +1181,15 @@ Public Module WS_Creatures
                 End If
             End If
         End Sub
+
+        Sub CastSpell(ByVal p1 As Integer, ByVal GUID_PLAYER As ULong)
+            Throw New NotImplementedException
+        End Sub
+
+        Sub CastSpell(ByVal p1 As Integer)
+            Throw New NotImplementedException
+        End Sub
+
     End Class
 #End Region
 #Region "WS.Creatures.HelperSubs"
