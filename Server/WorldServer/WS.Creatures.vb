@@ -797,8 +797,21 @@ Public Module WS_Creatures
             Return True
         End Function
         Public Sub GiveXP(ByRef Character As CharacterObject)
-            Dim XP As Integer = Level * 5 + 45  'Green
-            Dim lvlDiffirence As Integer = Character.Level - Level
+            Dim XP As Byte = 0
+            Try
+                XP = Level * 5 + 45  'Green
+            Catch ex As Exception
+                Log.WriteLine(LogType.CRITICAL, "GiveXP Error, XP caused error: " & ex.Message)
+            End Try
+
+            Dim lvlDiffirence As SByte = 0
+            Try
+                lvlDiffirence = Character.Level - Level
+            Catch ex As Exception
+                Log.WriteLine(LogType.CRITICAL, "GiveXP Error, lvlDiffirence caused error: " & ex.Message)
+                Log.WriteLine(LogType.CRITICAL, vbTab & vbTab & "Character.Level: " & Character.Level.ToString())
+                Log.WriteLine(LogType.CRITICAL, vbTab & vbTab & "          Level: " & Level.ToString())
+            End Try
 
             Select Case lvlDiffirence
                 Case 1, 2
