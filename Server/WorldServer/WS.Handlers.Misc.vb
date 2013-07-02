@@ -65,10 +65,10 @@ Public Module WS_Handlers_Misc
             Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_NAME_QUERY [GUID={2:X}]", Client.IP, Client.Port, GUID)
             Dim SMSG_NAME_QUERY_RESPONSE As New PacketClass(OPCODES.SMSG_NAME_QUERY_RESPONSE)
 
-            'RESERVED For Warden Bot
-            If GUID = WardenGUID Then
+            'RESERVED For Server Bot
+            If GUID = ServerGUID Then
                 SMSG_NAME_QUERY_RESPONSE.AddUInt64(GUID)
-                SMSG_NAME_QUERY_RESPONSE.AddString(WardenNAME)
+                SMSG_NAME_QUERY_RESPONSE.AddString(ServerNAME)
                 SMSG_NAME_QUERY_RESPONSE.AddInt8(0)
                 SMSG_NAME_QUERY_RESPONSE.AddInt32(1)
                 SMSG_NAME_QUERY_RESPONSE.AddInt32(1)

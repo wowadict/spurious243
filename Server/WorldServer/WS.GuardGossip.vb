@@ -43,7 +43,7 @@ Public Module WS_GuardGossip
         Dim GuardID As Integer
 
         MenuData.Clear()
-        GuardGID = CType(WORLD_CREATUREs(cGUID).ID, Integer)
+        GuardID = CType(WORLD_CREATUREs(cGUID).ID, Integer)
 
         Dim GuardMenusSQLQuery As New DataTable
         Database.Query(String.Format("SELECT * FROM guard_gossip_menus WHERE entry = {0} AND Menu_Number = 0;", GuardID), GuardMenusSQLQuery)
