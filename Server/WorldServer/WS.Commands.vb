@@ -1083,7 +1083,7 @@ Public Module WS_Commands
             c.CommandResponse("No target selected.")
         Else
             SystemMessage(String.Format("Character [{0}] kicked form server.{3}Reason: {1}{3}GameMaster: [{2}].", SetColor(CType(CHARACTERs(c.TargetGUID), CharacterObject).Name, 255, 0, 0), SetColor(Message, 255, 0, 0), SetColor(c.Name, 255, 0, 0), vbNewLine))
-            Thread.Sleep(2000)
+            Thread.Sleep(8000)
 
             cmdKick(c, "")
         End If
