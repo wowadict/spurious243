@@ -40,14 +40,14 @@ Public Module WS_GuardGossip
     Public MenuData As New Dictionary(Of Integer, TMenuData)
 
     Public Sub StartGuardGossip(ByRef c As CharacterObject, ByVal cGUID As ULong)
-        Dim GuardGUID As Integer
+        Dim GuardID As Integer
 
         MenuData.Clear()
-        GuardGUID = CType(WORLD_CREATUREs(cGUID).ID, Integer)
+        GuardGID = CType(WORLD_CREATUREs(cGUID).ID, Integer)
 
         Dim GuardMenusSQLQuery As New DataTable
-        Database.Query(String.Format("SELECT * FROM guard_gossip_menus WHERE entry = {0} AND Menu_Number = 0;", GuardGUID), GuardMenusSQLQuery)
-        Log.WriteLine(LogType.DEBUG, "Reading Guard Gossip Menus For [GUID={0}]", GuardGUID)
+        Database.Query(String.Format("SELECT * FROM guard_gossip_menus WHERE entry = {0} AND Menu_Number = 0;", GuardID), GuardMenusSQLQuery)
+        Log.WriteLine(LogType.DEBUG, "Reading Guard Gossip Menus For [GUID={0}]", GuardID)
 
         If GuardMenusSQLQuery.Rows.Count > 0 Then
             Dim tmp() As String
@@ -66,7 +66,7 @@ Public Module WS_GuardGossip
             Dim npcText As New NPCText
             Dim npcTextIDSQLQuery As New DataTable
             Dim npcTextSQLQuery As New DataTable
-            Database.Query(String.Format("SELECT * FROM npc_gossip_textid WHERE creatureid = {0};", GuardGUID), npcTextIDSQLQuery)
+            Database.Query(String.Format("SELECT * FROM npc_gossip_textid WHERE creatureid = {0};", GuardID), npcTextIDSQLQuery)
             Database.Query(String.Format("SELECT * FROM npctext WHERE entry = {0};", npcTextIDSQLQuery.Rows(0).Item("textid")), npcTextSQLQuery)
 
             npcText.Count = 1

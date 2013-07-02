@@ -301,7 +301,7 @@ Public Module WS_TimerBasedEvents
     End Class
 
 
-    'NOTE: Manages ai movement
+        'NOTE: Manages ai movement
     Public Class TAIManager
         Implements IDisposable
 
@@ -318,21 +318,32 @@ Public Module WS_TimerBasedEvents
                 Exit Sub
             End If
 
+            Dim aiCreature As CreatureObject = Nothing
+            Dim iKey As Long = 0
+
             Dim StartTime As Integer = timeGetTime
             AIManagerWorking = True
             Try
                 WORLD_CREATUREs_Lock.AcquireReaderLock(DEFAULT_LOCK_TIMEOUT)
 
-                For Each de As KeyValuePair(Of ULong, CreatureObject) In WORLD_CREATUREs
-                    If Not de.Value.aiScript Is Nothing Then de.Value.aiScript.DoThink()
-                Next
+                '''''For Each de As KeyValuePair(Of ULong, CreatureObject) In WORLD_CREATUREsClone
+                'For Each de As KeyValuePair(Of ULong, CreatureObject) In WORLD_CREATUREs
+                '    If de.Value IsNot Nothing AndAlso de.Value.aiScript IsNot Nothing Then de.Value.aiScript.DoThink()
+                'Next
+                'For i As Long = 0 To WORLD_CREATUREsKeys.Count - 1
+                'If WORLD_CREATUREs(WORLD_CREATUREsKeys(i)) IsNot Nothing AndAlso WORLD_CREATUREs(WORLD_CREATUREsKeys(i)).aiScript IsNot Nothing Then
+                'WORLD_CREATUREs(WORLD_CREATUREsKeys(i)).aiScript.DoThink()
+                'End If
+                'Next
+
+                aiCreature = Nothing
+
             Catch ex As Exception
                 Log.WriteLine(LogType.CRITICAL, ex.ToString, Nothing)
             Finally
                 WORLD_CREATUREs_Lock.ReleaseReaderLock()
             End Try
             AIManagerWorking = False
-            ''Log.WriteLine(LogType.DEBUG, "AI took {0} ms.", timeGetTime - StartTime)
         End Sub
         Public Sub Dispose() Implements System.IDisposable.Dispose
             AIManagerTimer.Dispose()
