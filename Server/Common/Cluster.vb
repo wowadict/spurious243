@@ -4,7 +4,6 @@ Imports System.Collections.Generic
 Public Enum ExpansionLevel As Byte
     NORMAL = 0          'WoW
     EXPANSION_1 = 1     'WoW: Burning Crusade
-    EXPANSION_2 = 2     'WoW: Wrath of the Lich King
 End Enum
 Public Enum AccessLevel As Byte
     Trial = 0
