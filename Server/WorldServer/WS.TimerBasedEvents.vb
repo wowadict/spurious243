@@ -206,7 +206,7 @@ Public Module WS_TimerBasedEvents
 
         Public Const UPDATE_TIMER As Integer = 1000        'Timer period (ms)
         Public Sub New()
-            SpellManagerTimer = New Threading.Timer(AddressOf Update, Nothing, 10000, UPDATE_TIMER)
+            SpellManagerTimer = New Threading.Timer(AddressOf Update, Now, 10000, UPDATE_TIMER) 'AddressOf Update, Nothing equals to a possible System.ArgumentNullException: Value cannot be null? !!!Documented!!!
         End Sub
         Private Sub Update(ByVal state As Object)
             If SpellManagerWorking Then
