@@ -1642,46 +1642,48 @@ Public Module WS_Quests
             End If
 
             'DONE: Remove quest
-            For i = 0 To QUEST_SLOTS
+            Try
+                For i = 0 To QUEST_SLOTS
+                Next
                 If Not Client.Character.TalkQuests Is Nothing Then
-                    If Client.Character.TalkQuests(i).ID = Client.Character.TalkCurrentQuest.ID Then
-                        Client.Character.TalkCompleteQuest(i)
-                        Exit For
-                    End If
                 End If
-            Next
+            Catch ex As Exception
+                If Client.Character.TalkQuests(i).ID Then
+                End If
+                Client.Character.TalkCompleteQuest(i)
+            End Try
 
-            'DONE: XP Calculations
-            Dim xp As Integer = Client.Character.TalkCurrentQuest.RewardXP
-            Dim gold As Integer = Client.Character.TalkCurrentQuest.RewardGold
-            If Client.Character.Level >= MAX_LEVEL Then
-                gold += xp
-                xp = 0
-            Else
-                Select Case Client.Character.Level
-                    Case Client.Character.TalkCurrentQuest.Level_Normal + 6
-                        xp = Fix(xp * 0.8 / 5) * 5
-                    Case Client.Character.TalkCurrentQuest.Level_Normal + 7
-                        xp = Fix(xp * 0.6 / 5) * 5
-                    Case Client.Character.TalkCurrentQuest.Level_Normal + 8
-                        xp = Fix(xp * 0.4 / 5) * 5
-                    Case Client.Character.TalkCurrentQuest.Level_Normal + 9
-                        xp = Fix(xp * 0.2 / 5) * 5
-                    Case Is > Client.Character.TalkCurrentQuest.Level_Normal + 10
-                        xp = Fix(xp * 0.1 / 5) * 5
-                End Select
-            End If
+        'DONE: XP Calculations
+        Dim xp As Integer = Client.Character.TalkCurrentQuest.RewardXP
+        Dim gold As Integer = Client.Character.TalkCurrentQuest.RewardGold
+        If Client.Character.Level >= MAX_LEVEL Then
+            gold += xp
+            xp = 0
+        Else
+            Select Case Client.Character.Level
+                Case Client.Character.TalkCurrentQuest.Level_Normal + 6
+                    xp = Fix(xp * 0.8 / 5) * 5
+                Case Client.Character.TalkCurrentQuest.Level_Normal + 7
+                    xp = Fix(xp * 0.6 / 5) * 5
+                Case Client.Character.TalkCurrentQuest.Level_Normal + 8
+                    xp = Fix(xp * 0.4 / 5) * 5
+                Case Client.Character.TalkCurrentQuest.Level_Normal + 9
+                    xp = Fix(xp * 0.2 / 5) * 5
+                Case Is > Client.Character.TalkCurrentQuest.Level_Normal + 10
+                    xp = Fix(xp * 0.1 / 5) * 5
+            End Select
+        End If
 
-            'DONE: Adding XP
-            Client.Character.AddXP(Client.Character.TalkCurrentQuest.RewardXP)
+        'DONE: Adding XP
+        Client.Character.AddXP(Client.Character.TalkCurrentQuest.RewardXP)
 
-            SendQuestComplete(Client, Client.Character.TalkCurrentQuest, xp, gold)
+        SendQuestComplete(Client, Client.Character.TalkCurrentQuest, xp, gold)
 
-            'DONE: Follow-up quests (no requirements checked?)
-            If Client.Character.TalkCurrentQuest.NextQuest <> 0 Then
-                Client.Character.TalkCurrentQuest = New QuestInfo(Client.Character.TalkCurrentQuest.NextQuest)
-                SendQuestDetails(Client, Client.Character.TalkCurrentQuest, GUID, True)
-            End If
+        'DONE: Follow-up quests (no requirements checked?)
+        If Client.Character.TalkCurrentQuest.NextQuest <> 0 Then
+            Client.Character.TalkCurrentQuest = New QuestInfo(Client.Character.TalkCurrentQuest.NextQuest)
+            SendQuestDetails(Client, Client.Character.TalkCurrentQuest, GUID, True)
+        End If
 
         Catch e As Exception
             Log.WriteLine(LogType.CRITICAL, "Error while choosing reward.{0}", vbNewLine & e.ToString)
