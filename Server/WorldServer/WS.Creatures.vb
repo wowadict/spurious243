@@ -830,10 +830,12 @@ Public Module WS_Creatures
             End Select
 
             'DONE: Killing elites
-            If CType(CREATURESDatabase(ID), CreatureInfo).Elite > 0 Then XP *= 2
-            'DONE: XP Rate config
-            XP *= Config.XPRate
-
+            Try
+                If CType(CREATURESDatabase(ID), CreatureInfo).Elite > 0 Then XP *= 2
+            Catch ex As Exception
+                'DONE: XP Rate config
+                XP *= Config.XPRate
+            End Try
 
             If Not Character.IsInGroup Then
                 'DONE: Single kill
