@@ -111,26 +111,27 @@ Public Module WS_Commands
             Next
         Next
 
-        For Each tmpModule As Type In ScriptedChatCommands.ass.GetTypes
-            For Each tmpMethod As MethodInfo In tmpModule.GetMethods
-                Dim infos() As ChatCommandAttribute = tmpMethod.GetCustomAttributes(GetType(ChatCommandAttribute), True)
+        If ScriptedChatCommands.ass IsNot Nothing Then
+            For Each tmpModule As Type In ScriptedChatCommands.ass.GetTypes
+                For Each tmpMethod As MethodInfo In tmpModule.GetMethods
+                    Dim infos() As ChatCommandAttribute = tmpMethod.GetCustomAttributes(GetType(ChatCommandAttribute), True)
 
-                If infos.Length <> 0 Then
-                    For Each info As ChatCommandAttribute In infos
-                        Dim cmd As New ChatCommand
-                        cmd.CommandHelp = info.cmdHelp
-                        cmd.CommandAccess = info.cmdAccess
-                        cmd.CommandDelegate = ChatCommandDelegate.CreateDelegate(GetType(ChatCommandDelegate), tmpMethod)
+                    If infos.Length <> 0 Then
+                        For Each info As ChatCommandAttribute In infos
+                            Dim cmd As New ChatCommand
+                            cmd.CommandHelp = info.cmdHelp
+                            cmd.CommandAccess = info.cmdAccess
+                            cmd.CommandDelegate = ChatCommandDelegate.CreateDelegate(GetType(ChatCommandDelegate), tmpMethod)
 
-                        ChatCommands.Add(UCase(info.cmdName), cmd)
+                            ChatCommands.Add(UCase(info.cmdName), cmd)
 #If DEBUG Then
-                        Log.WriteLine(mangosVB.Common.BaseWriter.LogType.INFORMATION, "Command found: {0}", UCase(info.cmdName))
+                            Log.WriteLine(mangosVB.Common.BaseWriter.LogType.INFORMATION, "Command found: {0}", UCase(info.cmdName))
 #End If
-                    Next
-                End If
+                        Next
+                    End If
+                Next
             Next
-        Next
-
+        End If
     End Sub
     Public Sub OnCommand(ByRef Client As ClientClass, ByVal Message As String)
         Try
