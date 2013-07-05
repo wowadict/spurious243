@@ -23,7 +23,7 @@ Imports Spurious.Common.BaseWriter
 
 Public Module WS_Creatures
 
-#Region "WS.Cretures.Constants"
+#Region "WS.Creatures.Constants"
 
 
     Public Const SKILL_DETECTION_PER_LEVEL As Integer = 5
@@ -285,12 +285,57 @@ Public Module WS_Creatures
                 Select Case ID
                     Case 68, 727, 1756, 2714, 2721, 3084, 3296, 3502, 4624, 5595, 5624, 9460, 10881, 11190, 12996, 15442, 15616, 16096, 16864, 18948, 18949, 18971, 18986, 19541, 20484, 20485, 21976, 22494, 23636, 23721, 25992
                         Return True
+                    Case Else
+                        Return False
+                End Select
+            End Get
+        End Property
+        Public ReadOnly Property ExpansionLevel() As ExpansionLevel
+            Get
+                'TODO: Fill in instance ID's here as well
+                Select Case MapID
+                    Case 0, 1
+                        Return Common.ExpansionLevel.NORMAL
+                    Case 530
+                        Return Common.ExpansionLevel.EXPANSION_1
+                    Case Else
+                        Return Common.ExpansionLevel.NORMAL
                 End Select
             End Get
         End Property
         Public Overrides ReadOnly Property isDead() As Boolean
             Get
-                Return aiScript.State = TBaseAI.AIState.AI_DEAD
+                'Return aiScript.State = TBaseAI.AIState.AI_DEAD
+                If aiScript IsNot Nothing Then
+                    Return (aiScript.State = TBaseAI.AIState.AI_DEAD OrElse aiScript.State = TBaseAI.AIState.AI_RESPAWN)
+                Else
+                    Return (Life.Current = 0)
+                End If
+            End Get
+        End Property
+
+        Public ReadOnly Property NPCTextID() As Integer
+            Get
+                Dim MysqlResult As New DataTable
+                Database.Query(String.Format("SELECT textid FROM npc_gossip_textid WHERE creatureid = '{0}'", GUID - GUID_UNIT), MysqlResult)
+                If MysqlResult.Rows.Count > 0 Then
+                    Return CType(MysqlResult.Rows(0).Item("textid"), Integer)
+                End If
+
+                Return &HFFFFFF
+            End Get
+        End Property
+
+        Public ReadOnly Property isWaypoint() As Boolean
+            Get
+                Dim MySQLQuery As New DataTable
+                Database.Query(String.Format("SELECT Count(*) FROM creature_movement WHERE spawnid='{0}'", Me.SpawnID), MySQLQuery)
+                If MySQLQuery.Rows(0).Item(0) > 0 Then
+                    Return True
+                Else
+                    Return False
+                End If
+
             End Get
         End Property
 
@@ -398,7 +443,7 @@ Public Module WS_Creatures
                 Dim packet As New PacketClass(OPCODES.MSG_MOVE_HEARTBEAT)
                 packet.AddPackGUID(GUID)
                 packet.AddInt32(0) 'Movementflags
-                packet.AddInt8(0)
+                packet.AddInt16(0) '2.3.0
                 packet.AddInt32(timeGetTime)
                 packet.AddSingle(positionX)
                 packet.AddSingle(positionY)
@@ -416,6 +461,28 @@ Public Module WS_Creatures
         Public OldZ As Single = 0
         Public LastMove As Integer = 0
         Public LastMove_Time As Integer = 0
+        Public Sub GetPosition(ByRef x As Single, ByRef y As Single, ByRef z As Single)
+            If aiScript IsNot Nothing AndAlso aiScript.IsMoving AndAlso (timeGetTime - LastMove) < LastMove_Time Then
+                Dim distance As Single
+
+                If aiScript.State = TBaseAI.AIState.AI_MOVING OrElse aiScript.State = TBaseAI.AIState.AI_WANDERING Then
+                    distance = (timeGetTime - LastMove) / 1000 * CreatureInfo.WalkSpeed
+                ElseIf aiScript.State = TBaseAI.AIState.AI_FLYING Then
+                    distance = (timeGetTime - LastMove) / 1000 * CreatureInfo.FlySpeed
+                Else
+                    distance = (timeGetTime - LastMove) / 1000 * CreatureInfo.RunSpeed
+                End If
+
+                x = OldX + Math.Cos(orientation) * distance
+                y = OldY + Math.Sin(orientation) * distance
+                z = GetZCoord(positionX, positionY, MapID)
+            Else
+                x = positionX
+                y = positionY
+                z = positionZ
+            End If
+        End Sub
+
         Public Function MoveTo(ByVal x As Single, ByVal y As Single, ByVal z As Single, Optional ByVal Running As Boolean = False) As Integer
             Try
                 If Me.SeenBy.Count = 0 Then
@@ -494,7 +561,7 @@ Public Module WS_Creatures
                 Dim packet As New PacketClass(OPCODES.MSG_MOVE_HEARTBEAT)
                 packet.AddPackGUID(GUID)
                 packet.AddInt32(0) 'Movementflags
-                packet.AddInt8(0)
+                packet.AddInt16(0) '2.3.0
                 packet.AddInt32(timeGetTime)
                 packet.AddSingle(positionX)
                 packet.AddSingle(positionY)
@@ -519,7 +586,7 @@ Public Module WS_Creatures
                 Dim packet As New PacketClass(OPCODES.MSG_MOVE_HEARTBEAT)
                 packet.AddPackGUID(GUID)
                 packet.AddInt32(0) 'Movementflags
-                packet.AddInt8(0)
+                packet.AddInt16(0) ' 2.3.0
                 packet.AddInt32(timeGetTime)
                 packet.AddSingle(positionX)
                 packet.AddSingle(positionY)
@@ -537,28 +604,26 @@ Public Module WS_Creatures
             Life.Current = 0
             Mana.Current = 0
 
+            'DONE: Send the update
+            Dim packetForNear As New UpdatePacketClass
+            Dim UpdateData As New UpdateClass(EUnitFields.UNIT_END)
+            UpdateData.SetUpdateFlag(EUnitFields.UNIT_FIELD_HEALTH, CType(Life.Current, Integer))
+            UpdateData.SetUpdateFlag(EUnitFields.UNIT_FIELD_POWER1 + ManaType, CType(Mana.Current, Integer))
+            UpdateData.SetUpdateFlag(EUnitFields.UNIT_FIELD_FLAGS, cUnitFlags)
+            UpdateData.AddToPacket(CType(packetForNear, UpdatePacketClass), ObjectUpdateType.UPDATETYPE_VALUES, Me)
+
+            SendToNearPlayers(CType(packetForNear, UpdatePacketClass))
+            packetForNear.Dispose()
+            UpdateData.Dispose()
+
             'DONE: Creature stops while it's dead and everyone sees it at the same position
             If Not aiScript Is Nothing Then
-                If aiScript.IsMoving AndAlso (timeGetTime - LastMove) < LastMove_Time Then
-                    Dim distance As Single
-
-                    If aiScript.State = TBaseAI.AIState.AI_MOVING OrElse aiScript.State = TBaseAI.AIState.AI_WANDERING Then
-                        distance = (timeGetTime - LastMove) / 1000 * CreatureInfo.WalkSpeed
-                    ElseIf aiScript.State = TBaseAI.AIState.AI_FLYING Then
-                        distance = (timeGetTime - LastMove) / 1000 * CreatureInfo.FlySpeed
-                    Else
-                        distance = (timeGetTime - LastMove) / 1000 * CreatureInfo.RunSpeed
-                    End If
-
-                    positionX = OldX + Math.Cos(orientation) * distance
-                    positionY = OldY + Math.Sin(orientation) * distance
-                    positionZ = GetZCoord(positionX, positionY, MapID)
-                    If (Not Attacker Is Nothing) Then
-                        orientation = GetOrientation(positionX, Attacker.positionX, positionY, Attacker.positionY)
-                    End If
-
-                    MoveToInstant(positionX, positionY, positionZ)
+                GetPosition(positionX, positionY, positionZ)
+                If (Not Attacker Is Nothing) Then
+                    orientation = GetOrientation(positionX, Attacker.positionX, positionY, Attacker.positionY)
                 End If
+                MoveToInstant(positionX, positionY, positionZ)
+
                 aiScript.State = TBaseAI.AIState.AI_DEAD
                 aiScript.DoThink()
             End If
@@ -618,7 +683,8 @@ Public Module WS_Creatures
         Public Overrides Sub DealDamage(ByVal Damage As Integer, Optional ByRef Attacker As BaseUnit = Nothing)
             If Life.Current = 0 Then Exit Sub
 
-            If (Not Attacker Is Nothing) AndAlso (Not aiScript Is Nothing) Then aiScript.OnGetHit(Attacker, Damage)
+            If Attacker IsNot Nothing AndAlso aiScript IsNot Nothing Then aiScript.OnGetHit(Attacker, Damage)
+
             Life.Current -= Damage
 
             'DONE: Check for dead
@@ -632,7 +698,7 @@ Public Module WS_Creatures
                 UpdateData.SetUpdateFlag(EUnitFields.UNIT_FIELD_POWER1 + ManaType, CType(Mana.Current, Integer))
                 UpdateData.SetUpdateFlag(EUnitFields.UNIT_FIELD_FLAGS, cUnitFlags)
                 UpdateData.SetUpdateFlag(EUnitFields.UNIT_DYNAMIC_FLAGS, cDynamicFlags)
-                UpdateData.AddToPacket(CType(packetForNear, UpdatePacketClass), ObjectUpdateType.UPDATETYPE_VALUES, Me, 0)
+                UpdateData.AddToPacket(CType(packetForNear, UpdatePacketClass), ObjectUpdateType.UPDATETYPE_VALUES, Me)
 
                 SendToNearPlayers(CType(packetForNear, UpdatePacketClass))
                 packetForNear.Dispose()
@@ -650,7 +716,7 @@ Public Module WS_Creatures
                 Dim packetForNear As New UpdatePacketClass
                 Dim UpdateData As New UpdateClass(EUnitFields.UNIT_END)
                 UpdateData.SetUpdateFlag(EUnitFields.UNIT_FIELD_HEALTH, CType(Life.Current, Integer))
-                UpdateData.AddToPacket(CType(packetForNear, UpdatePacketClass), ObjectUpdateType.UPDATETYPE_VALUES, Me, 0)
+                UpdateData.AddToPacket(CType(packetForNear, UpdatePacketClass), ObjectUpdateType.UPDATETYPE_VALUES, Me)
 
                 SendToNearPlayers(CType(packetForNear, UpdatePacketClass))
                 packetForNear.Dispose()
@@ -670,7 +736,7 @@ Public Module WS_Creatures
                 Dim packetForNear As New UpdatePacketClass
                 Dim UpdateData As New UpdateClass(EUnitFields.UNIT_END)
                 UpdateData.SetUpdateFlag(EUnitFields.UNIT_FIELD_POWER1 + ManaType, CType(Mana.Current, Integer))
-                UpdateData.AddToPacket(CType(packetForNear, UpdatePacketClass), ObjectUpdateType.UPDATETYPE_VALUES, Me, 0)
+                UpdateData.AddToPacket(CType(packetForNear, UpdatePacketClass), ObjectUpdateType.UPDATETYPE_VALUES, Me)
 
                 SendToNearPlayers(CType(packetForNear, UpdatePacketClass))
                 packetForNear.Dispose()
@@ -693,7 +759,7 @@ Public Module WS_Creatures
                 'Dim UpdateDataSkinnable As New UpdateClass
                 'UpdateDataSkinnable.SetUpdateFlag(EUnitFields.UNIT_DYNAMIC_FLAGS, cDynamicFlags)
                 'UpdateDataSkinnable.SetUpdateFlag(EUnitFields.UNIT_FIELD_FLAGS, cUnitFlags)
-                'UpdateDataSkinnable.AddToPacket(SkinnablePacket, ObjectUpdateType.UPDATETYPE_VALUES, Me, 0)
+                'UpdateDataSkinnable.AddToPacket(SkinnablePacket, ObjectUpdateType.UPDATETYPE_VALUES, Me)
                 'UpdateDataSkinnable.Dispose()
                 'Character.Client.SendMultiplyPackets(SkinnablePacket)
                 'Character.SendToNearPlayers(SkinnablePacket)
@@ -712,7 +778,7 @@ Public Module WS_Creatures
             Dim UpdateData As New UpdateClass
             UpdateData.SetUpdateFlag(EUnitFields.UNIT_DYNAMIC_FLAGS, cDynamicFlags)
             UpdateData.SetUpdateFlag(EUnitFields.UNIT_FIELD_FLAGS, cUnitFlags)
-            UpdateData.AddToPacket(packet, ObjectUpdateType.UPDATETYPE_VALUES, Me, 0)
+            UpdateData.AddToPacket(packet, ObjectUpdateType.UPDATETYPE_VALUES, Me)
             UpdateData.Dispose()
 
 
@@ -728,7 +794,7 @@ Public Module WS_Creatures
                                 CHARACTERs(c).Client.Send(packet)
                             End If
                         Next
-                        
+
                     Case GroupLootMethod.LOOT_MASTER
                         If Character.Group.LocalLootMaster Is Nothing Then
                             LootTable(GUID).LootOwner = Character.GUID
@@ -765,8 +831,11 @@ Public Module WS_Creatures
             'TODO: Check if we're in a heroic instance!
             Dim Loot As New LootObject(GUID, LootType)
             For Each LootRow As DataRow In MySQLQuery.Rows
+                Dim lootmin As Integer = LootRow.Item("loot_min")
+
+                If lootmin < 1 Then lootmin = 1 'TODO: Find out why Mangos has Negative loot minimums
                 If CType(LootRow.Item("loot_chance"), Single) * 10000 > (Rnd.Next(1, 2000001) Mod 1000000) Then
-                    Dim ItemCount As Byte = CByte(Rnd.Next(CType(LootRow.Item("loot_min"), Byte), CType(LootRow.Item("loot_max"), Byte) + 1))
+                    Dim ItemCount As Byte = CByte(Rnd.Next(CType(lootmin, Byte), CType(LootRow.Item("loot_max"), Byte) + 1))
                     If ITEMDatabase.ContainsKey(CType(LootRow.Item("loot_item"), Integer)) = False Then Dim tmpItem As ItemInfo = New ItemInfo(CType(LootRow.Item("loot_item"), Integer))
                     If CType(ITEMDatabase(CType(LootRow.Item("loot_item"), Integer)), ItemInfo).ObjectClass = ITEM_CLASS.ITEM_CLASS_QUEST Then
                         'Check if this quest item can be looted
@@ -797,37 +866,51 @@ Public Module WS_Creatures
             Return True
         End Function
         Public Sub GiveXP(ByRef Character As CharacterObject)
-            Dim XP As Byte = 0
-            Try
-                XP = Level * 5 + 45  'Green
-            Catch ex As Exception
-                Log.WriteLine(LogType.CRITICAL, "GiveXP Error, XP caused error: " & ex.Message)
-            End Try
+            'NOTE: Formulas taken from http://www.wowwiki.com/Formulas:Mob_XP
+            Dim XP As Integer = 0
+            If ExpansionLevel = Common.ExpansionLevel.NORMAL Then 'Azeroth
+                XP = CInt(Level) * 5 + 45
+            ElseIf ExpansionLevel = Common.ExpansionLevel.EXPANSION_1 Then 'Outlands
+                'TODO: Blood elf and Draenei starting zones should be counted with azeroth XP formula.
+                XP = CInt(Level) * 5 + 235
+            End If
 
-            Dim lvlDiffirence As SByte = 0
-            Try
-                lvlDiffirence = Character.Level - Level
-            Catch ex As Exception
-                Log.WriteLine(LogType.CRITICAL, "GiveXP Error, lvlDiffirence caused error: " & ex.Message)
-                Log.WriteLine(LogType.CRITICAL, vbTab & vbTab & "Character.Level: " & Character.Level.ToString())
-                Log.WriteLine(LogType.CRITICAL, vbTab & vbTab & "          Level: " & Level.ToString())
-            End Try
+            Dim lvlDifference As Integer = CInt(Character.Level) - CInt(Level)
 
-            Select Case lvlDiffirence
-                Case 1, 2
-                    'Yellow 
-                    XP *= (1 + 0.05F * lvlDiffirence)
-                Case 3, 4
-                    'Orange
-                    XP *= (1 + 0.07F * lvlDiffirence)
-                Case Is >= 5
-                    'Red
-                    XP *= 1.4
-                Case Is < -(5 + Fix(Character.Level / 10))
-                    'Gray
+            If lvlDifference > 0 Then 'Higher level mobs
+                XP = XP * (1 + 0.05 * (CInt(Level) - CInt(Character.Level)))
+            ElseIf lvlDifference < 0 Then 'Lower level mobs
+                Dim GrayLevel As Byte = 0
+                Select Case Character.Level
+                    Case Is <= 5 : GrayLevel = 0
+                    Case Is <= 39 : GrayLevel = CInt(Character.Level) - Math.Floor(CInt(Character.Level) / 10) - 5
+                    Case Is <= 59 : GrayLevel = CInt(Character.Level) - Math.Floor(CInt(Character.Level) / 5) - 1
+                    Case Else : GrayLevel = CInt(Character.Level) - 9
+                End Select
+
+                If Level > GrayLevel Then
+                    Dim ZD As Integer = 0
+                    Select Case Character.Level
+                        Case Is <= 7 : ZD = 5
+                        Case Is <= 9 : ZD = 6
+                        Case Is <= 11 : ZD = 7
+                        Case Is <= 15 : ZD = 8
+                        Case Is <= 19 : ZD = 9
+                        Case Is <= 29 : ZD = 11
+                        Case Is <= 39 : ZD = 12
+                        Case Is <= 44 : ZD = 13
+                        Case Is <= 49 : ZD = 14
+                        Case Is <= 54 : ZD = 15
+                        Case Is <= 59 : ZD = 16
+                        Case Else : ZD = 17
+                    End Select
+
+                    XP = XP * (1 - (CInt(Character.Level) - CInt(Level)) / ZD)
+                Else
                     XP = 0
-                    Exit Sub
-            End Select
+                End If
+            End If
+
 
             'DONE: Killing elites
             Try
@@ -838,12 +921,28 @@ Public Module WS_Creatures
             End Try
 
             If Not Character.IsInGroup Then
+                'DONE: Rested
+                Dim RestedXP As Integer = 0
+                If Character.RestXP >= 0 Then
+                    RestedXP = XP
+                    If RestedXP > Character.RestXP Then RestedXP = Character.RestXP
+                    Character.RestXP -= RestedXP
+                    XP += RestedXP
+                End If
+
                 'DONE: Single kill
-                Character.AddXP(XP, GUID)
+                Character.AddXP(XP, RestedXP, GUID)
             Else
 
-                'DONE: Party bonus
-                XP *= (0.8F + 0.2F * Character.Group.GetMembersCount())
+                XP /= Character.Group.GetMembersCount()
+
+                Select Case Character.Group.GetMembersCount()
+                    Case Is <= 2 : XP *= 1
+                    Case 3 : XP *= 1.166
+                    Case 4 : XP *= 1.3
+                    Case Else : XP *= 1.4
+                End Select
+
 
                 'DONE: Party calculate all levels
                 Dim baseLvl As Integer = 0
@@ -859,13 +958,35 @@ Public Module WS_Creatures
                 For Each Member As ULong In Character.Group.LocalMembers
                     With CHARACTERs(Member)
                         If .DEAD = False AndAlso (Math.Sqrt((.positionX - positionX) ^ 2 + (.positionY - positionY) ^ 2) <= DEFAULT_DISTANCE_VISIBLE) Then
-                            .AddXP(Fix(XP * .Level / baseLvl), GUID)
+                            Dim tmpXP As Integer = XP
+                            'DONE: Rested
+                            Dim RestedXP As Integer = 0
+                            If .RestXP >= 0 Then
+                                RestedXP = tmpXP
+                                If RestedXP > .RestXP Then RestedXP = .RestXP
+                                .RestXP -= RestedXP
+                                tmpXP += RestedXP
+                            End If
+
+                            tmpXP = Fix(tmpXP * CInt(.Level) / baseLvl)
+                            .AddXP(tmpXP, RestedXP, GUID)
+
                         End If
                     End With
                 Next
 
             End If
         End Sub
+
+        Public Sub ApplySpell(ByVal SpellID As Integer)
+            'TODO: Check if the creature can cast the spell
+
+            If SPELLs.ContainsKey(SpellID) = False Then Exit Sub
+            Dim t As New SpellTargets
+            t.SetTarget_SELF(Me)
+            SPELLs(SpellID).Apply(Me, t)
+        End Sub
+
 
         Public Function CastSpell(ByVal SpellID As Integer, ByVal Target As BaseObject) As Integer
             If Spell_Silenced Then Return -1
@@ -941,7 +1062,6 @@ Public Module WS_Creatures
 
             Me.StandState = Me.cStandState
 
-
             'DONE: Load scripted AI
             If CREATURESDatabase(ID).AIScriptSource <> "" Then
                 aiScript = AI.Invoke(CREATURESDatabase(ID).AIScriptSource, New Object() {Me})
@@ -949,7 +1069,13 @@ Public Module WS_Creatures
 
             'DONE: Load default AI 
             If aiScript Is Nothing Then
-                If isGuard Then
+                ''''If isWaypoint Then
+                ''''aiScript = New WaypointAI(Me)
+                If CreatureInfo.cNpcFlags = 0 AndAlso StandState = 0 AndAlso cEmoteState = 0 Then
+                    aiScript = New DefaultAI(Me)
+                ElseIf isGuard Then
+                    aiScript = New GuardAI(Me)
+
                     aiScript = New GuardAI(Me)
                 ElseIf CreatureInfo.CreatureType = UNIT_TYPE.CRITTER Then
                     aiScript = New DefaultAI(Me)
@@ -1009,9 +1135,36 @@ Public Module WS_Creatures
             GUID = GUID_ + GUID_UNIT
             Initialize()
 
-            WORLD_CREATUREs_Lock.AcquireWriterLock(DEFAULT_LOCK_TIMEOUT)
-            WORLD_CREATUREs.Add(GUID, Me)
-            WORLD_CREATUREs_Lock.ReleaseWriterLock()
+            Try
+                WORLD_CREATUREs_Lock.AcquireWriterLock(DEFAULT_LOCK_TIMEOUT)
+                ''''WORLD_CREATUREsClone_Lock.AcquireWriterLock(DEFAULT_LOCK_TIMEOUT)
+                WORLD_CREATUREs.Add(GUID, Me)
+                'WORLD_CREATUREsKeys.Add(GUID)
+                ''''WORLD_CREATUREsClone.Add(GUID, Me)
+                WORLD_CREATUREs_Lock.ReleaseWriterLock()
+                ''''WORLD_CREATUREsClone_Lock.ReleaseWriterLock()
+            Catch
+            End Try
+        End Sub
+        Public Sub New(ByVal GUID_ As ULong, ByVal ID_ As Integer)
+            'WARNING: Use only for spawning new crature
+
+            If Not CREATURESDatabase.ContainsKey(ID_) Then
+                Dim baseCreature As New CreatureInfo(ID_)
+            End If
+
+            ID = ID_
+            GUID = GUID_
+
+            Initialize()
+
+            Try
+                WORLD_CREATUREs_Lock.AcquireWriterLock(DEFAULT_LOCK_TIMEOUT)
+                WORLD_CREATUREs.Add(GUID, Me)
+                'WORLD_CREATUREsKeys.Add(GUID)
+                WORLD_CREATUREs_Lock.ReleaseWriterLock()
+            Catch
+            End Try
         End Sub
         Public Sub New(ByVal ID_ As Integer)
             'WARNING: Use only for spawning new crature
@@ -1025,9 +1178,17 @@ Public Module WS_Creatures
 
             Initialize()
 
-            WORLD_CREATUREs_Lock.AcquireWriterLock(DEFAULT_LOCK_TIMEOUT)
-            WORLD_CREATUREs.Add(GUID, Me)
-            WORLD_CREATUREs_Lock.ReleaseWriterLock()
+            Try
+                WORLD_CREATUREs_Lock.AcquireWriterLock(DEFAULT_LOCK_TIMEOUT)
+                ''''WORLD_CREATUREsClone_Lock.AcquireWriterLock(DEFAULT_LOCK_TIMEOUT)
+                WORLD_CREATUREs.Add(GUID, Me)
+                'WORLD_CREATUREsKeys.Add(GUID)
+                ''''WORLD_CREATUREsClone.Add(GUID, Me)
+                WORLD_CREATUREs_Lock.ReleaseWriterLock()
+                ''''WORLD_CREATUREsClone_Lock.ReleaseWriterLock()
+            Catch
+            End Try
+
         End Sub
         Public Sub New(ByVal ID_ As Integer, ByVal PosX As Single, ByVal PosY As Single, ByVal PosZ As Single, ByVal Orientation As Single, ByVal Map As Integer, Optional ByVal Duration As Integer = 0)
             'WARNING: Use only for spawning new crature
@@ -1052,6 +1213,17 @@ Public Module WS_Creatures
 
             Initialize()
 
+            Try
+                WORLD_CREATUREs_Lock.AcquireWriterLock(DEFAULT_LOCK_TIMEOUT)
+                ''''WORLD_CREATUREsClone_Lock.AcquireWriterLock(DEFAULT_LOCK_TIMEOUT)
+                WORLD_CREATUREs.Add(GUID, Me)
+                'WORLD_CREATUREsKeys.Add(GUID)
+                ''''WORLD_CREATUREsClone.Add(GUID, Me)
+                WORLD_CREATUREs_Lock.ReleaseWriterLock()
+                ''''WORLD_CREATUREsClone_Lock.ReleaseWriterLock()
+            Catch
+            End Try
+
             'TODO: Duration
             If Duration > 0 Then
                 ExpireTimer = New Threading.Timer(AddressOf Destroy, Nothing, 0, Duration)
@@ -1066,9 +1238,16 @@ Public Module WS_Creatures
 
             Me.RemoveFromWorld()
 
-            WORLD_CREATUREs_Lock.AcquireWriterLock(DEFAULT_LOCK_TIMEOUT)
-            WORLD_CREATUREs.Remove(GUID)
-            WORLD_CREATUREs_Lock.ReleaseWriterLock()
+            Try
+                WORLD_CREATUREs_Lock.AcquireWriterLock(DEFAULT_LOCK_TIMEOUT)
+                ''''WORLD_CREATUREsClone_Lock.AcquireWriterLock(DEFAULT_LOCK_TIMEOUT)
+                WORLD_CREATUREs.Remove(GUID)
+                'WORLD_CREATUREsKeys.Remove(GUID)
+                ''''WORLD_CREATUREsClone.Remove(GUID)
+                WORLD_CREATUREs_Lock.ReleaseWriterLock()
+                ''''WORLD_CREATUREsClone_Lock.ReleaseWriterLock()
+            Catch
+            End Try
         End Sub
         Public Sub Destroy(Optional ByVal state As Object = Nothing)
             'TODO: Remove pets also
@@ -1104,6 +1283,11 @@ Public Module WS_Creatures
             positionY = SpawnY
             positionZ = SpawnZ
             orientation = SpawnO
+            'CurrentWaypoint = 0
+
+            If aiScript IsNot Nothing Then
+                aiScript.Reset()
+            End If
 
             If SeenBy.Count > 0 Then
                 Dim packetForNear As New UpdatePacketClass
@@ -1112,7 +1296,7 @@ Public Module WS_Creatures
                 UpdateData.SetUpdateFlag(EUnitFields.UNIT_FIELD_POWER1 + ManaType, CType(Mana.Current, Integer))
                 UpdateData.SetUpdateFlag(EUnitFields.UNIT_FIELD_FLAGS, cUnitFlags)
                 UpdateData.SetUpdateFlag(EUnitFields.UNIT_DYNAMIC_FLAGS, cDynamicFlags)
-                UpdateData.AddToPacket(CType(packetForNear, UpdatePacketClass), ObjectUpdateType.UPDATETYPE_VALUES, Me, 0)
+                UpdateData.AddToPacket(CType(packetForNear, UpdatePacketClass), ObjectUpdateType.UPDATETYPE_VALUES, Me)
 
                 SendToNearPlayers(CType(packetForNear, UpdatePacketClass))
                 packetForNear.Dispose()
@@ -1181,13 +1365,15 @@ Public Module WS_Creatures
 
             SeenBy.Clear()
         End Sub
-Public Sub MoveCell()
+        Public Sub MoveCell()
             If CellX <> GetMapTileX(positionX) OrElse CellY <> GetMapTileY(positionY) Then
                 Maps(MapID).Tiles(CellX, CellY).CreaturesHere.Remove(GUID)
                 GetMapTile(positionX, positionY, CellX, CellY)
 
                 'If creature changes cell then it's sent back to spawn, if the creature is a waypoint walker this won't be very good :/
-                If Maps(MapID).Tiles(CellX, CellY) Is Nothing Then
+                ' Hopefully the Not isWaypoint will override the above comment.
+                If (Maps(MapID).Tiles(CellX, CellY) Is Nothing) Then
+
                     aiScript.State = TBaseAI.AIState.AI_WANDERING
                     MoveTo(SpawnX, SpawnY, SpawnZ, True)
                     Exit Sub
@@ -1221,8 +1407,15 @@ Public Sub MoveCell()
 
             If CREATURESDatabase.ContainsKey(CreatureID) = False Then
                 Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_CREATURE_QUERY [Creature {2} not loaded.]", Client.IP, Client.Port, CreatureID)
-                Creature = New CreatureInfo(CreatureID)
+                'Creature = New CreatureInfo(CreatureID)
+
+                response.AddUInt32((CreatureID Or &H80000000))
+                Client.Send(response)
+                response.Dispose()
+                Exit Sub
+
             Else
+                Log.WriteLine(LogType.WARNING, "DEBUG: Creature Name = {0}", Creature.Name)
                 Creature = CREATURESDatabase(CreatureID)
                 'Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_CREATURE_QUERY [CreatureID={2} CreatureGUID={3:X}]", Format(TimeOfDay, "hh:mm:ss"), Client.IP, Client.Port, CreatureID, CreatureGUID - GUID_UNIT)
             End If
@@ -1250,12 +1443,11 @@ Public Sub MoveCell()
             response.AddInt8(Creature.Civilian) 'Leader
 
 
-
             Client.Send(response)
             response.Dispose()
             'Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SMSG_CREATURE_QUERY_RESPONSE", Client.IP, Client.Port)
         Catch e As Exception
-            Log.WriteLine(LogType.FAILED, "Unknown Error: Unable to find CreatureID={0} in database.", CreatureID)
+            Log.WriteLine(LogType.FAILED, "Unknown Error: Unable to find CreatureID={0} in database. Error:{1} : Inner:{2}", CreatureID, e.Message, e.InnerException)
         End Try
     End Sub
     Public Sub On_CMSG_NPC_TEXT_QUERY(ByRef packet As PacketClass, ByRef Client As ClientClass)
@@ -1568,7 +1760,7 @@ Public Class TBaseTalk
 
     End Sub
     Public Overridable Function OnQuestStatus(ByRef c As CharacterObject, ByVal cGUID As ULong) As Integer
-        Return -1
+        Return QuestgiverStatus.DIALOG_STATUS_NONE
     End Function
     Public Overridable Function OnQuestHello(ByRef c As CharacterObject, ByVal cGUID As ULong) As Boolean
         Return True

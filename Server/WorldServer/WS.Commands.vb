@@ -530,7 +530,7 @@ Public Module WS_Commands
     End Function
 
     <ChatCommandAttribute("MySpeed", "MYSPEED - Displays all your current speed.", AccessLevel.GameMaster)> _
-    Public Function cmdSpeed(ByRef c As CharacterObject, ByVal tCopper As String) As Boolean
+    Public Function cmdMySpeed(ByRef c As CharacterObject, ByVal tCopper As String) As Boolean
         c.CommandResponse("WalkSpeed: " & c.WalkSpeed)
         c.CommandResponse("RunSpeed:" & c.RunSpeed)
         c.CommandResponse("RunBackSpeed:" & c.RunBackSpeed)
@@ -542,6 +542,8 @@ Public Module WS_Commands
 
         Return True
     End Function
+
+
 
     '****************************************** DEBUG COMMANDs ******************************************************
     <ChatCommandAttribute("GetMax", "GETMAX - Get all spells and skills maxed out for your level.", AccessLevel.Admin)> _
@@ -756,9 +758,20 @@ Public Module WS_Commands
     <ChatCommandAttribute("SetRunSpeed", "SETRUNSPEED <VALUE> - Change your run speed.")> _
     Public Function cmdSetRunSpeed(ByRef c As CharacterObject, ByVal Message As String) As Boolean
         If Message = "" Then Return False
-        c.ChangeSpeedForced(WS_CharManagment.CharacterObject.ChangeSpeedType.RUN, Message)
-        c.CommandResponse("Your RunSpeed is changed to " & Message)
-        Return True
+        If c.TargetGUID = 0 Then
+            c.ChangeSpeedForced(WS_CharManagment.CharacterObject.ChangeSpeedType.RUN, Message)
+            c.CommandResponse("Your RunSpeed is changed to " & Message)
+            Return True
+        End If
+        If GuidIsPlayer(c.TargetGUID) AndAlso CHARACTERs.ContainsKey(c.TargetGUID) Then
+            CHARACTERs(c.TargetGUID).ChangeSpeedForced(CharacterObject.ChangeSpeedType.RUN, Message)
+            CHARACTERs(c.TargetGUID).SystemMessage(" Your RunSpeed was changed by " & c.Name)
+            Return True
+        Else
+            c.CommandResponse(" Please Select Character")
+            Return True
+        End If
+
     End Function
     <ChatCommandAttribute("SetSwimSpeed", "SETSWIMSPEED <VALUE> - Change your swim speed.")> _
     Public Function cmdSetSwimSpeed(ByRef c As CharacterObject, ByVal Message As String) As Boolean
