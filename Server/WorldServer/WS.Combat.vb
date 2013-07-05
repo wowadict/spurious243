@@ -836,27 +836,44 @@ Public Module WS_Combat
             End If
 
             'TODO: If the victim has a spelltrigger on melee attacks
-            Dim Target As New SpellTargets
-            Target.SetTarget_UNIT(Character)
-            For i As Byte = 0 To MAX_AURA_EFFECTs_VISIBLE - 1
-                If Victim.ActiveSpells(i) IsNot Nothing AndAlso (Victim.ActiveSpells(i).GetSpellInfo.procFlags And ProcFlags.PROC_FLAG_HIT_MELEE) Then
-                    If Victim.ActiveSpells(i).Aura1_Info IsNot Nothing AndAlso Victim.ActiveSpells(i).Aura1_Info.ApplyAuraIndex = AuraEffects_Names.SPELL_AURA_PROC_TRIGGER_SPELL Then
-                        If RollChance(Victim.ActiveSpells(i).GetSpellInfo.procChance) Then
-                            SPELLs(Victim.ActiveSpells(i).Aura1_Info.TriggerSpell).Cast(Victim, Target, 0)
+            Try 'Check1
+                Dim Target As New SpellTargets
+                Target.SetTarget_UNIT(Character)
+                For i As Byte = 0 To MAX_AURA_EFFECTs_VISIBLE - 1
+                    Try 'Check 2
+                        If Victim.ActiveSpells(i) IsNot Nothing AndAlso (Victim.ActiveSpells(i).GetSpellInfo.procFlags And ProcFlags.PROC_FLAG_HIT_MELEE) Then
+                            Try 'Check 3
+                                If Victim.ActiveSpells(i).Aura1_Info IsNot Nothing AndAlso Victim.ActiveSpells(i).Aura1_Info.ApplyAuraIndex = AuraEffects_Names.SPELL_AURA_PROC_TRIGGER_SPELL Then
+                                    If RollChance(Victim.ActiveSpells(i).GetSpellInfo.procChance) Then
+                                        SPELLs(Victim.ActiveSpells(i).Aura1_Info.TriggerSpell).Cast(Victim, Target, 0)
+                                    End If
+                                End If
+                            Catch ex As Exception 'End of Check 3
+                            End Try
+
+                            Try 'Check 4
+                                If Victim.ActiveSpells(i).Aura2_Info IsNot Nothing AndAlso Victim.ActiveSpells(i).Aura2_Info.ApplyAuraIndex = AuraEffects_Names.SPELL_AURA_PROC_TRIGGER_SPELL Then
+                                    If RollChance(Victim.ActiveSpells(i).GetSpellInfo.procChance) Then
+                                        SPELLs(Victim.ActiveSpells(i).Aura2_Info.TriggerSpell).Cast(Victim, Target, 0)
+                                    End If
+                                End If
+                            Catch ex As Exception 'End of Check 4
+                            End Try
+
+                            Try ' Check 5
+                                If Victim.ActiveSpells(i).Aura3_Info IsNot Nothing AndAlso Victim.ActiveSpells(i).Aura3_Info.ApplyAuraIndex = AuraEffects_Names.SPELL_AURA_PROC_TRIGGER_SPELL Then
+                                    If RollChance(Victim.ActiveSpells(i).GetSpellInfo.procChance) Then
+                                        SPELLs(Victim.ActiveSpells(i).Aura3_Info.TriggerSpell).Cast(Victim, Target, 0)
+                                    End If
+                                End If
+                            Catch ex As Exception 'Check of Check 5
+                            End Try
                         End If
-                    End If
-                    If Victim.ActiveSpells(i).Aura2_Info IsNot Nothing AndAlso Victim.ActiveSpells(i).Aura2_Info.ApplyAuraIndex = AuraEffects_Names.SPELL_AURA_PROC_TRIGGER_SPELL Then
-                        If RollChance(Victim.ActiveSpells(i).GetSpellInfo.procChance) Then
-                            SPELLs(Victim.ActiveSpells(i).Aura2_Info.TriggerSpell).Cast(Victim, Target, 0)
-                        End If
-                    End If
-                    If Victim.ActiveSpells(i).Aura3_Info IsNot Nothing AndAlso Victim.ActiveSpells(i).Aura3_Info.ApplyAuraIndex = AuraEffects_Names.SPELL_AURA_PROC_TRIGGER_SPELL Then
-                        If RollChance(Victim.ActiveSpells(i).GetSpellInfo.procChance) Then
-                            SPELLs(Victim.ActiveSpells(i).Aura3_Info.TriggerSpell).Cast(Victim, Target, 0)
-                        End If
-                    End If
-                End If
-            Next
+                    Catch ex As Exception 'End of Check2
+                    End Try
+                Next
+            Catch ex As Exception 'End of Check1
+            End Try
 
             'DONE: Rage generation
             'http://www.wowwiki.com/Formulas:Rage_generation

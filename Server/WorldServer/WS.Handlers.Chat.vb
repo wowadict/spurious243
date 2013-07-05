@@ -97,7 +97,7 @@ Public Module WS_Handlers_Chat
 
                 'DONE: Handle admin/gm commands
                 If ToUser = "SERVER" AndAlso Client.Character.Access > 0 Then
-                    Dim toServer As PacketClass = BuildChatMessage(ServerGUID, Message, ChatMsg.CHAT_MSG_REPLY, LANGUAGES.LANG_UNIVERSAL)
+                    Dim toServer As PacketClass = BuildChatMessage(WardenGUID, Message, ChatMsg.CHAT_MSG_REPLY, LANGUAGES.LANG_UNIVERSAL)
                     Client.Send(toServer)
                     toServer.Dispose()
 

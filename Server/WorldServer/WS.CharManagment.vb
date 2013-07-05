@@ -1755,7 +1755,7 @@ Public Module WS_CharManagment
             packet.Dispose()
         End Sub
         Public Sub CommandResponse(ByVal Message As String)
-            Dim packet As PacketClass = BuildChatMessage(ServerGUID, Message, ChatMsg.CHAT_MSG_WHISPER, LANGUAGES.LANG_UNIVERSAL)
+            Dim packet As PacketClass = BuildChatMessage(WardenGUID, Message, ChatMsg.CHAT_MSG_WHISPER, LANGUAGES.LANG_UNIVERSAL)
             Client.Send(packet)
             packet.Dispose()
             Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SMSG_MESSAGECHAT", Client.IP, Client.Port)
@@ -5089,7 +5089,7 @@ CheckXPAgain:
         End Try
 
         'DONE: Can't create character named as the bot
-        If UCase(Character.Name) = UCase(ServerNAME) Then
+        If UCase(Character.Name) = UCase(WardenNAME) Then
             Return AuthResponseCodes.CHAR_CREATE_NAME_IN_USE
         End If
 

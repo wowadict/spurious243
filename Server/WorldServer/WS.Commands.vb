@@ -72,8 +72,8 @@ Public Module WS_Commands
 #Region "WS.Commands.Framework"
 
 
-    Public Const ServerGUID As ULong = Integer.MaxValue
-    Public Const ServerNAME As String = "Server"
+    Public Const WardenGUID As ULong = Integer.MaxValue
+    Public Const WardenNAME As String = "Warden"
     Public Enum AccessLevel As Byte
         Trial = 0
         Player = 1
@@ -348,13 +348,13 @@ Public Module WS_Commands
         c.CommandResponse("Character saved")
         Return True
     End Function
-    <ChatCommandAttribute("AddServerToParty", "This command will add the command bot to you group.", AccessLevel.Developer)> _
-    Public Function cmdAddServerToParty(ByRef c As CharacterObject, ByVal Message As String) As Boolean
-        'Dim Server As New CharacterObject
-        'Server.Name = ServerNAME
-        'Server.GUID = ServerGUID
-        'Server.Client = New ClientClass
-        'Server.Client.DEBUG_CONNECTION = True
+    <ChatCommandAttribute("AddWardenToParty", "This command will add the command bot to you group.", AccessLevel.Developer)> _
+    Public Function cmdAddWardenToParty(ByRef c As CharacterObject, ByVal Message As String) As Boolean
+        'Dim Warden As New CharacterObject
+        'Warden.Name = WardenNAME
+        'Warden.GUID = WardenGUID
+        'Warden.Client = New ClientClass
+        'Warden.Client.DEBUG_CONNECTION = True
 
         'c.Party = New BaseParty(c)
         'c.Party.AddCharacter(Server)
