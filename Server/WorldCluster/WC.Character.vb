@@ -1,5 +1,5 @@
 ﻿' 
-' Copyright (C) 2008 Spurious <http://SpuriousEmu.com>
+' Copyright (C) 2013 getMaNGOS <http://www.getMangos.co.uk>
 '
 ' This program is free software; you can redistribute it and/or modify
 ' it under the terms of the GNU General Public License as published by
@@ -19,8 +19,8 @@
 
 Imports System.Threading
 Imports System.Reflection
-Imports Spurious.Common
-Imports Spurious.Common.BaseWriter
+Imports mangosVB.Common
+Imports mangosVB.Common.BaseWriter
 
 
 Public Module WC_Character
@@ -166,7 +166,7 @@ Public Module WC_Character
 
             'DONE: Server Message Of The Day
             SendMessageMOTD(Client, "Welcome to World of Warcraft.")
-            SendMessageMOTD(Client, String.Format("This server is using {0} v.{1}", SetColor("[SpuriousEmu]", 255, 0, 0), [Assembly].GetExecutingAssembly().GetName().Version))
+            SendMessageMOTD(Client, String.Format("This server is using {0} v.{1}", SetColor("[MaNGOSvb]", 255, 0, 0), [Assembly].GetExecutingAssembly().GetName().Version))
 
             'DONE: SMSG_CONTACT_LIST
             SendContactList(Client, Me)

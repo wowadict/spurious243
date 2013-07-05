@@ -1,5 +1,5 @@
 ' 
-' Copyright (C) 2008 Spurious <http://SpuriousEmu.com>
+' Copyright (C) 2013 getMaNGOS <http://www.getMangos.co.uk>
 '
 ' This program is free software; you can redistribute it and/or modify
 ' it under the terms of the GNU General Public License as published by
@@ -132,7 +132,7 @@ Namespace DBC
                         Dim strResult As String = ""
                         Do
                             strByte = bs.ReadByte()
-                            strResult &= Chr(strByte)
+                            If strByte <> 0 Then strResult &= Chr(strByte)
                         Loop While strByte <> 0
 
                         Return strResult

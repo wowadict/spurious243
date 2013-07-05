@@ -56,9 +56,9 @@
     </WarningsAsErrors>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Spurious.Common, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="mangosVB.Common, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Required\Spurious.Common.dll</HintPath>
+      <HintPath>..\..\..\Required\mangosVB.Common.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />

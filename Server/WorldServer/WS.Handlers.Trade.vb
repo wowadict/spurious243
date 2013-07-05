@@ -1,5 +1,5 @@
 ﻿' 
-' Copyright (C) 2008 Spurious <http://SpuriousEmu.com>
+' Copyright (C) 2013 getMaNGOS <http://www.getMangos.co.uk>
 '
 ' This program is free software; you can redistribute it and/or modify
 ' it under the terms of the GNU General Public License as published by
@@ -24,8 +24,8 @@ Imports System.IO
 Imports System.Net
 Imports System.Reflection
 Imports System.Runtime.CompilerServices
-Imports Spurious.Common.BaseWriter
-Imports Spurious.Common
+Imports mangosVB.Common.BaseWriter
+Imports mangosVB.Common
 
 
 Public Module WS_Handlers_Trade
@@ -63,7 +63,7 @@ Public Module WS_Handlers_Trade
             If Trader Is Nothing Then Exit Sub
 
             Dim packet As New PacketClass(OPCODES.SMSG_TRADE_STATUS_EXTENDED)
-            packet.AddInt8(1)               'giving(0x00) or receiving(0x01) 
+            packet.AddInt8(1)               'giving(0x00) or receiving(0x01)
             packet.AddInt32(ID)             'ID
             packet.AddInt32(7)              'Slots for Character 1
             packet.AddInt32(7)              'Slots for Character 2
@@ -92,10 +92,10 @@ Public Module WS_Handlers_Trade
                     packet.AddUInt64(myItem.CreatorGUID)             'ITEM_FIELD_CREATOR
                     packet.AddInt32(myItem.ChargesLeft)             'ITEM_FIELD_SPELL_CHARGES
                     packet.AddInt32(0)                              'ITEM_FIELD_PROPERTY_SEED
-                    packet.AddInt32(myItem.RandomProperties)        'ITEM_FIELD_RANDOM_PROPERTIES_ID 
-                    packet.AddInt32(myItem.ItemInfo.LockID)         'ITEM_FIELD_FLAGS 
-                    packet.AddInt32(myItem.ItemInfo.Durability)     'ITEM_FIELD_MAXDURABILITY 
-                    packet.AddInt32(myItem.Durability)              'ITEM_FIELD_DURABILITY 
+                    packet.AddInt32(myItem.RandomProperties)        'ITEM_FIELD_RANDOM_PROPERTIES_ID
+                    packet.AddInt32(myItem.ItemInfo.LockID)         'ITEM_FIELD_FLAGS
+                    packet.AddInt32(myItem.ItemInfo.Durability)     'ITEM_FIELD_MAXDURABILITY
+                    packet.AddInt32(myItem.Durability)              'ITEM_FIELD_DURABILITY
                 Else
                     Dim j As Integer
                     For j = 0 To 17
@@ -104,7 +104,6 @@ Public Module WS_Handlers_Trade
                 End If
             Next i
 
-
             Trader.Client.Send(packet)
             packet.Dispose()
         End Sub
@@ -112,7 +111,7 @@ Public Module WS_Handlers_Trade
             If Target Is Nothing Then Exit Sub
 
             Dim packet As New PacketClass(OPCODES.SMSG_TRADE_STATUS_EXTENDED)
-            packet.AddInt8(1)               'giving(0x00) or receiving(0x01) 
+            packet.AddInt8(1)               'giving(0x00) or receiving(0x01)
             packet.AddInt32(ID)             'ID
             packet.AddInt32(7)              'Slots for Character 1
             packet.AddInt32(7)              'Slots for Character 2
@@ -133,18 +132,18 @@ Public Module WS_Handlers_Trade
                     packet.AddInt32(myItem.ItemInfo.Model)
                     packet.AddInt32(myItem.StackCount)              'ITEM_FIELD_STACK_COUNT
                     packet.AddInt32(0)                              'Unk.. probably gift=1, created_by=0?
-                    packet.AddUInt64(myItem.GiftCreatorGUID)         'ITEM_FIELD_GIFTCREATOR
-                    packet.AddInt32(0)                              'ITEM_FIELD_ENCHANTMENT
+                    packet.AddUInt64(myItem.GiftCreatorGUID)        'ITEM_FIELD_GIFTCREATOR
+                    packet.AddInt32(0)                          'ITEM_FIELD_ENCHANTMENT
                     packet.AddInt32(0)                              'ITEM_FIELD_SOCKET_CONTENT1 ?
                     packet.AddInt32(0)                              'ITEM_FIELD_SOCKET_CONTENT2 ?
                     packet.AddInt32(0)                              'ITEM_FIELD_SOCKET_CONTENT3 ?
                     packet.AddUInt64(myItem.CreatorGUID)             'ITEM_FIELD_CREATOR
                     packet.AddInt32(myItem.ChargesLeft)             'ITEM_FIELD_SPELL_CHARGES
                     packet.AddInt32(0)                              'ITEM_FIELD_PROPERTY_SEED
-                    packet.AddInt32(myItem.RandomProperties)        'ITEM_FIELD_RANDOM_PROPERTIES_ID 
-                    packet.AddInt32(myItem.ItemInfo.LockID)         'ITEM_FIELD_FLAGS 
-                    packet.AddInt32(myItem.ItemInfo.Durability)     'ITEM_FIELD_MAXDURABILITY 
-                    packet.AddInt32(myItem.Durability)              'ITEM_FIELD_DURABILITY 
+                    packet.AddInt32(myItem.RandomProperties)        'ITEM_FIELD_RANDOM_PROPERTIES_ID
+                    packet.AddInt32(myItem.ItemInfo.LockID)         'ITEM_FIELD_FLAGS
+                    packet.AddInt32(myItem.ItemInfo.Durability)     'ITEM_FIELD_MAXDURABILITY
+                    packet.AddInt32(myItem.Durability)              'ITEM_FIELD_DURABILITY
                 Else
                     Dim j As Integer
                     For j = 0 To 17
@@ -315,8 +314,8 @@ Public Module WS_Handlers_Trade
         If Not Client.Character.tradeInfo Is Nothing Then
             Dim response As New PacketClass(OPCODES.SMSG_TRADE_STATUS)
             response.AddInt32(TradeStatus.TRADE_STATUS_CANCELED)
-            Client.Character.tradeInfo.Target.Client.SendMultiplyPackets(response)
-            Client.Character.tradeInfo.Trader.Client.SendMultiplyPackets(response)
+            If Client.Character.tradeInfo.Target IsNot Nothing Then Client.Character.tradeInfo.Target.Client.SendMultiplyPackets(response)
+            If Client.Character.tradeInfo.Trader IsNot Nothing Then Client.Character.tradeInfo.Trader.Client.SendMultiplyPackets(response)
             response.Dispose()
 
             Client.Character.tradeInfo.Dispose()

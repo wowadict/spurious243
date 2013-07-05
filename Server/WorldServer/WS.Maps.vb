@@ -1,5 +1,5 @@
 ﻿' 
-' Copyright (C) 2008 Spurious <http://SpuriousEmu.com>
+' Copyright (C) 2013 getMaNGOS <http://www.getMangos.co.uk>
 '
 ' This program is free software; you can redistribute it and/or modify
 ' it under the terms of the GNU General Public License as published by
@@ -20,8 +20,8 @@ Imports System.Threading
 Imports System.IO
 Imports System.Runtime.InteropServices
 Imports System.Collections.Generic
-Imports Spurious.Common.BaseWriter
-
+Imports mangosVB.Common.BaseWriter
+Imports mangosVB.Common
 
 Public Module WS_Maps
 #Region "Zones"
@@ -664,7 +664,7 @@ Public Module WS_Maps
             Map = pMap
         End Sub
     End Class
-    Public Sub GoToNearestGraveyard(ByVal Character As CharacterObject, Optional ByVal Alive As Boolean = False)
+    Public Sub GoToNearestGraveyard(ByRef Character As CharacterObject, Optional ByVal Alive As Boolean = False)
         Dim minDistance As Single = 9999999.0F
         Dim tmp As Single
         Dim selectedGraveyard As TGraveyard = Nothing

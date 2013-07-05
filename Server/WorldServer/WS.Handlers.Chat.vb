@@ -1,5 +1,5 @@
 ﻿' 
-' Copyright (C) 2008 Spurious <http://SpuriousEmu.com>
+' Copyright (C) 2013 getMaNGOS <http://www.getMangos.co.uk>
 '
 ' This program is free software; you can redistribute it and/or modify
 ' it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@
 
 Imports System.Threading
 Imports System.Collections.Generic
-Imports Spurious.Common.BaseWriter
+Imports mangosVB.Common.BaseWriter
 
 Public Module WS_Handlers_Chat
 
@@ -56,13 +56,13 @@ Public Module WS_Handlers_Chat
             Case ChatMsg.CHAT_MSG_GUILD
                 Dim Message As String = packet.GetString()
 
-                'DONE: Broadcast to party
+                'DONE: Broadcast to guild
                 BroadcastChatMessageGuild(Client.Character, Message, msgLanguage, Client.Character.GuildID)
                 Exit Select
             Case ChatMsg.CHAT_MSG_OFFICER
                 Dim Message As String = packet.GetString()
 
-                'DONE: Broadcast to party
+                'DONE: Broadcast to officer chat
                 BroadcastChatMessageOfficer(Client.Character, Message, msgLanguage, Client.Character.GuildID)
                 Exit Select
 

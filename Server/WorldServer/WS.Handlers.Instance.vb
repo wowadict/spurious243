@@ -1,5 +1,5 @@
 ﻿' 
-' Copyright (C) 2008 Spurious <http://SpuriousEmu.com>
+' Copyright (C) 2013 getMaNGOS <http://www.getMangos.co.uk>
 '
 ' This program is free software; you can redistribute it and/or modify
 ' it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@
 
 Imports System.Threading
 Imports System.Collections.Generic
-Imports Spurious.Common.BaseWriter
+Imports mangosVB.Common.BaseWriter
 
 Public Module WS_Handlers_Instance
 
@@ -31,7 +31,7 @@ Public Module WS_Handlers_Instance
         Database.Query(String.Format("SELECT * FROM characters_instances WHERE expire < {0};", t), q)
 
         For Each r As DataRow In q.Rows
-            InstanceMapExpire(r.Item("map"), r.Item("instance"))
+            If Maps.ContainsKey(r.Item("map")) Then InstanceMapExpire(r.Item("map"), r.Item("instance"))
         Next
 
         Database.Update(String.Format("DELETE FROM characters_instances WHERE expire < {0};", t))

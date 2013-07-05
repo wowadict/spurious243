@@ -76,7 +76,7 @@
         Me.CheckBox2.Name = "CheckBox2"
         Me.CheckBox2.Size = New System.Drawing.Size(133, 18)
         Me.CheckBox2.TabIndex = 2
-        Me.CheckBox2.Text = "Spurious.WorldServer"
+        Me.CheckBox2.Text = "mangosVB.WorldServer"
         Me.CheckBox2.UseVisualStyleBackColor = True
         '
         'CheckBox1
@@ -87,7 +87,7 @@
         Me.CheckBox1.Name = "CheckBox1"
         Me.CheckBox1.Size = New System.Drawing.Size(134, 18)
         Me.CheckBox1.TabIndex = 1
-        Me.CheckBox1.Text = "Spurious.RealmServer"
+        Me.CheckBox1.Text = "mangosVB.RealmServer"
         Me.CheckBox1.UseVisualStyleBackColor = True
         '
         'TextBox1
@@ -126,7 +126,7 @@
         'WorldProcess
         '
         Me.WorldProcess.StartInfo.Domain = ""
-        Me.WorldProcess.StartInfo.FileName = "Spurious.WorldServer.exe"
+        Me.WorldProcess.StartInfo.FileName = "mangosVB.WorldServer.exe"
         Me.WorldProcess.StartInfo.LoadUserProfile = False
         Me.WorldProcess.StartInfo.Password = Nothing
         Me.WorldProcess.StartInfo.StandardErrorEncoding = Nothing
@@ -194,7 +194,7 @@
         'RealmProcess
         '
         Me.RealmProcess.StartInfo.Domain = ""
-        Me.RealmProcess.StartInfo.FileName = "Spurious.RealmServer.exe"
+        Me.RealmProcess.StartInfo.FileName = "mangosVB.RealmServer.exe"
         Me.RealmProcess.StartInfo.LoadUserProfile = False
         Me.RealmProcess.StartInfo.Password = Nothing
         Me.RealmProcess.StartInfo.StandardErrorEncoding = Nothing
@@ -253,7 +253,7 @@
         Me.Button1.Name = "Button1"
         Me.Button1.Size = New System.Drawing.Size(151, 23)
         Me.Button1.TabIndex = 19
-        Me.Button1.Text = "Start Spurious.RealmServer"
+        Me.Button1.Text = "Start mangosVB.RealmServer"
         Me.Button1.UseVisualStyleBackColor = True
         '
         'Button2
@@ -262,7 +262,7 @@
         Me.Button2.Name = "Button2"
         Me.Button2.Size = New System.Drawing.Size(162, 23)
         Me.Button2.TabIndex = 20
-        Me.Button2.Text = "Start Spurious.WorldServer"
+        Me.Button2.Text = "Start mangosVB.WorldServer"
         Me.Button2.UseVisualStyleBackColor = True
         '
         'Main

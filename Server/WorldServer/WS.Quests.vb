@@ -1,5 +1,5 @@
 ' 
-' Copyright (C) 2008 Spurious <http://SpuriousEmu.com>
+' Copyright (C) 2013 getMaNGOS <http://www.getMangos.co.uk>
 '
 ' This program is free software; you can redistribute it and/or modify
 ' it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@
 ' Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 '
 
-Imports Spurious.Common.BaseWriter
+Imports mangosVB.Common.BaseWriter
 
 
 Public Module WS_Quests
@@ -41,7 +41,7 @@ Public Module WS_Quests
         DIALOG_STATUS_REWARD2 = 7                ' Quest has been finished. - Yellow Question ? Mark (No yellow dot on the minimap?)
         DIALOG_STATUS_REWARD = 8                ' Quest has been finished. - Yellow Question ? Mark
     End Enum
-    Public Enum QuestObjectiveFlag 'These flags are custom and are only used for Spurious
+    Public Enum QuestObjectiveFlag 'These flags are custom and are only used for MangosVB
         QUEST_OBJECTIVE_KILL = 1 'You have to kill creatures
         QUEST_OBJECTIVE_EXPLORE = 2 'You have to explore an area
         QUEST_OBJECTIVE_ESCORT = 4 'You have to escort someone
@@ -1653,37 +1653,37 @@ Public Module WS_Quests
                 Client.Character.TalkCompleteQuest(i)
             End Try
 
-        'DONE: XP Calculations
-        Dim xp As Integer = Client.Character.TalkCurrentQuest.RewardXP
-        Dim gold As Integer = Client.Character.TalkCurrentQuest.RewardGold
-        If Client.Character.Level >= MAX_LEVEL Then
-            gold += xp
-            xp = 0
-        Else
-            Select Case Client.Character.Level
-                Case Client.Character.TalkCurrentQuest.Level_Normal + 6
-                    xp = Fix(xp * 0.8 / 5) * 5
-                Case Client.Character.TalkCurrentQuest.Level_Normal + 7
-                    xp = Fix(xp * 0.6 / 5) * 5
-                Case Client.Character.TalkCurrentQuest.Level_Normal + 8
-                    xp = Fix(xp * 0.4 / 5) * 5
-                Case Client.Character.TalkCurrentQuest.Level_Normal + 9
-                    xp = Fix(xp * 0.2 / 5) * 5
-                Case Is > Client.Character.TalkCurrentQuest.Level_Normal + 10
-                    xp = Fix(xp * 0.1 / 5) * 5
-            End Select
-        End If
+            'DONE: XP Calculations
+            Dim xp As Integer = Client.Character.TalkCurrentQuest.RewardXP
+            Dim gold As Integer = Client.Character.TalkCurrentQuest.RewardGold
+            If Client.Character.Level >= MAX_LEVEL Then
+                gold += xp
+                xp = 0
+            Else
+                Select Case Client.Character.Level
+                    Case Client.Character.TalkCurrentQuest.Level_Normal + 6
+                        xp = Fix(xp * 0.8 / 5) * 5
+                    Case Client.Character.TalkCurrentQuest.Level_Normal + 7
+                        xp = Fix(xp * 0.6 / 5) * 5
+                    Case Client.Character.TalkCurrentQuest.Level_Normal + 8
+                        xp = Fix(xp * 0.4 / 5) * 5
+                    Case Client.Character.TalkCurrentQuest.Level_Normal + 9
+                        xp = Fix(xp * 0.2 / 5) * 5
+                    Case Is > Client.Character.TalkCurrentQuest.Level_Normal + 10
+                        xp = Fix(xp * 0.1 / 5) * 5
+                End Select
+            End If
 
-        'DONE: Adding XP
-        Client.Character.AddXP(Client.Character.TalkCurrentQuest.RewardXP)
+            'DONE: Adding XP
+            Client.Character.AddXP(Client.Character.TalkCurrentQuest.RewardXP)
 
-        SendQuestComplete(Client, Client.Character.TalkCurrentQuest, xp, gold)
+            SendQuestComplete(Client, Client.Character.TalkCurrentQuest, xp, gold)
 
-        'DONE: Follow-up quests (no requirements checked?)
-        If Client.Character.TalkCurrentQuest.NextQuest <> 0 Then
-            Client.Character.TalkCurrentQuest = New QuestInfo(Client.Character.TalkCurrentQuest.NextQuest)
-            SendQuestDetails(Client, Client.Character.TalkCurrentQuest, GUID, True)
-        End If
+            'DONE: Follow-up quests (no requirements checked?)
+            If Client.Character.TalkCurrentQuest.NextQuest <> 0 Then
+                Client.Character.TalkCurrentQuest = New QuestInfo(Client.Character.TalkCurrentQuest.NextQuest)
+                SendQuestDetails(Client, Client.Character.TalkCurrentQuest, GUID, True)
+            End If
 
         Catch e As Exception
             Log.WriteLine(LogType.CRITICAL, "Error while choosing reward.{0}", vbNewLine & e.ToString)

@@ -1,5 +1,5 @@
 ' 
-' Copyright (C) 2008 Spurious <http://SpuriousEmu.com>
+' Copyright (C) 2013 getMaNGOS <http://www.getMangos.co.uk>
 '
 ' This program is free software; you can redistribute it and/or modify
 ' it under the terms of the GNU General Public License as published by
@@ -25,7 +25,7 @@ Public Class TelnetWriter
     Inherits BaseWriter
 
     Protected conn As TcpListener
-    Protected socket As socket = Nothing
+    Protected socket As Socket = Nothing
     Protected Const SLEEP_TIME As Integer = 1000
 
     Public Sub New(ByVal host As System.Net.IPAddress, ByVal port As Integer)

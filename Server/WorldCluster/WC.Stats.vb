@@ -1,5 +1,5 @@
 ' 
-' Copyright (C) 2008 Spurious <http://SpuriousEmu.com>
+' Copyright (C) 2013 getMaNGOS <http://www.getMangos.co.uk>
 '
 ' This program is free software; you can redistribute it and/or modify
 ' it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@ Imports System.Xml
 Imports System.Reflection
 Imports System.Threading
 Imports System.Diagnostics.PerformanceCounter
-Imports Spurious.Common
+Imports mangosVB.Common
 
 
 Public Module WC_Stats
@@ -49,7 +49,7 @@ Public Module WC_Stats
 
     Private ThreadsWorker As Integer = 0
     Private ThreadsComletion As Integer = 0
-    Private LastCheck As Date = now
+    Private LastCheck As Date = Now
     Private LastCPUTime As Double = 0
     Private Uptime As TimeSpan
     Private Latency As Long = 0
@@ -69,7 +69,7 @@ Public Module WC_Stats
 
     Public Sub CheckCPU(ByVal State As Object)
         Dim TimeSinceLastCheck As TimeSpan = Now.Subtract(LastCheck)
-        UsageCPU = (Process.GetCurrentProcess().TotalProcessorTime.TotalMilliseconds - LastCPUTime) / TimeSinceLastCheck.TotalMilliseconds
+        UsageCPU = ((Process.GetCurrentProcess().TotalProcessorTime.TotalMilliseconds - LastCPUTime) / TimeSinceLastCheck.TotalMilliseconds) * 100
         LastCheck = Now
         LastCPUTime = Process.GetCurrentProcess().TotalProcessorTime.TotalMilliseconds
     End Sub
@@ -132,7 +132,7 @@ Public Module WC_Stats
         f.WriteStartElement("cluster")
 
         f.WriteStartElement("platform")
-        f.WriteValue(String.Format("Spurious rev{0} v{1}", 0, [Assembly].GetExecutingAssembly().GetName().Version))
+        f.WriteValue(String.Format("MaNGOSvb rev{0} v{1}", 0, [Assembly].GetExecutingAssembly().GetName().Version))
         f.WriteEndElement()
 
         f.WriteStartElement("uptime")

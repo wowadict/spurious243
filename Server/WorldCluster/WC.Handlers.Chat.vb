@@ -1,5 +1,5 @@
 ﻿' 
-' Copyright (C) 2008 Spurious <http://SpuriousEmu.com>
+' Copyright (C) 2013 getMaNGOS <http://www.getMangos.co.uk>
 '
 ' This program is free software; you can redistribute it and/or modify
 ' it under the terms of the GNU General Public License as published by
@@ -18,8 +18,8 @@
 
 
 Imports System.Threading
-Imports Spurious.Common
-Imports Spurious.Common.BaseWriter
+Imports mangosVB.Common
+Imports mangosVB.Common.BaseWriter
 
 
 Public Module WC_Handlers_Chat

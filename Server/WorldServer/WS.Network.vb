@@ -1,5 +1,5 @@
 ﻿' 
-' Copyright (C) 2008 Spurious <http://SpuriousEmu.com>
+' Copyright (C) 2013 getMaNGOS <http://www.getMangos.co.uk>
 '
 ' This program is free software; you can redistribute it and/or modify
 ' it under the terms of the GNU General Public License as published by
@@ -27,8 +27,8 @@ Imports System.Runtime.Remoting
 Imports System.Runtime.CompilerServices
 Imports System.Collections.Generic
 Imports System.Security.Permissions
-Imports Spurious.Common.BaseWriter
-Imports Spurious.Common
+Imports mangosVB.Common.BaseWriter
+Imports mangosVB.Common
 
 
 Public Module WS_Network
@@ -206,7 +206,7 @@ Public Module WS_Network
 
         Public Sub CheckCPU(ByVal State As Object)
             Dim TimeSinceLastCheck As TimeSpan = Now.Subtract(LastInfo)
-            UsageCPU = (Process.GetCurrentProcess().TotalProcessorTime.TotalMilliseconds - LastCPUTime) / TimeSinceLastCheck.TotalMilliseconds
+            UsageCPU = ((Process.GetCurrentProcess().TotalProcessorTime.TotalMilliseconds - LastCPUTime) / TimeSinceLastCheck.TotalMilliseconds) * 100
             LastInfo = Now
             LastCPUTime = Process.GetCurrentProcess().TotalProcessorTime.TotalMilliseconds
         End Sub

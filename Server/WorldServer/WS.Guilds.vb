@@ -1,5 +1,5 @@
 ' 
-' Copyright (C) 2008 Spurious <http://SpuriousEmu.com>
+' Copyright (C) 2013 getMaNGOS <http://www.getMangos.co.uk>
 '
 ' This program is free software; you can redistribute it and/or modify
 ' it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@
 ' Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 '
 
-Imports Spurious.Common.BaseWriter
+Imports mangosVB.Common.BaseWriter
 
 
 Public Module WS_Guilds
@@ -1319,7 +1319,7 @@ Public Module WS_Guilds
             Exit Sub
         End If
 
-        'DONE: Do the real update            
+        'DONE: Do the real update
         c.GuildRank -= 1
         Database.Update(String.Format("UPDATE characters SET char_guildRank = {0} WHERE char_guid = {1};", c.GuildRank, c.GUID))
         c.SetUpdateFlag(EPlayerFields.PLAYER_GUILDRANK, c.GuildRank)
@@ -1391,7 +1391,7 @@ Public Module WS_Guilds
             Exit Sub
         End If
 
-        'DONE: Do the real update            
+        'DONE: Do the real update
         c.GuildRank += 1
         Database.Update(String.Format("UPDATE characters SET char_guildRank = {0} WHERE char_guid = {1};", c.GuildRank, c.GUID))
         c.SetUpdateFlag(EPlayerFields.PLAYER_GUILDRANK, c.GuildRank)
@@ -1729,7 +1729,7 @@ Public Module WS_Guilds
         LEFT = 4                'uint8(1), string(name)                                             '<name> has left the guild.
         REMOVED = 5             '??
         LEADER_IS = 6           'uint8(1), string(name                                              '<name> is the leader of your guild.
-        LEADER_CHANGED = 7      'uint8(2), string(oldLeaderName), string(newLeaderName) 
+        LEADER_CHANGED = 7      'uint8(2), string(oldLeaderName), string(newLeaderName)
         DISBANDED = 8           'uint8(0)                                                           'Your guild has been disbanded.
         TABARDCHANGE = 9        '??
     End Enum

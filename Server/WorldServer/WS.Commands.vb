@@ -1,5 +1,5 @@
 ' 
-' Copyright (C) 2008 Spurious <http://SpuriousEmu.com>
+' Copyright (C) 2013 getMaNGOS <http://www.getMangos.co.uk>
 '
 ' This program is free software; you can redistribute it and/or modify
 ' it under the terms of the GNU General Public License as published by
@@ -19,12 +19,12 @@
 Imports System.Threading
 Imports System.Reflection
 Imports System.Collections.Generic
-Imports Spurious.Common.BaseWriter
+Imports mangosVB.Common.BaseWriter
 
 
 #Region "WS.Commands.Attributes"
 <AttributeUsage(AttributeTargets.Method, Inherited:=False, AllowMultiple:=True)> _
-    Public Class ChatCommandAttribute
+Public Class ChatCommandAttribute
     Inherits System.Attribute
 
     Private Command As String = ""
@@ -96,7 +96,7 @@ Public Module WS_Commands
 
 
     Public Sub RegisterChatCommands()
-        ScriptedChatCommands = New ScriptedObject("scripts\Commands.vb", "Spurious.Commands.dll", False)
+        ScriptedChatCommands = New ScriptedObject("scripts\Commands.vb", "mangosVB.Commands.dll", False)
 
         For Each tmpModule As Type In [Assembly].GetExecutingAssembly.GetTypes
             For Each tmpMethod As MethodInfo In tmpModule.GetMethods
@@ -111,7 +111,7 @@ Public Module WS_Commands
 
                         ChatCommands.Add(UCase(info.cmdName), cmd)
 #If DEBUG Then
-                        Log.WriteLine(Spurious.Common.BaseWriter.LogType.INFORMATION, "Command found: {0}", UCase(info.cmdName))
+                        Log.WriteLine(mangosVB.Common.BaseWriter.LogType.INFORMATION, "Command found: {0}", UCase(info.cmdName))
 #End If
                     Next
                 End If
@@ -131,7 +131,7 @@ Public Module WS_Commands
 
                         ChatCommands.Add(UCase(info.cmdName), cmd)
 #If DEBUG Then
-                        Log.WriteLine(Spurious.Common.BaseWriter.LogType.INFORMATION, "Command found: {0}", UCase(info.cmdName))
+                        Log.WriteLine(mangosVB.Common.BaseWriter.LogType.INFORMATION, "Command found: {0}", UCase(info.cmdName))
 #End If
                     Next
                 End If
@@ -542,8 +542,6 @@ Public Module WS_Commands
 
         Return True
     End Function
-
-
 
     '****************************************** DEBUG COMMANDs ******************************************************
     <ChatCommandAttribute("GetMax", "GETMAX - Get all spells and skills maxed out for your level.", AccessLevel.Admin)> _
@@ -1096,7 +1094,7 @@ Public Module WS_Commands
             c.CommandResponse("No target selected.")
         Else
             SystemMessage(String.Format("Character [{0}] kicked form server.{3}Reason: {1}{3}GameMaster: [{2}].", SetColor(CType(CHARACTERs(c.TargetGUID), CharacterObject).Name, 255, 0, 0), SetColor(Message, 255, 0, 0), SetColor(c.Name, 255, 0, 0), vbNewLine))
-            Thread.Sleep(8000)
+            Thread.Sleep(2000)
 
             cmdKick(c, "")
         End If

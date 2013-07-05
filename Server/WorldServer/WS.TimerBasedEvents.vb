@@ -1,5 +1,5 @@
 ' 
-' Copyright (C) 2008 Spurious <http://SpuriousEmu.com>
+' Copyright (C) 2013 getMaNGOS <http://www.getMangos.co.uk>
 '
 ' This program is free software; you can redistribute it and/or modify
 ' it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@
 
 Imports System.Threading
 Imports System.Collections.Generic
-Imports Spurious.Common.BaseWriter
+Imports mangosVB.Common.BaseWriter
 
 Public Module WS_TimerBasedEvents
 
@@ -219,7 +219,7 @@ Public Module WS_TimerBasedEvents
             Try
                 WORLD_CREATUREs_Lock.AcquireReaderLock(DEFAULT_LOCK_TIMEOUT)
                 For Each de As KeyValuePair(Of ULong, CreatureObject) In WORLD_CREATUREs
-                    UpdateSpells(de.Value)
+                    If de.Value IsNot Nothing Then UpdateSpells(de.Value)
                 Next
             Catch ex As Exception
                 Log.WriteLine(LogType.FAILED, ex.ToString, Nothing)
@@ -230,7 +230,7 @@ Public Module WS_TimerBasedEvents
             Try
                 CHARACTERs_Lock.AcquireReaderLock(DEFAULT_LOCK_TIMEOUT)
                 For Each Character As KeyValuePair(Of ULong, CharacterObject) In CHARACTERs
-                    UpdateSpells(Character.Value)
+                    If Character.Value IsNot Nothing Then UpdateSpells(Character.Value)
                 Next
             Catch ex As Exception
                 Log.WriteLine(LogType.FAILED, ex.ToString, Nothing)
@@ -253,7 +253,7 @@ Public Module WS_TimerBasedEvents
             End Try
 
             For Each Dynamic As DynamicObjectObject In DynamicObjectsToDelete
-                Dynamic.Delete()
+                If Dynamic IsNot Nothing Then Dynamic.Delete()
             Next
 
             SpellManagerWorking = False
@@ -300,8 +300,7 @@ Public Module WS_TimerBasedEvents
         End Sub
     End Class
 
-
-        'NOTE: Manages ai movement
+    'NOTE: Manages ai movement
     Public Class TAIManager
         Implements IDisposable
 

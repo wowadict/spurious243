@@ -1,5 +1,5 @@
 ' 
-' Copyright (C) 2008 Spurious <http://SpuriousEmu.com>
+' Copyright (C) 2013 getMaNGOS <http://www.getMangos.co.uk>
 '
 ' This program is free software; you can redistribute it and/or modify
 ' it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@
 
 Imports System.Threading
 Imports System.Runtime.CompilerServices
-Imports Spurious.Common.BaseWriter
+Imports mangosVB.Common.BaseWriter
 
 Public Module WS_Items
 
@@ -445,7 +445,7 @@ Public Module WS_Items
             Model = MySQLQuery.Rows(0).Item("displayid")
             Name = MySQLQuery.Rows(0).Item("name1")
             Quality = MySQLQuery.Rows(0).Item("quality")               '0=Grey-Poor 1=White-Common 2=Green-Uncommon 3=Blue-Rare 4=Purple-Epic 5=Orange-Legendary 6=Red-Artifact
-            Material = MySQLQuery.Rows(0).Item("lock_material")             '-1=Consumables 1=Metal 2=Wood 3=Liquid 4=Jewelry 5=Chain 6=Plate 7=Cloth 8=Leather 
+            Material = MySQLQuery.Rows(0).Item("lock_material")             '-1=Consumables 1=Metal 2=Wood 3=Liquid 4=Jewelry 5=Chain 6=Plate 7=Cloth 8=Leather
             Durability = MySQLQuery.Rows(0).Item("MaxDurability")
             MaxCount = MySQLQuery.Rows(0).Item("maxcount")
             Sheath = MySQLQuery.Rows(0).Item("sheathID")
@@ -481,7 +481,7 @@ Public Module WS_Items
             Description = MySQLQuery.Rows(0).Item("description")
             Block = MySQLQuery.Rows(0).Item("block")
             ItemSet = MySQLQuery.Rows(0).Item("itemset")
-            PageMaterial = MySQLQuery.Rows(0).Item("page_material")     'The background of the page window: 1=Parchment 2=Stone 3=Marble 4=Silver 5=Bronze                
+            PageMaterial = MySQLQuery.Rows(0).Item("page_material")     'The background of the page window: 1=Parchment 2=Stone 3=Marble 4=Silver 5=Bronze
             StartQuest = MySQLQuery.Rows(0).Item("quest_id")
             ContainerSlots = MySQLQuery.Rows(0).Item("ContainerSlots")
             LanguageID = MySQLQuery.Rows(0).Item("page_language")
@@ -1068,7 +1068,7 @@ Public Module WS_Items
             OwnerGUID = Owner
             Durability = ITEMDatabase(ItemEntry).Durability
 
-            'DONE: Create new GUID 
+            'DONE: Create new GUID
             GUID = GetNewGUID()
             InitializeBag()
             SaveAsNew()
@@ -1171,7 +1171,7 @@ Public Module WS_Items
         Public Function IsBroken() As Boolean
             Return (Durability = 0) AndAlso (ItemInfo.Durability > 0)
         End Function
-        Public Sub ModifyDurability(ByVal percent As Single, ByVal Client As ClientClass)
+        Public Sub ModifyDurability(ByVal percent As Single, ByRef Client As ClientClass)
             If ITEMDatabase(ItemEntry).Durability > 0 Then
                 Durability -= Fix(ITEMDatabase(ItemEntry).Durability * percent)
                 If Durability < 0 Then Durability = 0

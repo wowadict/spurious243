@@ -1,5 +1,5 @@
 ' 
-' Copyright (C) 2008 Spurious <http://SpuriousEmu.com>
+' Copyright (C) 2013 getMaNGOS <http://www.getMangos.co.uk>
 '
 ' This program is free software; you can redistribute it and/or modify
 ' it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@ Imports System.IO
 Imports System.Net
 Imports System.Security.Cryptography
 Imports System.Reflection
-Imports Spurious.Common
+Imports mangosVB.Common
 
 Public Module RS_Main
 #Region "Global.Constants"
@@ -101,15 +101,25 @@ Public Module RS_Main
         <XmlElement(ElementName:="RSPort")> Public RSPort As Int32 = 0
         <XmlElement(ElementName:="RSHost")> Public RSHost As String = "localhost"
         <XmlElement(ElementName:="SQLUser")> Public SQLUser As String = "root"
-        <XmlElement(ElementName:="SQLPass")> Public SQLPass As String = "spurious"
+        <XmlElement(ElementName:="SQLPass")> Public SQLPass As String = "mangos"
         <XmlElement(ElementName:="SQLHost")> Public SQLHost As String = "localhost"
         <XmlElement(ElementName:="SQLPort")> Public SQLPort As String = "3306"
-        <XmlElement(ElementName:="SQLDBName")> Public SQLDBName As String = "spurious"
+        <XmlElement(ElementName:="SQLDBName")> Public SQLDBName As String = "mangosvb"
         <XmlElement(ElementName:="SQLDBType")> Public SQLDBType As SQL.DB_Type = SQL.DB_Type.MySQL
     End Class
 
     Public Sub LoadConfig()
         Try
+            'Make sure RealmServer.ini exists
+            If System.IO.File.Exists("RealmServer.ini") = False Then
+                Console.ForegroundColor = ConsoleColor.Red
+                Console.WriteLine("[{0}] Cannot Continue. {1} does not exist.", Format(TimeOfDay, "hh:mm:ss"), "RealmServer.ini")
+                Console.WriteLine("Please copy the ini files into the same directory as the MangosVB exe files.")
+                Console.WriteLine("Press any key to exit server: ")
+                Console.ReadKey()
+                End
+            End If
+
             Console.Write("[{0}] Loading Configuration...", Format(TimeOfDay, "hh:mm:ss"))
 
             Config = New XMLConfigFile
@@ -748,7 +758,7 @@ Public Module RS_Main
         Console.WriteLine()
 
         Console.ForegroundColor = System.ConsoleColor.Magenta
-        Console.WriteLine("http://www.SpuriousEmu.com")
+        Console.WriteLine("http://www.getMangos.co.uk")
         Console.WriteLine()
 
         Console.ForegroundColor = System.ConsoleColor.White
@@ -785,17 +795,17 @@ Public Module RS_Main
                             End
                         Case "help", "/help"
                             Console.ForegroundColor = System.ConsoleColor.Blue
-                            Console.WriteLine("'Spurious.RealmServer' Command list:")
+                            Console.WriteLine("'mangosVB.RealmServer' Command list:")
                             Console.ForegroundColor = System.ConsoleColor.White
                             Console.WriteLine("---------------------------------")
                             Console.WriteLine("")
                             Console.WriteLine("")
-                            Console.WriteLine("'help' or '/help' - Brings up the 'Spurious.RealmServer' Command list (this).")
+                            Console.WriteLine("'help' or '/help' - Brings up the 'mangosVB.RealmServer' Command list (this).")
                             Console.WriteLine("")
-                            Console.WriteLine("'/quit' or '/shutdown' or 'off' or 'kill' or 'exit' - Shutsdown 'Spurious.RealmServer'.")
+                            Console.WriteLine("'/quit' or '/shutdown' or 'off' or 'kill' or 'exit' - Shutsdown 'mangosVB.RealmServer'.")
                         Case Else
                             Console.ForegroundColor = System.ConsoleColor.DarkRed
-                            Console.WriteLine("Error!. Cannot find specified command. Please type 'help' for information on 'Spurious.RealmServer' console commands.")
+                            Console.WriteLine("Error!. Cannot find specified command. Please type 'help' for information on 'mangosVB.RealmServer' console commands.")
                             Console.ForegroundColor = System.ConsoleColor.White
                     End Select
                 End If

@@ -1,5 +1,5 @@
 ' 
-' Copyright (C) 2008 Spurious <http://SpuriousEmu.com>
+' Copyright (C) 2013 getMaNGOS <http://www.getMangos.co.uk>
 '
 ' This program is free software; you can redistribute it and/or modify
 ' it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@
 
 Imports System.Threading
 Imports System.Collections.Generic
-Imports Spurious.Common.BaseWriter
+Imports mangosVB.Common.BaseWriter
 
 Public Module WS_Handlers_Misc
 
@@ -345,7 +345,7 @@ Public Module WS_Handlers_Misc
         End Try
     End Sub
     Public Sub CharacterResurrect(ByRef Character As CharacterObject)
-       'DONE: Make really alive
+        'DONE: Make really alive
         Character.Mana.Current = 0
         Character.Rage.Current = 0
         Character.Energy.Current = 0

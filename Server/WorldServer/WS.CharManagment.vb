@@ -1,5 +1,5 @@
 ' 
-' Copyright (C) 2008 Spurious <http://SpuriousEmu.com>
+' Copyright (C) 2013 getMaNGOS <http://www.getMangos.co.uk>
 '
 ' This program is free software; you can redistribute it and/or modify
 ' it under the terms of the GNU General Public License as published by
@@ -19,7 +19,8 @@
 Imports System.Threading
 Imports System.Reflection
 Imports System.Text.RegularExpressions
-Imports Spurious.Common.BaseWriter
+Imports mangosVB.Common.BaseWriter
+Imports mangosVB.Common
 
 
 
@@ -28,7 +29,7 @@ Public Module WS_CharManagment
 
 
 #Region "WS.CharMangment.CharacterInitializators"
-    Enum ManaTypes
+    Enum ManaTypes As Integer
         TYPE_MANA = 0
         TYPE_RAGE = 1
         TYPE_FOCUS = 2
@@ -448,7 +449,7 @@ Public Module WS_CharManagment
             DrowningTimer = New Threading.Timer(AddressOf Character.HandleDrowning, Nothing, 2000, 1000)
         End Sub
         Public Sub Dispose() Implements System.IDisposable.Dispose
-            DrowningTimer.dispose()
+            DrowningTimer.Dispose()
             DrowningTimer = Nothing
             If CHARACTERs.ContainsKey(CharacterGUID) Then CHARACTERs(CharacterGUID).StopMirrorTimer(1)
         End Sub
@@ -469,7 +470,7 @@ Public Module WS_CharManagment
             Me.Dispose()
         End Sub
         Public Sub Dispose() Implements System.IDisposable.Dispose
-            RepopTimer.dispose()
+            RepopTimer.Dispose()
             RepopTimer = Nothing
         End Sub
     End Class
@@ -614,7 +615,7 @@ Public Module WS_CharManagment
 
         Public ReadOnly Property GetCriticalWithSpells() As Byte
             ' From http://www.wowwiki.com/Spell_critical_strike
-            ' TODO: Need to add SpellCritical Value in this format -- (Intellect/80 '82 for Warlocks) + (Spell Critical Strike Rating/22.08) + Class Specific Constant 
+            ' TODO: Need to add SpellCritical Value in this format -- (Intellect/80 '82 for Warlocks) + (Spell Critical Strike Rating/22.08) + Class Specific Constant
             ' How do you generate the base spell crit rating... and then we can fix the formula
             Get
                 Select Case Classe
@@ -1904,7 +1905,7 @@ CheckXPAgain:
                     SMSG_LEVELUP_INFO.AddInt32(Stamina.Base - oldStamina)
                     SMSG_LEVELUP_INFO.AddInt32(Intellect.Base - oldIntellect)
                     SMSG_LEVELUP_INFO.AddInt32(Spirit.Base - oldSpirit)
-                    Client.Send(SMSG_LEVELUP_INFO)
+                    If Client IsNot Nothing Then Client.Send(SMSG_LEVELUP_INFO)
                     SMSG_LEVELUP_INFO.Dispose()
 
                     Life.Current = Life.Maximum
@@ -1942,11 +1943,11 @@ CheckXPAgain:
                         SetUpdateFlag(EPlayerFields.PLAYER_SKILL_INFO_1_1 + SkillsPositions(Skill.Key) * 3 + 1, Skill.Value.GetSkill)       'CType((skill1.CurrentVal(Me) + (skill1.Cap(Me) << 16)), Integer)
                     Next
 
-                    SendCharacterUpdate()
-                    UpdateManaRegen()
+                    If Client IsNot Nothing Then SendCharacterUpdate()
+                    If Client IsNot Nothing Then UpdateManaRegen()
                 Else
-                    SetUpdateFlag(EPlayerFields.PLAYER_XP, XP)
-                    SendCharacterUpdate(False)
+                    If Client IsNot Nothing Then SetUpdateFlag(EPlayerFields.PLAYER_XP, XP)
+                    If Client IsNot Nothing Then SendCharacterUpdate(False)
                 End If
 
                 'We just dinged more than one level
@@ -2156,9 +2157,9 @@ CheckXPAgain:
 
 
             'DONE: Insert as new item in inventory
-            For i As Byte = INVENTORY_SLOT_ITEM_START To INVENTORY_SLOT_ITEM_END - 1
-                If Not Items.ContainsKey(i) Then
-                    Return ItemSETSLOT(Item, 0, i)
+            For slot As Byte = INVENTORY_SLOT_ITEM_START To INVENTORY_SLOT_ITEM_END - 1
+                If Not Items.ContainsKey(slot) Then
+                    Return ItemSETSLOT(Item, 0, slot)
                 End If
             Next
             'DONE: Insert as new item in bag
@@ -4171,7 +4172,7 @@ CheckXPAgain:
             If MySQLQuery.Rows.Count > 0 Then
                 For i = 0 To MySQLQuery.Rows.Count - 1
                     Dim Slot As Byte = 0
-                    Select CByte(MySQLQuery.Rows(i).Item("member_type"))
+                    Select Case CByte(MySQLQuery.Rows(i).Item("member_type"))
                         Case 2
                             Slot = 0
                         Case 3

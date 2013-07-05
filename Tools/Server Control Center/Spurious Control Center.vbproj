@@ -14,7 +14,7 @@
     <AssemblyMinorVersion>0</AssemblyMinorVersion>
     <AssemblyRevisionNumber>42</AssemblyRevisionNumber>
     <GenerateRevisionNumber>True</GenerateRevisionNumber>
-    <AssemblyCompanyName>http://Spurious.sites.assembla.com/</AssemblyCompanyName>
+    <AssemblyCompanyName>http://mangosVB.sites.assembla.com/</AssemblyCompanyName>
     <StartWithIE>False</StartWithIE>
     <ApplicationIcon>SpuriousControlCenter.ico</ApplicationIcon>
     <RootNamespace>SpuriousControlCenter</RootNamespace>

@@ -1,5 +1,5 @@
 ' 
-' Copyright (C) 2008 Spurious <http://SpuriousEmu.com>
+' Copyright (C) 2013 getMaNGOS <http://www.getMangos.co.uk>
 '
 ' This program is free software; you can redistribute it and/or modify
 ' it under the terms of the GNU General Public License as published by
@@ -18,7 +18,8 @@
 
 Imports System.Threading
 Imports System.Runtime.CompilerServices
-Imports Spurious.Common.BaseWriter
+Imports mangosVB.Common.BaseWriter
+Imports mangosVB.Common
 
 
 Public Module WS_Creatures
@@ -91,7 +92,7 @@ Public Module WS_Creatures
 
             Id = CreatureID
 
-            If Dir(System.AppDomain.CurrentDomain.BaseDirectory() & "scripts\creatures\" & Replace(Name, """", "'") & ".vb") <> "" Then
+            If Dir(System.AppDomain.CurrentDomain.BaseDirectory() & "scripts\creatures\" & Name.Replace("""", "'").Replace("<", "").Replace(">", "").Replace("*", "").Replace("/", "").Replace("\", "").Replace(":", "").Replace("|", "").Replace("?", "") & ".vb") <> "" Then
                 Dim tmpScript As New ScriptedObject("scripts\creatures\" & Replace(Name, """", "'") & ".vb", "", True)
                 TalkScript = tmpScript.Invoke("TalkScript")
                 tmpScript.Dispose()
@@ -369,7 +370,7 @@ Public Module WS_Creatures
 
             Update.SetUpdateFlag(EUnitFields.UNIT_FIELD_SUMMONEDBY, SummonedBy)
             Update.SetUpdateFlag(EUnitFields.UNIT_FIELD_CREATEDBY, CreatedBy)
-            Update.SetUpdateFlag(EUnitFields.UNIT_CREATED_BY_SPELL, createdbyspell)
+            Update.SetUpdateFlag(EUnitFields.UNIT_CREATED_BY_SPELL, CreatedBySpell)
 
             Update.SetUpdateFlag(EUnitFields.UNIT_FIELD_DISPLAYID, Me.Model)
             Update.SetUpdateFlag(EUnitFields.UNIT_FIELD_NATIVEDISPLAYID, CREATURESDatabase(ID).Model)
@@ -749,7 +750,7 @@ Public Module WS_Creatures
                 cDynamicFlags = DynamicFlags.UNIT_DYNFLAG_LOOTABLE
 
                 'ElseIf CType(CREATURESDatabase(ID), CreatureInfo).Loot_Skinning <> 0 Then
-                'GenerateLoot(Character, LootType.LOOTTYPE_SKINNNING) 
+                'GenerateLoot(Character, LootType.LOOTTYPE_SKINNNING)
                 'cUnitFlags += UnitFlags.UNIT_FLAG_SKINNABLE
                 '
                 ''DONE: Send skinnable and exit
@@ -759,7 +760,7 @@ Public Module WS_Creatures
                 'Dim UpdateDataSkinnable As New UpdateClass
                 'UpdateDataSkinnable.SetUpdateFlag(EUnitFields.UNIT_DYNAMIC_FLAGS, cDynamicFlags)
                 'UpdateDataSkinnable.SetUpdateFlag(EUnitFields.UNIT_FIELD_FLAGS, cUnitFlags)
-                'UpdateDataSkinnable.AddToPacket(SkinnablePacket, ObjectUpdateType.UPDATETYPE_VALUES, Me)
+                'UpdateDataSkinnable.AddToPacket(SkinnablePacket, ObjectUpdateType.UPDATETYPE_VALUES, Me, 0)
                 'UpdateDataSkinnable.Dispose()
                 'Character.Client.SendMultiplyPackets(SkinnablePacket)
                 'Character.SendToNearPlayers(SkinnablePacket)
@@ -1229,9 +1230,12 @@ Public Module WS_Creatures
                 ExpireTimer = New Threading.Timer(AddressOf Destroy, Nothing, 0, Duration)
             End If
 
-            WORLD_CREATUREs_Lock.AcquireWriterLock(DEFAULT_LOCK_TIMEOUT)
-            WORLD_CREATUREs.Add(GUID, Me)
-            WORLD_CREATUREs_Lock.ReleaseWriterLock()
+            Try
+                WORLD_CREATUREs_Lock.AcquireWriterLock(DEFAULT_LOCK_TIMEOUT)
+                WORLD_CREATUREs.Add(GUID, Me)
+                WORLD_CREATUREs_Lock.ReleaseWriterLock()
+            Catch
+            End Try
         End Sub
         Private Sub Dispose() Implements System.IDisposable.Dispose
             If Not Me.aiScript Is Nothing Then Me.aiScript.Dispose()

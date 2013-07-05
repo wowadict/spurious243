@@ -1,5 +1,5 @@
 ' 
-' Copyright (C) 2008 Spurious <http://SpuriousEmu.com>
+' Copyright (C) 2013 getMaNGOS <http://www.getMangos.co.uk>
 '
 ' This program is free software; you can redistribute it and/or modify
 ' it under the terms of the GNU General Public License as published by
@@ -258,7 +258,7 @@ Public Enum OPCODES18
     SMSG_ADDON_INFO = &H2EF                 '751    'SendEnableAddOns
 
     'Items
-    CMSG_ITEM_QUERY_SINGLE = &H56               '86 
+    CMSG_ITEM_QUERY_SINGLE = &H56               '86
     CMSG_ITEM_QUERY_MULTIPLE = &H57             '87     'Unhandled
     SMSG_ITEM_QUERY_SINGLE_RESPONSE = &H58      '88
     SMSG_ITEM_QUERY_MULTIPLE_RESPONSE = &H59    '89     'Unhandled
@@ -288,18 +288,18 @@ Public Enum OPCODES18
 
     'Creatures - Talking
     CMSG_GOSSIP_HELLO = &H17B                   '379
-    CMSG_GOSSIP_SELECT_OPTION = &H17C           '380  
+    CMSG_GOSSIP_SELECT_OPTION = &H17C           '380
     SMSG_GOSSIP_MESSAGE = &H17D                 '381
     SMSG_GOSSIP_COMPLETE = &H17E                '382
     CMSG_NPC_TEXT_QUERY = &H17F                 '383
     SMSG_NPC_TEXT_UPDATE = &H180                '384
     SMSG_GOSSIP_POI = &H224                     '548
-    SMSG_SPIRIT_HEALER_CONFIRM = &H222          '546  
+    SMSG_SPIRIT_HEALER_CONFIRM = &H222          '546
     CMSG_SPIRIT_HEALER_ACTIVATE = &H21C         '540
 
     'Characters
     CMSG_REPOP_REQUEST = &H15A                  '346
-    CMSG_RECLAIM_CORPSE = &H1D2                 '466  
+    CMSG_RECLAIM_CORPSE = &H1D2                 '466
     MSG_MINIMAP_PING = &H1D5                    '469
     CMSG_SET_SELECTION = &H13D                  '317
 
@@ -308,7 +308,7 @@ Public Enum OPCODES18
     CMSG_TUTORIAL_CLEAR = &HFF              '255
     CMSG_TUTORIAL_RESET = &H100             '256
     CMSG_SET_ACTION_BUTTON = &H128          '296
-    SMSG_EXPLORATION_EXPERIENCE = &H1F8     '504 
+    SMSG_EXPLORATION_EXPERIENCE = &H1F8     '504
 
     'Game Logout
     CMSG_PLAYER_LOGOUT = &H4A               '74
@@ -350,8 +350,8 @@ Public Enum OPCODES18
     MSG_MOVE_STOP_SWIM = 203
     MSG_MOVE_SET_FACING = 218
     MSG_MOVE_SET_PITCH = 219
-    MSG_MOVE_HEARTBEAT = &HEE               '238 
-    MSG_MOVE_FALL_LAND = &HC9               '201  
+    MSG_MOVE_HEARTBEAT = &HEE               '238
+    MSG_MOVE_FALL_LAND = &HC9               '201
     CMSG_AREATRIGGER = &HB4                 '180
     CMSG_ZONEUPDATE = &H1F4                 '500
     SMSG_FORCE_RUN_SPEED_CHANGE = &HE2                   '226   'c.SetRunSpeed
@@ -366,7 +366,7 @@ Public Enum OPCODES18
     SMSG_STOP_MIRROR_TIMER = 475            '475    'c.StopMirrorTimer
 
     MSG_MOVE_SET_RUN_SPEED = &HCD            '205
-    MSG_MOVE_SET_RUN_BACK_SPEED = &HCF       '207 
+    MSG_MOVE_SET_RUN_BACK_SPEED = &HCF       '207
     MSG_MOVE_SET_WALK_SPEED = &HD1           '209
     MSG_MOVE_SET_SWIM_SPEED = &HD3           '211
     MSG_MOVE_SET_SWIM_BACK_SPEED = &HD5      '213
@@ -423,7 +423,7 @@ Public Enum OPCODES18
 
     'Unhandled
     CMSG_MOVE_TIME_SKIPPED = &H2CE          '718
-    CMSG_NEXT_CINEMATIC_CAMERA = &HFB       '251   
+    CMSG_NEXT_CINEMATIC_CAMERA = &HFB       '251
     CMSG_COMPLETE_CINEMATIC = &HFC          '252
 End Enum
 
@@ -1544,7 +1544,7 @@ Enum AuthResponseCodes
     AUTH_NO_TIME = &H1E                         'Your WoW subscription has expired
     AUTH_DB_BUSY = &H1F                         'This session has timed out
     AUTH_SUSPENDED = &H20                       'This account has been temporarily suspended
-    AUTH_PARENTAL_CONTROL = &H21                'Access to this account blocked by parental controls 
+    AUTH_PARENTAL_CONTROL = &H21                'Access to this account blocked by parental controls
     AUTH_LOCKED_ENFORCED = &H22                 'You have applied a lock to your account.
 
     REALM_LIST_IN_PROGRESS = &H23               'Retrieving realm list
