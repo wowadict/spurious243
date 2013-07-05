@@ -1,4 +1,4 @@
-' 
+'
 ' Copyright (C) 2013 getMaNGOS <http://www.getMangos.co.uk>
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -39,7 +39,6 @@ Public Class AuthEngineClass
         Me.b = New Byte(20 - 1) {}
     End Sub
 
-
     Public Declare Function BN_add Lib "LIBEAY32" (ByVal r As IntPtr, ByVal a As IntPtr, ByVal b As IntPtr) As Integer
     Public Declare Function BN_bin2bn Lib "LIBEAY32" (ByVal ByteArrayIn As Byte(), ByVal length As Integer, ByVal [to] As IntPtr) As IntPtr
     Public Declare Function BN_bn2bin Lib "LIBEAY32" (ByVal a As IntPtr, ByVal [to] As Byte()) As Integer
@@ -50,7 +49,6 @@ Public Class AuthEngineClass
     Public Declare Function BN_mul Lib "LIBEAY32" (ByVal r As IntPtr, ByVal a As IntPtr, ByVal b As IntPtr, ByVal ctx As IntPtr) As Integer
     Public Declare Function BN_new Lib "LIBEAY32" () As IntPtr
 
-
     Public Sub Dispose() Implements System.IDisposable.Dispose
     End Sub
 #End Region
@@ -59,19 +57,19 @@ Public Class AuthEngineClass
     Private Sub CalculateB()
         Dim encoding1 As New UTF7Encoding
         AuthEngineClass.RAND_bytes(Me.b, 20)
-        Dim ptr1 As IntPtr = AuthEngineClass.BN_New
-        Dim ptr2 As IntPtr = AuthEngineClass.BN_New
-        Dim ptr3 As IntPtr = AuthEngineClass.BN_New
-        Dim ptr4 As IntPtr = AuthEngineClass.BN_New
-        Me.BNPublicB = AuthEngineClass.BN_New
-        Dim ptr5 As IntPtr = AuthEngineClass.BN_ctx_new
+        Dim ptr1 As IntPtr = AuthEngineClass.BN_new
+        Dim ptr2 As IntPtr = AuthEngineClass.BN_new
+        Dim ptr3 As IntPtr = AuthEngineClass.BN_new
+        Dim ptr4 As IntPtr = AuthEngineClass.BN_new
+        Me.BNPublicB = AuthEngineClass.BN_new
+        Dim ptr5 As IntPtr = AuthEngineClass.BN_CTX_new
         Array.Reverse(Me.b)
-        Me.BNb = AuthEngineClass.BN_Bin2BN(Me.b, Me.b.Length, IntPtr.Zero)
+        Me.BNb = AuthEngineClass.BN_bin2bn(Me.b, Me.b.Length, IntPtr.Zero)
         Array.Reverse(Me.b)
         AuthEngineClass.BN_mod_exp(ptr1, Me.BNg, Me.BNb, Me.BNn, ptr5)
         AuthEngineClass.BN_mul(ptr2, Me.BNk, Me.BNv, ptr5)
         AuthEngineClass.BN_add(ptr3, ptr1, ptr2)
-        AuthEngineClass.BN_Mod(Me.BNPublicB, ptr3, Me.BNn, ptr5)
+        AuthEngineClass.BN_mod(Me.BNPublicB, ptr3, Me.BNn, ptr5)
         AuthEngineClass.BN_bn2bin(Me.BNPublicB, Me.PublicB)
         Array.Reverse(Me.PublicB)
     End Sub
@@ -92,12 +90,12 @@ Public Class AuthEngineClass
         Me.M2 = algorithm1.ComputeHash(buffer1)
     End Sub
     Private Sub CalculateS()
-        Dim ptr1 As IntPtr = AuthEngineClass.BN_New
-        Dim ptr2 As IntPtr = AuthEngineClass.BN_New
-        Dim ptr3 As IntPtr = AuthEngineClass.BN_New
-        Dim ptr4 As IntPtr = AuthEngineClass.BN_New
-        Me.BNS = AuthEngineClass.BN_New
-        Dim ptr5 As IntPtr = AuthEngineClass.BN_ctx_new
+        Dim ptr1 As IntPtr = AuthEngineClass.BN_new
+        Dim ptr2 As IntPtr = AuthEngineClass.BN_new
+        Dim ptr3 As IntPtr = AuthEngineClass.BN_new
+        Dim ptr4 As IntPtr = AuthEngineClass.BN_new
+        Me.BNS = AuthEngineClass.BN_new
+        Dim ptr5 As IntPtr = AuthEngineClass.BN_CTX_new
         Me.S = New Byte(32 - 1) {}
         AuthEngineClass.BN_mod_exp(ptr1, Me.BNv, Me.BNU, Me.BNn, ptr5)
         AuthEngineClass.BN_mul(ptr2, Me.BNA, ptr1, ptr5)
@@ -114,16 +112,16 @@ Public Class AuthEngineClass
         Buffer.BlockCopy(Me.PublicB, 0, buffer1, a.Length, Me.PublicB.Length)
         Me.U = algorithm1.ComputeHash(buffer1)
         Array.Reverse(Me.U)
-        Me.BNU = AuthEngineClass.BN_Bin2BN(Me.U, Me.U.Length, IntPtr.Zero)
+        Me.BNU = AuthEngineClass.BN_bin2bn(Me.U, Me.U.Length, IntPtr.Zero)
         Array.Reverse(Me.U)
         Array.Reverse(Me.A)
-        Me.BNA = AuthEngineClass.BN_Bin2BN(Me.A, Me.A.Length, IntPtr.Zero)
+        Me.BNA = AuthEngineClass.BN_bin2bn(Me.A, Me.A.Length, IntPtr.Zero)
         Array.Reverse(Me.A)
         Me.CalculateS()
     End Sub
     Private Sub CalculateV()
-        Me.BNv = AuthEngineClass.BN_New
-        Dim ptr1 As IntPtr = AuthEngineClass.BN_ctx_new
+        Me.BNv = AuthEngineClass.BN_new
+        Dim ptr1 As IntPtr = AuthEngineClass.BN_CTX_new
         AuthEngineClass.BN_mod_exp(Me.BNv, Me.BNg, Me.BNx, Me.BNn, ptr1)
         Me.CalculateB()
     End Sub
@@ -145,19 +143,18 @@ Public Class AuthEngineClass
         Buffer.BlockCopy(Me.salt, 0, buffer5, 0, Me.salt.Length)
         buffer3 = algorithm1.ComputeHash(buffer5)
         Array.Reverse(buffer3)
-        Me.BNx = AuthEngineClass.BN_Bin2BN(buffer3, buffer3.Length, IntPtr.Zero)
+        Me.BNx = AuthEngineClass.BN_bin2bn(buffer3, buffer3.Length, IntPtr.Zero)
         Array.Reverse(Me.g)
-        Me.BNg = AuthEngineClass.BN_Bin2BN(Me.g, Me.g.Length, IntPtr.Zero)
+        Me.BNg = AuthEngineClass.BN_bin2bn(Me.g, Me.g.Length, IntPtr.Zero)
         Array.Reverse(Me.g)
         Array.Reverse(Me.k)
-        Me.BNk = AuthEngineClass.BN_Bin2BN(Me.k, Me.k.Length, IntPtr.Zero)
+        Me.BNk = AuthEngineClass.BN_bin2bn(Me.k, Me.k.Length, IntPtr.Zero)
         Array.Reverse(Me.k)
         Array.Reverse(Me.N)
-        Me.BNn = AuthEngineClass.BN_Bin2BN(Me.N, Me.N.Length, IntPtr.Zero)
+        Me.BNn = AuthEngineClass.BN_bin2bn(Me.N, Me.N.Length, IntPtr.Zero)
         Array.Reverse(Me.N)
         Me.CalculateV()
     End Sub
-
 
     Public Sub CalculateM1()
         Dim algorithm1 As New SHA1Managed
@@ -326,7 +323,6 @@ Public Class AuthEngineClass
 #End Region
 
 #Region "AuthEngine.Variables"
-
 
     Private A As Byte()
     Private b As Byte()

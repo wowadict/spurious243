@@ -1,4 +1,4 @@
-' 
+'
 ' Copyright (C) 2013 getMaNGOS <http://www.getMangos.co.uk>
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -27,9 +27,7 @@ Imports System.Collections.Generic
 Imports mangosVB.Common.BaseWriter
 Imports mangosVB.Common
 
-
 Public Module WS_Main
-
 
 #Region "Global.Variables"
     'Players' containers
@@ -143,9 +141,7 @@ Public Module WS_Main
             Config = oXS.Deserialize(oStmR)
             oStmR.Close()
 
-
             Console.WriteLine(".[done]")
-
 
             'DONE: Setting SQL Connection
             Database.SQLDBName = Config.SQLDBName
@@ -176,7 +172,6 @@ Public Module WS_Main
         End Select
     End Sub
 #End Region
-
 
     <System.MTAThreadAttribute()> _
     Sub Main()
@@ -234,7 +229,6 @@ Public Module WS_Main
         Regenerator.Dispose()
         AreaTriggers.Dispose()
     End Sub
-
 
     Public Sub WaitConsoleCommand()
         Dim tmp As String = "", CommandList() As String, cmds() As String
@@ -396,6 +390,5 @@ Public Module WS_Main
         tw.Write(EX.ToString)
         tw.Close()
     End Sub
-
 
 End Module

@@ -1,4 +1,4 @@
-' 
+'
 ' Copyright (C) 2013 getMaNGOS <http://www.getMangos.co.uk>
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -20,7 +20,6 @@ Imports System
 Imports System.IO
 Imports mangosVB.Common
 Imports mangosVB.Common.BaseWriter
-
 
 Public Module WS_DBCLoad
 
@@ -81,7 +80,6 @@ Public Module WS_DBCLoad
 
         InitializeLoadDBCs()
 
-
         Try
             'Set all characters offline
             Database.Update("UPDATE characters SET char_online = 0;")
@@ -95,8 +93,6 @@ Public Module WS_DBCLoad
         InitializeMaps()
         InitializeChatChannels()
     End Sub
-
-
 
 #End Region
 

@@ -1,4 +1,4 @@
-' 
+'
 ' Copyright (C) 2013 getMaNGOS <http://www.getMangos.co.uk>
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -43,17 +43,17 @@ Public Class SQL
 #End Region
 
 #Region "COM GUIDs"
-    ' These  GUIDs provide the COM identity for this class 
-    ' and its COM interfaces. If you change them, existing 
+    ' These  GUIDs provide the COM identity for this class
+    ' and its COM interfaces. If you change them, existing
     ' clients will no longer be able to access the class.
     Public Const ClassId As String = "ECC3DCA3-E394-4D4F-BCC9-FBC3A999B8D3"
     Public Const InterfaceId As String = "4A2A2AF5-39A2-44BA-9881-57AA6D867D33"
     Public Const EventsId As String = "BD50B4A8-D148-4C52-B8FC-469119FBB71D"
 #End Region
 
-    ' A creatable COM class must have a Public Sub New() 
-    ' with no parameters, otherwise, the class will not be 
-    ' registered in the COM registry and cannot be created 
+    ' A creatable COM class must have a Public Sub New()
+    ' with no parameters, otherwise, the class will not be
+    ' registered in the COM registry and cannot be created
     ' via CreateObject.
     Public Sub New()
         MyBase.New()
@@ -197,7 +197,6 @@ Public Class SQL
                     '    Dim OracleConn As New OracleConnection([String].Format("Host={0};Port={4};User Id={1};Password={2};Data Source={3};", SQLHost, SQLUser, SQLPass, SQLDBName, SQLPort))
                     '    OracleConn.Open()
                     '    RaiseEvent SQLMessage(EMessages.ID_Message, "Oracle Connection Opened Successfully [" & SQLUser & "@" & SQLHost & "]")
-
 
             End Select
 
@@ -352,7 +351,7 @@ Public Class SQL
             Select Case v_SQLType
                 Case DB_Type.MySQL
                     Monitor.Enter(MySQLConn)
-                    Dim MySQLCommand As New MySQLCommand(sqlquery, MySQLConn)
+                    Dim MySQLCommand As New MySqlCommand(sqlquery, MySQLConn)
                     Dim MySQLAdapter As New MySqlDataAdapter(MySQLCommand)
 
                     If Result Is Nothing Then
@@ -361,7 +360,6 @@ Public Class SQL
                         Result.Clear()
                     End If
                     MySQLAdapter.Fill(Result)
-
 
                 Case DB_Type.MSSQL
                     Monitor.Enter(MSSQLConn)
@@ -374,7 +372,6 @@ Public Class SQL
                         Result.Clear()
                     End If
                     MSSQLAdapter.Fill(Result)
-
 
                     'Case DB_Type.Oracle
                     '    Monitor.Enter(OracleConn)
@@ -450,7 +447,6 @@ Public Class SQL
                     MySQLTransaction.Commit()
                     Console.WriteLine("transaction completed")
 
-
                 Case DB_Type.MSSQL
                     Monitor.Enter(MSSQLConn)
                     Dim MSSQLTransaction As SqlTransaction = MSSQLConn.BeginTransaction()
@@ -459,7 +455,6 @@ Public Class SQL
                     MSSQLCommand.ExecuteNonQuery()
                     MSSQLTransaction.Commit()
                     Console.WriteLine("transaction completed")
-
 
                     'Case DB_Type.Oracle
                     '    Monitor.Enter(OracleConn)
@@ -531,7 +526,6 @@ Public Class SQL
                     Dim result As New DataTable
                     MySQLAdapter.Fill(result)
 
-
                 Case DB_Type.MSSQL
                     Monitor.Enter(MSSQLConn)
                     Dim MSSQLCommand As New SqlCommand(sqlquery, MSSQLConn)
@@ -539,7 +533,6 @@ Public Class SQL
 
                     Dim result As New DataTable
                     MSSQLAdapter.Fill(result)
-
 
                     'Case DB_Type.Oracle
                     '    Monitor.Enter(OracleConn)
@@ -574,5 +567,3 @@ Public Class SQL
 #End Region
 
 End Class
-
-

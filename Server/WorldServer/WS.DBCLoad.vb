@@ -1,4 +1,4 @@
-' 
+'
 ' Copyright (C) 2013 getMaNGOS <http://www.getMangos.co.uk>
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -80,7 +80,6 @@ Public Module WS_DBCLoad
             Console.ForegroundColor = System.ConsoleColor.Gray
         End Try
     End Sub
-
 
 #End Region
 #Region "Spells"
@@ -434,7 +433,6 @@ Public Module WS_DBCLoad
                     SPELLs(ID).RequiredAreaID = SpellDBC.Item(i, 214)
                     ''''SPELLs(id).RuneCostID = SpellDBC.Item(i, 216)    ' THIS IS USED IN WOTLK
                     ''''SPELLs(id).SpellMissleID = SpellDBC.Item(i, 217) ' THIS IS USED IN WOTLK
-
 
                 Catch e As Exception
                     Log.WriteLine(LogType.FAILED, "Line {0} caused error: {1}", i, e.ToString)

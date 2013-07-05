@@ -1,4 +1,4 @@
-﻿' 
+﻿'
 ' Copyright (C) 2013 getMaNGOS <http://www.getMangos.co.uk>
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -16,7 +16,6 @@
 ' Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 '
 
-
 Imports System.Threading
 Imports System.Net.Sockets
 Imports System.Xml.Serialization
@@ -27,9 +26,7 @@ Imports System.Runtime.CompilerServices
 Imports mangosVB.Common.BaseWriter
 Imports mangosVB.Common
 
-
 Public Module WC_Handlers_Auth
-
 
     Public Sub SendLoginOK(ByRef Client As ClientClass)
         Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_AUTH_SESSION [{2}]", Client.IP, Client.Port, Client.Account)
@@ -80,7 +77,6 @@ Public Module WC_Handlers_Auth
         Next
         Client.Account = tmp
 
-
         'DONE: Set Client.SS_Hash
         Dim result As New DataTable
         Dim query As String
@@ -103,18 +99,12 @@ Public Module WC_Handlers_Auth
         Next
         Client.Encryption = True
 
-
-
-
         'DONE: If server full then queue, If GM/Admin let in
         If CLIENTs.Count > Config.ServerLimit And Client.Access <= AccessLevel.Player Then
             ThreadPool.QueueUserWorkItem(New WaitCallback(AddressOf Client.EnQueue))
         Else
             SendLoginOK(Client)
         End If
-
-
-
 
         'DONE: Addons info reading
         Dim decompressBuffer(packet.Data.Length - packet.Offset) As Byte
@@ -188,7 +178,6 @@ Public Module WC_Handlers_Auth
         response.Dispose()
     End Sub
 
-
     Public Sub On_CMSG_UPDATE_ACCOUNT_DATA(ByRef packet As PacketClass, ByRef Client As ClientClass)
         Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_UPDATE_ACCOUNT_DATA", Client.IP, Client.Port)
         Dim DataID As Integer = packet.GetInt32
@@ -205,8 +194,6 @@ Public Module WC_Handlers_Auth
     Public Sub On_CMSG_REQUEST_ACCOUNT_DATA(ByRef packet As PacketClass, ByRef Client As ClientClass)
         Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_REQUEST_ACCOUNT_DATA", Client.IP, Client.Port)
     End Sub
-
-
 
     <Flags()> _
     Private Enum CharacterFlagState
@@ -257,7 +244,6 @@ Public Module WC_Handlers_Auth
             Account_ID = CType(MySQLQuery.Rows(0).Item("account_id"), Integer)
             MySQLQuery.Clear()
             Database.Query(String.Format("SELECT * FROM characters WHERE account_id = ""{0}"" ORDER BY char_guid;", Account_ID), MySQLQuery)
-
 
             'DONE: Make The Packet
             response.AddInt8(MySQLQuery.Rows.Count)
@@ -487,7 +473,6 @@ Public Module WC_Handlers_Auth
                 End If
             End If
 
-
             If WS.InstanceCheck(Client, Client.Character.Map) Then
                 Client.Character.GetWorld.ClientConnect(Client.Index, Client.GetClientInfo)
                 Client.Character.IsInWorld = True
@@ -535,7 +520,6 @@ Public Module WC_Handlers_Auth
         Try
             If Not WS.InstanceCheck(Client, Client.Character.Map) Then Exit Sub
 
-
             If Client.Character.IsInWorld Then
                 'Inside server transfer
                 Client.Character.GetWorld.ClientLogin(Client.Index, Client.Character.GUID)
@@ -551,8 +535,6 @@ Public Module WC_Handlers_Auth
             Log.WriteLine(LogType.CRITICAL, "{0}", ex.ToString)
         End Try
 
-
     End Sub
-
 
 End Module

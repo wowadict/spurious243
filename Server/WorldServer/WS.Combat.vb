@@ -1,4 +1,4 @@
-' 
+'
 ' Copyright (C) 2013 getMaNGOS <http://www.getMangos.co.uk>
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -22,9 +22,7 @@ Imports mangosVB.Common.BaseWriter
 
 Public Module WS_Combat
 
-
 #Region "WS.Combat.Constants"
-
 
     Public Enum ProcFlags
         PROC_FLAG_NONE = &H0                            ' None
@@ -70,7 +68,6 @@ Public Module WS_Combat
 
 #End Region
 #Region "WS.Combat.Calculations"
-
 
     Public Sub DoEmote(ByVal AnimationID As Integer, ByRef Unit As BaseObject)
         'EMOTE_ONESHOT_WOUNDCRITICAL
@@ -259,7 +256,6 @@ Public Module WS_Combat
         If Armor > 0.75F Then Armor = 0.75F
         result.Damage -= result.Damage * Armor
 
-
         'TODO: Set aurastate!
         'DONE: Rolling the dice
         Dim roll As Single = Rnd.Next(0, 10000) / 100
@@ -406,7 +402,6 @@ Public Module WS_Combat
                         Return 5 - skillDiference * 0.2F
                     End If
 
-
                 End If
             End With
         End If
@@ -536,8 +531,6 @@ Public Module WS_Combat
                     Return CType(.Skills(tmpSkill), TSkill).Current
                 End If
 
-
-
             End With
         End If
 
@@ -594,10 +587,8 @@ Public Module WS_Combat
         End If
     End Sub
 
-
 #End Region
 #Region "WS.Combat.Framework"
-
 
     Public Enum AttackVictimState As Integer
         'ATTACK_HIT = 1
@@ -630,7 +621,6 @@ Public Module WS_Combat
         HIT_RESIST = HITINFO_RESIST
         HIT_CRUSHING_BLOW = HITINFO_CRUSHING
         HIT_GLANCING_BLOW = HITINFO_GLANCING
-
 
         HITINFO_NORMALSWING = &H0
         HITINFO_NORMALSWING2 = &H2
@@ -1045,8 +1035,6 @@ Public Module WS_Combat
         packet.Dispose()
     End Sub
 
-
 #End Region
-
 
 End Module

@@ -1,4 +1,4 @@
-' 
+'
 ' Copyright (C) 2013 getMaNGOS <http://www.getMangos.co.uk>
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -32,7 +32,7 @@ Public Module WS_Mail
         MAIL_RETURNED = 3
         MAIL_DELETED = 4
         MAIL_MADE_PERMANENT = 5
-		
+
     End Enum
     Private Enum MailSentError
         NO_ERROR = 0
@@ -41,9 +41,9 @@ Public Module WS_Mail
         NOT_ENOUGHT_MONEY = 3
         CHARACTER_NOT_FOUND = 4
         NOT_YOUR_ALLIANCE = 5
-		RECIPIENT_CAP_REACHED = 6
-		CANT_SEND_WRAPPED_COD = 7
-		MAIL_AND_CHAT_SUSPENDED = 8
+        RECIPIENT_CAP_REACHED = 6
+        CANT_SEND_WRAPPED_COD = 7
+        MAIL_AND_CHAT_SUSPENDED = 8
         INTERNAL_ERROR = 9
     End Enum
 
@@ -59,10 +59,8 @@ Public Module WS_Mail
         AUCTION = 2
     End Enum
 
-
 #End Region
 #Region "WS.Mail.Handlers"
-
 
     Public Sub On_CMSG_MAIL_RETURN_TO_SENDER(ByRef packet As PacketClass, ByRef Client As ClientClass)
         If (packet.Data.Length - 1) < 17 Then Exit Sub
@@ -539,6 +537,5 @@ Public Module WS_Mail
     End Sub
 
 #End Region
-
 
 End Module

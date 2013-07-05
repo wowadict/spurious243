@@ -1,4 +1,4 @@
-' 
+'
 ' Copyright (C) 2013 getMaNGOS <http://www.getMangos.co.uk>
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -20,7 +20,6 @@ Imports System.Threading
 Imports System.Reflection
 Imports System.Collections.Generic
 Imports mangosVB.Common.BaseWriter
-
 
 #Region "WS.Commands.Attributes"
 <AttributeUsage(AttributeTargets.Method, Inherited:=False, AllowMultiple:=True)> _
@@ -65,12 +64,9 @@ Public Class ChatCommandAttribute
 End Class
 #End Region
 
-
 Public Module WS_Commands
 
-
 #Region "WS.Commands.Framework"
-
 
     Public Const WardenGUID As ULong = Integer.MaxValue
     Public Const WardenNAME As String = "Warden"
@@ -83,8 +79,6 @@ Public Module WS_Commands
         Developer = 5
     End Enum
 
-
-
     Public ChatCommands As New Dictionary(Of String, ChatCommand)
     Public ScriptedChatCommands As ScriptedObject
     Public Class ChatCommand
@@ -93,7 +87,6 @@ Public Module WS_Commands
         Public CommandDelegate As ChatCommandDelegate
     End Class
     Public Delegate Function ChatCommandDelegate(ByRef c As CharacterObject, ByVal Message As String) As Boolean
-
 
     Public Sub RegisterChatCommands()
         ScriptedChatCommands = New ScriptedObject("scripts\Commands.vb", "mangosVB.Commands.dll", False)
@@ -138,7 +131,6 @@ Public Module WS_Commands
             Next
         Next
 
-
     End Sub
     Public Sub OnCommand(ByRef Client As ClientClass, ByVal Message As String)
         Try
@@ -156,7 +148,6 @@ Public Module WS_Commands
             'DONE: Get character name (there can be no character after the command)
             Dim Name As String = Client.Character.Name
 
-
             If Command Is Nothing Then
                 Client.Character.CommandResponse("Unknown command.")
             ElseIf Command.CommandAccess > Client.Character.Access Then
@@ -173,10 +164,8 @@ Public Module WS_Commands
         End Try
     End Sub
 
-
 #End Region
 #Region "WS.Commands.InternalCommands"
-
 
     <ChatCommandAttribute("Help", "HELP <CMD>" & vbNewLine & "Displays usage information about command, if no command specified - displays list of available commands.")> _
     Public Function Help(ByRef c As CharacterObject, ByVal Message As String) As Boolean
@@ -226,7 +215,6 @@ Public Module WS_Commands
 
         x += 1
         If x = 5 Then x = 0
-
 
         Dim packet As New PacketClass(OPCODES.SMSG_UPDATE_OBJECT)
         packet.AddInt32(1)
@@ -332,9 +320,9 @@ Public Module WS_Commands
             Dim Targets As New SpellTargets
             Targets.SetTarget_UNIT(WORLD_CREATUREs(c.TargetGUID))
             CType(SPELLs(SpellID), SpellInfo).Cast(CType(c, CharacterObject), Targets, 0)
-        ElseIf CHARACTERS.ContainsKey(c.TargetGUID) Then
+        ElseIf CHARACTERs.ContainsKey(c.TargetGUID) Then
             Dim Targets As New SpellTargets
-            Targets.SetTarget_UNIT(CHARACTERS(c.TargetGUID))
+            Targets.SetTarget_UNIT(CHARACTERs(c.TargetGUID))
             CType(SPELLs(SpellID), SpellInfo).Cast(CType(c, CharacterObject), Targets, 0)
         Else
             c.CommandResponse(String.Format("GUID=[{0:X}] not found or unsupported.", c.TargetGUID))
@@ -440,11 +428,9 @@ Public Module WS_Commands
                 Next
             End With
         End If
-       
+
         Return True
     End Function
-
-
 
     '****************************************** CHAT COMMANDs ******************************************************
     <ChatCommandAttribute("Broadcast", "BROADCAST <TEXT> - Send text message to all players on the server.", AccessLevel.GameMaster)> _
@@ -487,7 +473,6 @@ Public Module WS_Commands
         If tmp.Length <> 2 Then Return False
         Dim Type As Integer = tmp(0)
         Dim Text As String = tmp(1)
-
 
         Dim packet As New PacketClass(OPCODES.SMSG_SERVER_MESSAGE)
         packet.AddInt32(Type)
@@ -666,7 +651,6 @@ Public Module WS_Commands
         Dim tmp() As String = Split(Message, " ", 2)
         If tmp.Length < 1 Then Return False
 
-
         Dim id As Integer = tmp(0)
         Dim Count As Integer = 1
         If tmp.Length = 2 Then Count = tmp(1)
@@ -700,7 +684,6 @@ Public Module WS_Commands
     <ChatCommandAttribute("LearnSkill", "LearnSkill <ID> <CURRENT> <MAX> - Add skill id X with value Y of Z to selected character.")> _
     Public Function cmdLearnSkill(ByRef c As CharacterObject, ByVal Message As String) As Boolean
         If Message = "" Then Return False
-
 
         If CHARACTERs.ContainsKey(c.TargetGUID) Then
             Dim tmp() As String
@@ -1032,7 +1015,6 @@ Public Module WS_Commands
             c.CommandResponse(String.Format("Location {0} NOT found in Database", location))
         End If
 
-
         Return True
     End Function
 
@@ -1163,7 +1145,6 @@ Public Module WS_Commands
         Return True
     End Function
 
-
     <ChatCommandAttribute("Ban", "BAN <ACCOUNT> - Ban specified account from server.")> _
     Public Function cmdBan(ByRef c As CharacterObject, ByVal Name As String) As Boolean
         If Name = "" Then Return False
@@ -1275,14 +1256,12 @@ Public Module WS_Commands
         Return True
     End Function
 
-
     '****************************************** MISC COMMANDs *******************************************************
     <ChatCommandAttribute("SetGM", "SETGM <FLAG> <INVISIBILITY> - Toggles gameMaster status. You can use values like On/Off/1/0.")> _
     Public Function cmdSetGM(ByRef c As CharacterObject, ByVal Message As String) As Boolean
         Dim tmp() As String = Split(Message, " ", 2)
         Dim value1 As String = tmp(0)
         Dim value2 As String = tmp(1)
-
 
         'Commnad: .setgm <gmflag:0/1/off/on> <invisibility:0/1/off/on>
         If value1 = "0" Or UCase(value1) = "OFF" Then
@@ -1313,7 +1292,6 @@ Public Module WS_Commands
         Dim Type As Integer = tmp(0)
         Dim Intensity As Single = tmp(1)
 
-
         Dim MySQLQuery As New DataTable
         Database.Query(String.Format("SELECT * FROM weather WHERE weather_zone = {0};", c.ZoneID), MySQLQuery)
         If MySQLQuery.Rows.Count = 0 Then
@@ -1325,7 +1303,6 @@ Public Module WS_Commands
 
         Return True
     End Function
-
 
     '****************************************** SPAWNING COMMANDs ***************************************************
     <ChatCommandAttribute("Del", "DEL <ID> - Delete selected creature or gameobject."), _
@@ -1358,9 +1335,6 @@ Public Module WS_Commands
             c.CommandResponse("Game object deleted.")
 
         End If
-
-
-
 
         Return True
     End Function
@@ -1475,7 +1449,6 @@ Public Module WS_Commands
             c.CommandResponse(String.Format("Selected [{0}] game object at distance {1}.", WORLD_GAMEOBJECTs(c.TargetGUID).Name, minDistance))
         End If
 
-
         Return True
     End Function
     <ChatCommandAttribute("AddGO", "ADDGO <ID> - Spawn game object at your position."), _
@@ -1512,12 +1485,8 @@ Public Module WS_Commands
         Return True
     End Function
 
-
-
-
 #End Region
 #Region "WS.Commands.InternalCommands.HelperSubs"
-
 
     Public Function GetGUID(ByVal Name As String) As ULong
         Dim MySQLQuery As New DataTable
@@ -1558,10 +1527,6 @@ Public Module WS_Commands
         UpdateData.Dispose()
     End Function
 
-
 #End Region
 
-
 End Module
-
-

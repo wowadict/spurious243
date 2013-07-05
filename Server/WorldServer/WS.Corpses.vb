@@ -1,4 +1,4 @@
-' 
+'
 ' Copyright (C) 2013 getMaNGOS <http://www.getMangos.co.uk>
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -124,8 +124,6 @@ Public Module WS_Corpses
             tmpCMD = tmpCMD & ", corpse_items"
             tmpValues = tmpValues & ", """ & Join(temp, " ") & """"
 
-
-
             tmpCMD = tmpCMD & ") " & tmpValues & ");"
             Database.Update(tmpCMD)
         End Sub
@@ -218,7 +216,7 @@ Public Module WS_Corpses
 
             Dim list() As ULong
 
-                        'DONE: Sending to players in nearby cells
+            'DONE: Sending to players in nearby cells
             Dim packet As New PacketClass(OPCODES.SMSG_UPDATE_OBJECT)
             packet.AddInt32(1)
             'packet.AddInt8(0)

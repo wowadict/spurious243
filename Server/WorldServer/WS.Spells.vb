@@ -1,4 +1,4 @@
-' 
+'
 ' Copyright (C) 2013 getMaNGOS <http://www.getMangos.co.uk>
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -476,9 +476,6 @@ Public Module WS_Spells
         TARGET_UNK54 = 54
         TARGET_SELECTED_PARTY_MEMBER = 57           'Puts a pirate costume on targeted party member.
 
-
-
-
     End Enum
 
     Public Enum ShapeshiftForm As Byte
@@ -590,7 +587,6 @@ Public Module WS_Spells
                 Return manaType
         End Select
     End Function
-
 
 #End Region
 #Region "WS.Spells.Framework"
@@ -759,7 +755,6 @@ Public Module WS_Spells
             spellStart.Dispose()
 
             'TODO: If ChannelInterruptFlags <>0 then START_CHANNEL
-
 
             'PREPEARING SPELL
             Dim tmpRandom As Integer
@@ -1175,8 +1170,6 @@ SkipShapeShift:
                     Exit Sub
             End Select
 
-
-
             If TypeOf Caster Is CharacterObject Then CType(Caster, CharacterObject).Client.SendMultiplyPackets(packet)
             Caster.SendToNearPlayers(packet)
             packet.Dispose()
@@ -1387,7 +1380,6 @@ SkipShapeShift:
         End Sub
     End Class
 
-
     Public Class CastSpellParameters
         Public tmpTargets As SpellTargets
         Public tmpCaster As BaseObject
@@ -1545,7 +1537,6 @@ SkipShapeShift:
 #End Region
 #Region "WS.Spells.Database"
 
-
     Public SPELLs As New Dictionary(Of Integer, SpellInfo)(29000)
 
     Public SpellCastTime As New Dictionary(Of Integer, Integer)
@@ -1553,7 +1544,6 @@ SkipShapeShift:
     Public SpellRange As New Dictionary(Of Integer, Single)
     Public SpellDuration As New Dictionary(Of Integer, Integer)
     Public SpellFocusObject As New Dictionary(Of Integer, String)
-
 
     Public Sub InitializeSpellDB()
         Dim i As Integer
@@ -1699,10 +1689,6 @@ SkipShapeShift:
         'SPELL_EFFECTs(133) = AddressOf SPELL_EFFECT_FORGET
         'SPELL_EFFECTs(134) = AddressOf SPELL_EFFECT_KILL_CREDIT
         'SPELL_EFFECTs(135) = AddressOf SPELL_EFFECT_SUMMON_PET_NEW
-
-
-
-
 
         For i = 0 To AURAs_COUNT
             AURAs(i) = AddressOf SPELL_AURA_NONE
@@ -1936,7 +1922,6 @@ SkipShapeShift:
         'AURAs(	225	) = AddressOf 	                                                    '
         AURAs(226) = AddressOf SPELL_AURA_PERIODIC_DUMMY                                'Periodic dummy
     End Sub
-
 
 #End Region
 
@@ -2554,13 +2539,11 @@ SkipShapeShift:
             Exit Function
         End If
 
-
         Dim Damage As Integer = SpellInfo.GetValue(Caster.Level)
 
         If TypeOf Caster Is CharacterObject Then
             Damage += SpellInfo.valuePerLevel * CType(Caster, CharacterObject).Level
         End If
-
 
         '! Only 1 target everytime, so no need to check
         'Select Case SpellInfo.implicitTargetA
@@ -2569,19 +2552,10 @@ SkipShapeShift:
         '    Case SpellImplicitTargets.TARGET_SELECTED_ENEMY
         'End Select
 
-
-
-
-
-
-
-
-
         'DONE: Get mana from victim
         Target.unitTarget.Mana.Current -= Damage
         'DONE: Give mana to caster
         Caster.Mana.Current += Damage
-
 
         'DONE: Send victim mana update, for near
         If GuidIsCreature(Target.unitTarget.GUID) Then
@@ -2814,7 +2788,6 @@ SkipShapeShift:
                 Return SpellFailedReason.CAST_FAIL_BAD_IMPLICIT_TARGETS
         End Select
 
-
         Return SpellFailedReason.CAST_NO_ERROR
     End Function
 
@@ -2979,7 +2952,6 @@ SkipShapeShift:
         Return SpellFailedReason.CAST_NO_ERROR
     End Function
 
-
     Public Function SPELL_EFFECT_WEAPON_DAMAGE_NOSCHOOL(ByRef Target As SpellTargets, ByRef Caster As BaseUnit, ByRef SpellInfo As SpellEffect, ByVal SpellID As Integer, ByRef Infected As ArrayList, ByRef Item As ItemObject) As SpellFailedReason
 
         If TypeOf Caster Is CharacterObject Then
@@ -2991,7 +2963,6 @@ SkipShapeShift:
             'TODO: Creatures still cant cast this spell
             Return SpellFailedReason.CAST_FAIL_NOT_READY
         End If
-
 
         Select Case SpellInfo.implicitTargetA
             Case SpellImplicitTargets.TARGET_SELECTED_ENEMY
@@ -3012,10 +2983,8 @@ SkipShapeShift:
                 Return SpellFailedReason.CAST_FAIL_BAD_IMPLICIT_TARGETS
         End Select
 
-
         Return SpellFailedReason.CAST_NO_ERROR
     End Function
-
 
     Public Function SPELL_EFFECT_HONOR(ByRef Target As SpellTargets, ByRef Caster As BaseUnit, ByRef SpellInfo As SpellEffect, ByVal SpellID As Integer, ByRef Infected As ArrayList, ByRef Item As ItemObject) As SpellFailedReason
 
@@ -3024,13 +2993,8 @@ SkipShapeShift:
             CType(Target.unitTarget, CharacterObject).HonorSave()
         End If
 
-
         Return SpellFailedReason.CAST_NO_ERROR
     End Function
-
-
-
-
 
     Private Const SLOT_NOT_FOUND As Integer = -1
     Private Const SLOT_CREATE_NEW As Integer = -2
@@ -3468,7 +3432,6 @@ SkipShapeShift:
                 'CAST_FAIL_CANT_START_DUEL_STEALTHED
                 'CAST_FAIL_NO_DUELING_HERE
 
-
                 'DONE: Get middle coordinate
                 Dim flagX As Single = Caster.positionX + (Target.unitTarget.positionX - Caster.positionX) / 2
                 Dim flagY As Single = Caster.positionY + (Target.unitTarget.positionY - Caster.positionY) / 2
@@ -3522,12 +3485,6 @@ SkipShapeShift:
 
         Return SpellFailedReason.CAST_NO_ERROR
     End Function
-
-
-
-
-
-
 
     Public Function GetEnemyAtPoint(ByRef c As BaseUnit, ByVal PosX As Single, ByVal PosY As Single, ByVal PosZ As Single, ByVal Distance As Single) As List(Of BaseUnit)
         Dim result As New List(Of BaseUnit)
@@ -3651,7 +3608,6 @@ SkipShapeShift:
 
 #End Region
 #Region "WS.Spells.SpellAuraEffects"
-
 
     Public Enum AuraAction As Byte
         AURA_ADD
@@ -4134,7 +4090,6 @@ SkipShapeShift:
 
     End Sub
 
-
     Public Sub SPELL_AURA_GHOST(ByRef Target As BaseUnit, ByRef Caster As BaseUnit, ByRef EffectInfo As SpellEffect, ByVal SpellID As Integer, ByVal StackCount As Integer, ByVal Action As AuraAction)
         If Not TypeOf Target Is CharacterObject Then Exit Sub
 
@@ -4568,7 +4523,6 @@ SkipShapeShift:
                 Exit Sub
         End Select
     End Sub
-
 
     Public Sub SPELL_AURA_MOUNTED(ByRef Target As BaseUnit, ByRef Caster As BaseUnit, ByRef EffectInfo As SpellEffect, ByVal SpellID As Integer, ByVal StackCount As Integer, ByVal Action As AuraAction)
 
@@ -5210,7 +5164,6 @@ SkipShapeShift:
 
     End Sub
 
-
     Public Sub SPELL_AURA_MOD_BASE_RESISTANCE(ByRef Target As BaseUnit, ByRef Caster As BaseUnit, ByRef EffectInfo As SpellEffect, ByVal SpellID As Integer, ByVal StackCount As Integer, ByVal Action As AuraAction)
         If Not TypeOf Target Is CharacterObject Then Exit Sub
 
@@ -5437,7 +5390,6 @@ SkipShapeShift:
 
         End Select
 
-
         If TypeOf Target Is CharacterObject Then
             CType(Target, CharacterObject).SetUpdateFlag(EUnitFields.UNIT_FIELD_ATTACK_POWER, CType(Target, CharacterObject).AttackPower)
             CType(Target, CharacterObject).SetUpdateFlag(EUnitFields.UNIT_FIELD_ATTACK_POWER_MODS, CType(Target, CharacterObject).AttackPowerMods)
@@ -5462,7 +5414,6 @@ SkipShapeShift:
                 Target.AttackPowerModsRanged -= EffectInfo.GetValue(Caster.Level)
 
         End Select
-
 
         If TypeOf Target Is CharacterObject Then
             CType(Target, CharacterObject).SetUpdateFlag(EUnitFields.UNIT_FIELD_ATTACK_POWER, CType(Target, CharacterObject).AttackPower)
@@ -5687,12 +5638,9 @@ SkipShapeShift:
 
                 CType(Target, CreatureObject).aiScript.Reset()
 
-
         End Select
 
     End Sub
-
-
 
     Public Sub SPELL_AURA_MOD_THREAT(ByRef Target As BaseUnit, ByRef Caster As BaseUnit, ByRef EffectInfo As SpellEffect, ByVal SpellID As Integer, ByVal StackCount As Integer, ByVal Action As AuraAction)
 
@@ -5733,7 +5681,6 @@ SkipShapeShift:
                 End If
         End Select
 
-
         If TypeOf Target Is CharacterObject Then
             For Each CreatureGUID As ULong In CType(Target, CharacterObject).creaturesNear
                 If Not CType(WORLD_CREATUREs(CreatureGUID), CreatureObject).aiScript Is Nothing AndAlso _
@@ -5764,9 +5711,6 @@ SkipShapeShift:
         End Select
 
     End Sub
-
-
-
 
 #End Region
 
@@ -5835,7 +5779,6 @@ SkipShapeShift:
         End If
         Loser.SendCharacterUpdate(True)
         Winner.SendCharacterUpdate(True)
-
 
         'DONE: Notify client
         Dim packet As New PacketClass(OPCODES.SMSG_DUEL_WINNER)
@@ -5916,7 +5859,6 @@ SkipShapeShift:
         Client.Character.DuelPartner = Nothing
     End Sub
 
-
 #End Region
 #Region "WS.Spells.Handlers"
     Public Sub On_CMSG_CAST_SPELL(ByRef packet As PacketClass, ByRef Client As ClientClass)
@@ -5933,7 +5875,6 @@ SkipShapeShift:
             Log.WriteLine(LogType.WARNING, "[{0}:{1}] Character tried to cast a spell that didn't exist: {2}!", Client.IP, Client.Port, spellID)
             Exit Sub
         End If
-
 
         DumpPacket(packet.Data, Client)
         'TODO: In duel disable
@@ -6079,7 +6020,6 @@ SkipShapeShift:
         End Try
     End Sub
 
-
 #End Region
 
 #Region "WS.Spells.Loot"
@@ -6104,6 +6044,5 @@ SkipShapeShift:
         CType(WORLD_GAMEOBJECTs(GUID), GameObjectObject).LootObject(CType(Player, CharacterObject), LootingType)
     End Sub
 #End Region
-
 
 End Module

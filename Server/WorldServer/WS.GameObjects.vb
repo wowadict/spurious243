@@ -1,4 +1,4 @@
-' 
+'
 ' Copyright (C) 2013 getMaNGOS <http://www.getMangos.co.uk>
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -431,8 +431,6 @@ Public Module WS_GameObjects
         LOOT_LOOTED = 2
     End Enum
 
-
-
 #End Region
 #Region "WS.GameObjects.HelperSubs"
 
@@ -609,13 +607,7 @@ Public Module WS_GameObjects
 
 #End Region
 
-
 End Module
-
-
 
 #Region "WS.GameObjects.HelperTypes"
 #End Region
-
-
-

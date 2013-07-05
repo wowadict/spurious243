@@ -1,4 +1,4 @@
-' 
+'
 ' Copyright (C) 2013 getMaNGOS <http://www.getMangos.co.uk>
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -474,7 +474,7 @@ Public Module WS_DBCDatabase
     End Class
 
     Public Function GetNearestTaxi(ByVal x As Single, ByVal y As Single, ByVal map As Integer) As Integer
-        Dim minDistance As Single = 99999999.0F
+        Dim minDistance As Single = 1.0E+8F
         Dim selectedTaxiNode As Integer = 0
         Dim tmp As Single
 
@@ -1867,8 +1867,6 @@ Public Module WS_DBCDatabase
         InitializeAI()
 
     End Sub
-
-
 
     Public Sub InitializeAreaTriggers()
         AreaTriggers = New ScriptedObject("scripts\AreaTriggers.vb", "mangosVB.AreaTriggers.dll", False)

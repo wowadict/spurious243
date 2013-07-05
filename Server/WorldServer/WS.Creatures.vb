@@ -1,4 +1,4 @@
-' 
+'
 ' Copyright (C) 2013 getMaNGOS <http://www.getMangos.co.uk>
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -21,14 +21,11 @@ Imports System.Runtime.CompilerServices
 Imports mangosVB.Common.BaseWriter
 Imports mangosVB.Common
 
-
 Public Module WS_Creatures
 
 #Region "WS.Creatures.Constants"
 
-
     Public Const SKILL_DETECTION_PER_LEVEL As Integer = 5
-
 
 #End Region
 #Region "WS.Creatures.TypeDef"
@@ -420,7 +417,6 @@ Public Module WS_Creatures
             Update.SetUpdateFlag(EUnitFields.UNIT_VIRTUAL_ITEM_INFO + 4, 0)
             Update.SetUpdateFlag(EUnitFields.UNIT_VIRTUAL_ITEM_INFO + 4 + 1, 0)
 
-
             'Update.SetUpdateFlag(EUnitFields.UNIT_FIELD_BASEATTACKTIME, CREATURESDatabase(ID).BaseAttackTime)
             'Update.SetUpdateFlag(EUnitFields.UNIT_FIELD_OFFHANDATTACKTIME, CREATURESDatabase(ID).BaseAttackTime)
             'Update.SetUpdateFlag(EUnitFields.UNIT_FIELD_RANGEDATTACKTIME, CREATURESDatabase(ID).BaseRangedAttackTime)
@@ -711,7 +707,6 @@ Public Module WS_Creatures
 
             Life.Current += Damage
 
-
             'DONE: Do health update
             If SeenBy.Count > 0 Then
                 Dim packetForNear As New UpdatePacketClass
@@ -730,7 +725,6 @@ Public Module WS_Creatures
             If Mana.Current = Mana.Maximum Then Exit Sub
 
             Mana.Current += Damage
-
 
             'DONE: Do health update
             If SeenBy.Count > 0 Then
@@ -771,7 +765,6 @@ Public Module WS_Creatures
                 Exit Sub
             End If
 
-
             'DONE: Create packet
             Dim packet As New PacketClass(OPCODES.SMSG_UPDATE_OBJECT)
             packet.AddInt32(1)
@@ -781,7 +774,6 @@ Public Module WS_Creatures
             UpdateData.SetUpdateFlag(EUnitFields.UNIT_FIELD_FLAGS, cUnitFlags)
             UpdateData.AddToPacket(packet, ObjectUpdateType.UPDATETYPE_VALUES, Me)
             UpdateData.Dispose()
-
 
             If Character.IsInGroup Then
                 'DONE: Group loot rulles
@@ -912,7 +904,6 @@ Public Module WS_Creatures
                 End If
             End If
 
-
             'DONE: Killing elites
             Try
                 If CType(CREATURESDatabase(ID), CreatureInfo).Elite > 0 Then XP *= 2
@@ -943,7 +934,6 @@ Public Module WS_Creatures
                     Case 4 : XP *= 1.3
                     Case Else : XP *= 1.4
                 End Select
-
 
                 'DONE: Party calculate all levels
                 Dim baseLvl As Integer = 0
@@ -987,7 +977,6 @@ Public Module WS_Creatures
             t.SetTarget_SELF(Me)
             SPELLs(SpellID).Apply(Me, t)
         End Sub
-
 
         Public Function CastSpell(ByVal SpellID As Integer, ByVal Target As BaseObject) As Integer
             If Spell_Silenced Then Return -1
@@ -1068,7 +1057,7 @@ Public Module WS_Creatures
                 aiScript = AI.Invoke(CREATURESDatabase(ID).AIScriptSource, New Object() {Me})
             End If
 
-            'DONE: Load default AI 
+            'DONE: Load default AI
             If aiScript Is Nothing Then
                 ''''If isWaypoint Then
                 ''''aiScript = New WaypointAI(Me)
@@ -1446,7 +1435,6 @@ Public Module WS_Creatures
             response.AddSingle(1) ' UnkFloat2
             response.AddInt8(Creature.Civilian) 'Leader
 
-
             Client.Send(response)
             response.Dispose()
             'Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SMSG_CREATURE_QUERY_RESPONSE", Client.IP, Client.Port)
@@ -1460,7 +1448,6 @@ Public Module WS_Creatures
         Dim TextID As Long = packet.GetInt32
         Dim TargetGUID As ULong = packet.GetUInt64
         Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_NPC_TEXT_QUERY [TextID={2}]", Client.IP, Client.Port, TextID)
-
 
         Dim MySQLQuery As New DataTable
         Database.Query(String.Format("SELECT * FROM npcText WHERE entry = {0};", TextID), MySQLQuery)
@@ -1634,8 +1621,6 @@ Public Module WS_Creatures
         Client.Character.ApplySpell(15007)
     End Sub
 
-
-
     <MethodImplAttribute(MethodImplOptions.Synchronized)> _
     Private Function GetNewGUID() As ULong
         CreatureGUIDCounter += 1
@@ -1710,10 +1695,7 @@ Public Module WS_Creatures
     End Class
 #End Region
 
-
 End Module
-
-
 
 #Region "WS.Creatures.HelperTypes"
 Public Class TLoot
@@ -1771,7 +1753,6 @@ Public Class TBaseTalk
     End Function
 End Class
 
-
 Public Enum MenuIcon As Integer
     MENUICON_GOSSIP = &H0
     MENUICON_VENDOR = &H1
@@ -1788,5 +1769,3 @@ Public Enum MenuIcon As Integer
     MENUICON_GOSSIP3 = &HC
 End Enum
 #End Region
-
-

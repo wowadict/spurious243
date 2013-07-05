@@ -14,7 +14,6 @@ Public Enum AccessLevel As Byte
     Developer = 5
 End Enum
 
-
 Public Interface ICluster
 
     <Description("Signal realm server for new world server.")> _
@@ -53,7 +52,6 @@ Public Interface ICluster
 
     <Description("Send update for the requested group.")> _
     Sub GroupRequestUpdate(ByVal ID As UInteger)
-
 
 End Interface
 Public Interface IWorld
@@ -96,7 +94,6 @@ Public Interface IWorld
     <Description("Request party member stats.")> _
     Function GroupMemberStats(ByVal GUID As ULong, ByVal Flag As Integer) As Byte()
 
-
 End Interface
 Public Interface IVoice
 
@@ -113,9 +110,7 @@ Public Interface IVoice
     <Description("Respond to world server if still alive.")> _
     Function Ping(ByVal Timestamp As Integer) As Integer
 
-
 End Interface
-
 
 <Serializable()> _
 Public Class ClientInfo
@@ -126,6 +121,3 @@ Public Class ClientInfo
     Public Access As AccessLevel = AccessLevel.Player
     Public Expansion As ExpansionLevel = ExpansionLevel.NORMAL
 End Class
-
-
-

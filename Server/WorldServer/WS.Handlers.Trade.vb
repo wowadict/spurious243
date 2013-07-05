@@ -1,4 +1,4 @@
-﻿' 
+﻿'
 ' Copyright (C) 2013 getMaNGOS <http://www.getMangos.co.uk>
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -16,7 +16,6 @@
 ' Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 '
 
-
 Imports System.Threading
 Imports System.Net.Sockets
 Imports System.Xml.Serialization
@@ -27,9 +26,7 @@ Imports System.Runtime.CompilerServices
 Imports mangosVB.Common.BaseWriter
 Imports mangosVB.Common
 
-
 Public Module WS_Handlers_Trade
-
 
     Public Class TTradeInfo
         Implements IDisposable
@@ -152,7 +149,6 @@ Public Module WS_Handlers_Trade
                 End If
             Next i
 
-
             Target.Client.Send(packet)
             packet.Dispose()
         End Sub
@@ -221,7 +217,6 @@ Public Module WS_Handlers_Trade
                     Exit Sub
                 End If
 
-
                 'DONE: Trade gold
                 If TargetGold > 0 Or TraderGold > 0 Then
                     Trader.Copper = Trader.Copper - TraderGold + TargetGold
@@ -262,7 +257,6 @@ Public Module WS_Handlers_Trade
                         End If
                     Next
                 End If
-
 
                 Trader.SendCharacterUpdate(True)
                 Target.SendCharacterUpdate(True)
@@ -501,6 +495,5 @@ Public Module WS_Handlers_Trade
     Public Sub On_CMSG_BUSY_TRADE(ByRef packet As PacketClass, ByRef Client As ClientClass)
         Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_BUSY_TRADE", Client.IP, Client.Port)
     End Sub
-
 
 End Module

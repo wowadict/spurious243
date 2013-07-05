@@ -1,4 +1,4 @@
-' 
+'
 ' Copyright (C) 2013 getMaNGOS <http://www.getMangos.co.uk>
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -21,7 +21,6 @@ Imports System.Collections.Generic
 Imports mangosVB.Common.BaseWriter
 
 Public Module WS_Handlers_Misc
-
 
     Public Function SelectMonsterSay(ByVal MonsterID As Integer) As String
         ' Select Random Text Field From Monster Say HashTable(s)
@@ -53,9 +52,6 @@ Public Module WS_Handlers_Misc
         End Select
 
     End Function
-
-
-
 
     Public Sub On_CMSG_NAME_QUERY(ByRef packet As PacketClass, ByRef Client As ClientClass)
         Try
@@ -364,7 +360,6 @@ Public Module WS_Handlers_Misc
             Character.RemoveAuraBySpell(8326)
         End If
 
-
         Character.SetUpdateFlag(EUnitFields.UNIT_FIELD_HEALTH, Character.Life.Current)
         Character.SetUpdateFlag(EPlayerFields.PLAYER_FLAGS, Character.cPlayerFlags)
         Character.SetUpdateFlag(EUnitFields.UNIT_FIELD_FLAGS, Character.cUnitFlags)
@@ -381,7 +376,6 @@ Public Module WS_Handlers_Misc
             Character.corpsePositionZ = 0
         End If
     End Sub
-
 
     Public Sub On_CMSG_TOGGLE_PVP(ByRef packet As PacketClass, ByRef Client As ClientClass)
         Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_TOGGLE_PVP", Client.IP, Client.Port)
@@ -418,8 +412,6 @@ Public Module WS_Handlers_Misc
 
     End Sub
 
-
-
     Public Sub On_CMSG_MOVE_FALL_RESET(ByRef packet As PacketClass, ByRef Client As ClientClass)
         Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_MOVE_FALL_RESET", Client.IP, Client.Port)
         DumpPacket(packet.Data)
@@ -435,6 +427,5 @@ Public Module WS_Handlers_Misc
     Public Sub On_CMSG_MEETINGSTONE_INFO(ByRef packet As PacketClass, ByRef Client As ClientClass)
         Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_MEETINGSTONE_INFO", Client.IP, Client.Port)
     End Sub
-
 
 End Module

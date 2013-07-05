@@ -1,4 +1,4 @@
-' 
+'
 ' Copyright (C) 2013 getMaNGOS <http://www.getMangos.co.uk>
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -16,18 +16,15 @@
 ' Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 '
 
-
 Imports System.Xml
 Imports System.Reflection
 Imports System.Threading
 Imports System.Diagnostics.PerformanceCounter
 Imports mangosVB.Common
 
-
 Public Module WC_Stats
 
     'http://www.15seconds.com/issue/050615.htm
-
 
     Private ConnectionsHandled As Integer = 0
     Private ConnectionsPeak As Integer = 0
@@ -42,7 +39,6 @@ Public Module WC_Stats
     Public Sub ConnectionsDecrement()
         Interlocked.Decrement(ConnectionsCurrent)
     End Sub
-
 
     Public DataTransferOut As Long = 0
     Public DataTransferIn As Long = 0
@@ -85,7 +81,7 @@ Public Module WC_Stats
         CountPlayersHorde = 0
         CountPlayersAlliance = 0
         CountGMs = 0
-		Latency = 0
+        Latency = 0
 
         CHARACTERs_Lock.AcquireReaderLock(DEFAULT_LOCK_TIMEOUT)
         For Each c As KeyValuePair(Of ULong, CharacterObject) In CHARACTERs
@@ -108,7 +104,6 @@ Public Module WC_Stats
             Latency = Latency \ CountPlayers
         End If
 
-
         For Each c As KeyValuePair(Of UInteger, WorldInfo) In WS.WorldsInfo
             If Not w.ContainsKey(c.Value) Then
                 w.Add(c.Value, New List(Of String))
@@ -119,6 +114,11 @@ Public Module WC_Stats
     Public Sub GenerateStats(ByVal State As Object)
         Log.WriteLine(BaseWriter.LogType.DEBUG, "Generating stats")
         PrepareStats()
+
+        If IO.File.Exists(Config.StatsLocation) = False Then
+            Log.WriteLine(BaseWriter.LogType.WARNING, "Can't find stat.xsl")
+            Exit Sub
+        End If
 
         Dim f As XmlWriter = XmlWriter.Create(Config.StatsLocation)
         f.WriteStartDocument(True)
@@ -202,8 +202,6 @@ Public Module WC_Stats
         '</cluster>
         f.WriteEndElement()
 
-
-
         '<world>
         f.WriteStartElement("world")
         Try
@@ -236,9 +234,7 @@ Public Module WC_Stats
         '</world>
         f.WriteEndElement()
 
-
         CHARACTERs_Lock.AcquireReaderLock(DEFAULT_LOCK_TIMEOUT)
-
 
         f.WriteStartElement("users")
         For Each c As KeyValuePair(Of ULong, CharacterObject) In CHARACTERs
@@ -298,7 +294,5 @@ Public Module WC_Stats
 
         w.Clear()
     End Sub
-
-
 
 End Module

@@ -1,4 +1,4 @@
-' 
+'
 ' Copyright (C) 2013 getMaNGOS <http://www.getMangos.co.uk>
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -22,11 +22,7 @@ Imports System.Text.RegularExpressions
 Imports mangosVB.Common.BaseWriter
 Imports mangosVB.Common
 
-
-
 Public Module WS_CharManagment
-
-
 
 #Region "WS.CharMangment.CharacterInitializators"
     Enum ManaTypes As Integer
@@ -556,7 +552,6 @@ Public Module WS_CharManagment
         Log.WriteLine(LogType.DEBUG, "[{0}:{1}] SMSG_INITIAL_SPELLS", Client.IP, Client.Port)
     End Sub
 
-
     Public Sub InitializeTalentSpells(ByVal c As CharacterObject)
         Dim t As New SpellTargets
         t.SetTarget_SELF(CType(c, CharacterObject))
@@ -577,7 +572,6 @@ Public Module WS_CharManagment
 #End Region
 
 #Region "WS.CharMangment.CharacterDataType"
-
 
     Public Const ITEM_SLOT_NULL As Byte = 255
     Public Const ITEM_BAG_NULL As Long = -1
@@ -883,7 +877,6 @@ Public Module WS_CharManagment
             packet.Dispose()
         End Sub
 
-
         Public Copper As UInteger = 0
         Public Name As String = ""
         Public Race As Races = 0
@@ -1177,7 +1170,6 @@ Public Module WS_CharManagment
             packet.AddInt32(2)      'Operations.Count
             packet.AddInt8(0)
 
-
             Dim tmpUpdate As New UpdateClass(FIELD_MASK_SIZE_ITEM)
             Item.FillAllUpdateFlags(tmpUpdate)
             tmpUpdate.AddToPacket(packet, UPDATETYPE, CType(Item, ItemObject), 0)
@@ -1357,7 +1349,6 @@ Public Module WS_CharManagment
             ''Gender(for sound),Alchohol,Unk3,HonorRank?
             SetUpdateFlag(EPlayerFields.PLAYER_BYTES_3, (Gender + (0 << 8) + (0 << 16) + (0 << 24)))
 
-
             SetUpdateFlag(EPlayerFields.PLAYER_FIELD_WATCHED_FACTION_INDEX, WatchedFactionIndex)
 
             SetUpdateFlag(EPlayerFields.PLAYER_XP, XP)
@@ -1511,8 +1502,6 @@ Public Module WS_CharManagment
             ''SetUpdateFlag(EPlayerFields.PLAYER_FIELD_YESTERDAY_CONTRIBUTION, HonorPointsYesterday)
             ''SetUpdateFlag(EPlayerFields.PLAYER_FIELD_LIFETIME_HONORBALE_KILLS, HonorKillsLifeTime)
 
-
-
             For i = EQUIPMENT_SLOT_START To KEYRING_SLOT_END - 1
                 If Items.ContainsKey(i) Then
                     If i < EQUIPMENT_SLOT_END Then
@@ -1533,8 +1522,6 @@ Public Module WS_CharManagment
                     SetUpdateFlag(EPlayerFields.PLAYER_FIELD_INV_SLOT_HEAD + i * 2, 0)
                 End If
             Next
-
-
 
         End Sub                                       'Used for this player's update packets
         Public Sub FillAllUpdateFlags(ByRef Update As UpdateClass, ByRef Character As CharacterObject)
@@ -1559,7 +1546,6 @@ Public Module WS_CharManagment
             Update.SetUpdateFlag(EUnitFields.UNIT_FIELD_LEVEL, CType(Level, Integer))
             Update.SetUpdateFlag(EUnitFields.UNIT_FIELD_FACTIONTEMPLATE, CType(Faction, Integer))
 
-
             Update.SetUpdateFlag(EUnitFields.UNIT_FIELD_BYTES_0, CType(CType(Race, Integer) + (CType(Classe, Integer) << 8) + (CType(Gender, Integer) << 16) + (CType(ManaType, Integer) << 24), Integer))
             'StandState, PetLoyalty << 8, ShapeShift << 16, UnkFlag << 24, InvisibilityFlag << 25
             Update.SetUpdateFlag(EUnitFields.UNIT_FIELD_BYTES_1, CType(StandState, Integer) + CType(Invisibility > InvisibilityLevel.VISIBLE, Integer) * 2 << 24)
@@ -1569,7 +1555,6 @@ Public Module WS_CharManagment
             Update.SetUpdateFlag(EUnitFields.UNIT_FIELD_DISPLAYID, Model)
             Update.SetUpdateFlag(EUnitFields.UNIT_FIELD_NATIVEDISPLAYID, Model_Native)
             Update.SetUpdateFlag(EUnitFields.UNIT_FIELD_MOUNTDISPLAYID, Mount)
-
 
             Update.SetUpdateFlag(EUnitFields.UNIT_DYNAMIC_FLAGS, cDynamicFlags)
 
@@ -1620,8 +1605,6 @@ Public Module WS_CharManagment
             ''SetUpdateFlag(EPlayerFields.PLAYER_FIELD_TODAY_CONTRIBUTION, HonorPointsToday)
             ''SetUpdateFlag(EPlayerFields.PLAYER_FIELD_YESTERDAY_CONTRIBUTION, HonorPointsYesterday)
             ''SetUpdateFlag(EPlayerFields.PLAYER_FIELD_LIFETIME_HONORBALE_KILLS, HonorKillsLifeTime)
-
-
 
             For i = EQUIPMENT_SLOT_START To EQUIPMENT_SLOT_END - 1
                 If Items.ContainsKey(i) Then
@@ -1765,7 +1748,6 @@ Public Module WS_CharManagment
             SendMessageSystem(Client, Message)
         End Sub
 
-
         'Spell/Skill/Talents System
         Public TalentPoints As Byte = 0
         Public AmmoID As Integer = 0
@@ -1867,7 +1849,6 @@ Public Module WS_CharManagment
                 SendCharacterUpdate()
             End If
         End Sub
-
 
         'XP and Level Managment
         Public RestState As Byte = XPSTATE.Normal
@@ -2127,7 +2108,6 @@ CheckXPAgain:
                 Next
             End If
 
-
             If Item.ItemInfo.BagFamily = ITEM_BAG.KEYRING Then
                 'DONE: Insert as keyring
                 For i As Byte = KEYRING_SLOT_START To KEYRING_SLOT_END - 1
@@ -2154,7 +2134,6 @@ CheckXPAgain:
                     End If
                 Next
             End If
-
 
             'DONE: Insert as new item in inventory
             For slot As Byte = INVENTORY_SLOT_ITEM_START To INVENTORY_SLOT_ITEM_END - 1
@@ -2245,7 +2224,6 @@ CheckXPAgain:
                             End If
                         Next
                     End If
-
 
                 End If
             End If
@@ -2347,7 +2325,6 @@ CheckXPAgain:
                 End If
             Next slot
 
-
             'DONE: Search in keyring slot
             For slot As Byte = KEYRING_SLOT_START To KEYRING_SLOT_END - 1
                 If Items.ContainsKey(slot) Then
@@ -2367,7 +2344,6 @@ CheckXPAgain:
                     End If
                 End If
             Next slot
-
 
             'DONE: Search in bags
             For bag As Byte = INVENTORY_SLOT_BAG_1 To INVENTORY_SLOT_BAG_END - 1
@@ -2574,7 +2550,6 @@ CheckXPAgain:
                 dstItem = Items(dstSlot)
             End If
 
-
             'DONE: If already full, just swap
             If srcItem.StackCount = dstItem.ItemInfo.Stackable Or dstItem.StackCount = dstItem.ItemInfo.Stackable Then Return False
 
@@ -2720,7 +2695,6 @@ CheckXPAgain:
                 End If
             End If
 
-
             Dim response As New PacketClass(OPCODES.SMSG_INVENTORY_CHANGE_FAILURE)
             response.AddInt8(InventoryChangeFailure.EQUIP_ERR_COULDNT_SPLIT_ITEMS)
             response.AddUInt64(srcItem.GUID)
@@ -2743,7 +2717,6 @@ CheckXPAgain:
                 SendInventoryChangeFailure(Me, errCode, Items(srcSlot).GUID, 0)
                 Exit Sub
             End If
-
 
             Try
                 If srcBag > 0 AndAlso dstBag > 0 Then
@@ -2780,7 +2753,6 @@ CheckXPAgain:
                                 End If
                             End If
 
-
                             SendItemUpdate(Items(srcBag))
                             If dstBag <> srcBag Then
                                 SendItemUpdate(Items(dstBag))
@@ -2789,8 +2761,6 @@ CheckXPAgain:
                             If Items(srcBag).Items.ContainsKey(srcSlot) Then Database.Update(String.Format("UPDATE characters_inventory SET item_slot = {0}, item_bag = {1} WHERE item_guid = {2};", srcSlot, Items(srcBag).GUID, Items(srcBag).Items(srcSlot).GUID - GUID_ITEM))
                         End If
                     End If
-
-
 
                 ElseIf srcBag > 0 Then
                     'DONE: from Bag to Inventory
@@ -2838,8 +2808,6 @@ CheckXPAgain:
                         End If
                     End If
 
-
-
                 ElseIf dstBag > 0 Then
                     'DONE: from Inventory to Bag
                     If Not Items.ContainsKey(srcSlot) Then
@@ -2885,11 +2853,6 @@ CheckXPAgain:
                             If Items.ContainsKey(srcSlot) Then Database.Update(String.Format("UPDATE characters_inventory SET item_slot = {0}, item_bag = {1} WHERE item_guid = {2};", srcSlot, Me.GUID, Items(srcSlot).GUID - GUID_ITEM))
                         End If
                     End If
-
-
-
-
-
 
                 Else
                     'DONE: Inventory Moving
@@ -2943,7 +2906,6 @@ CheckXPAgain:
                         End If
                     End If
                 End If
-
 
             Catch err As Exception
                 Log.WriteLine(LogType.DEBUG, "[{0}:{1}] Unable to swap items. {2}{3}", Client.IP, Client.Port, vbNewLine, err.ToString)
@@ -3264,7 +3226,6 @@ CheckXPAgain:
             Client.Send(packet)
             packet.Dispose()
 
-
             Client.Character.positionX = posX
             Client.Character.positionY = posY
             Client.Character.positionZ = posZ
@@ -3277,7 +3238,6 @@ CheckXPAgain:
         End Sub
         Public Sub Transfer(ByVal posX As Single, ByVal posY As Single, ByVal posZ As Single, ByVal ori As Single, ByVal map As Integer)
             Log.WriteLine(LogType.INFORMATION, "World: Player Transfer: X[{0}], Y[{1}], Z[{2}], O[{3}], MAP[{4}]", posX, posY, posZ, ori, map)
-
 
             Dim p As New PacketClass(OPCODES.SMSG_TRANSFER_PENDING)
             p.AddInt32(map)
@@ -4145,7 +4105,6 @@ CheckXPAgain:
                 Reputation(i).Value = Trim(tmp2(1))
             Next
 
-
             'DONE: Get Items
             MySQLQuery.Clear()
             Database.Query(String.Format("SELECT * FROM characters_inventory WHERE item_bag = {0};", GUID), MySQLQuery)
@@ -4564,7 +4523,6 @@ CheckXPAgain:
 
                     TalkQuests(i).Slot = i
 
-
                     Dim updateDataCount As Integer = UpdateData.Count
                     Dim questState As Integer = TalkQuests(i).GetState
 
@@ -4782,7 +4740,6 @@ CheckXPAgain:
 
 #Region "WS.CharMangment.Handlers"
 
-
     Public Sub On_CMSG_LFM_SET_AUTOFILL(ByRef packet As PacketClass, ByRef Client As ClientClass)
         'Unsure how this works
     End Sub
@@ -4836,7 +4793,6 @@ CheckXPAgain:
             Client.Character.StandState = StandStates.STANDSTATE_SIT
             UpdateData.SetUpdateFlag(EUnitFields.UNIT_FIELD_BYTES_1, Client.Character.cBytes1)
 
-
             'DONE: Send packet
             UpdateData.AddToPacket(SMSG_UPDATE_OBJECT, ObjectUpdateType.UPDATETYPE_VALUES, CType(Client.Character, CharacterObject), 1)
             Client.SendMultiplyPackets(SMSG_UPDATE_OBJECT)
@@ -4848,9 +4804,6 @@ CheckXPAgain:
             Client.Send(packetACK)
             packetACK.Dispose()
         End If
-
-
-
 
         'DONE: Let the client to exit
         Dim SMSG_LOGOUT_RESPONSE As New PacketClass(OPCODES.SMSG_LOGOUT_RESPONSE)
@@ -4877,8 +4830,6 @@ CheckXPAgain:
             Catch
             End Try
 
-
-
             'DONE: Initialize packet
             Dim UpdateData As New UpdateClass
             Dim SMSG_UPDATE_OBJECT As New PacketClass(OPCODES.SMSG_UPDATE_OBJECT)
@@ -4901,8 +4852,6 @@ CheckXPAgain:
             packetACK.AddInt8(StandStates.STANDSTATE_STAND)
             Client.Send(packetACK)
             packetACK.Dispose()
-
-
 
             'DONE: Stop client logout
             Dim SMSG_LOGOUT_CANCEL_ACK As New PacketClass(OPCODES.SMSG_LOGOUT_CANCEL_ACK)
@@ -5044,7 +4993,6 @@ CheckXPAgain:
         Client.Character.SendCharacterUpdate(False)
     End Sub
 
-
 #End Region
 
 #Region "WS.CharMangment.CreateCharacter"
@@ -5052,7 +5000,6 @@ CheckXPAgain:
     Public Function CreateCharacter(ByVal Account As String, ByVal Name As String, ByVal Race As Byte, ByVal Classe As Byte, ByVal Gender As Byte, ByVal Skin As Byte, ByVal Face As Byte, ByVal HairStyle As Byte, ByVal HairColor As Byte, ByVal FacialHair As Byte, ByVal OutfitID As Byte) As Integer
         Dim Character As New CharacterObject
         Dim MySQLQuery As New DataTable
-
 
         'DONE: Make name capitalized as on official
         Character.Name = CapitalizeName(Name)
@@ -5065,7 +5012,6 @@ CheckXPAgain:
         Character.HairColor = HairColor
         Character.FacialHair = FacialHair
         Character.OutfitId = OutfitID
-
 
         'DONE: Query Access Level and Account ID
         Database.Query(String.Format("SELECT account_id, plevel, expansion FROM accounts WHERE account = ""{0}"";", Account), MySQLQuery)
@@ -5308,7 +5254,4 @@ CheckXPAgain:
 
 #End Region
 
-
 End Module
-
-

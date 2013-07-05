@@ -1,4 +1,4 @@
-' 
+'
 ' Copyright (C) 2013 getMaNGOS <http://www.getMangos.co.uk>
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -61,7 +61,6 @@ Public Module WS_TimerBasedEvents
                     'DONE: If dead don't regenerate
                     If (Not Character.Value.DEAD) AndAlso (Character.Value.underWaterTimer Is Nothing) AndAlso (Character.Value.LogoutTimer Is Nothing) AndAlso (Character.Value.Client IsNot Nothing) Then
                         With CType(Character.Value, CharacterObject)
-
 
                             BaseMana = .Mana.Current
                             BaseRage = .Rage.Current
@@ -170,7 +169,6 @@ Public Module WS_TimerBasedEvents
                             End If
                             UpdateData.Dispose()
 
-
                             'DONE: Duel counter
                             If .DuelOutOfBounds <> DUEL_COUNTER_DISABLED Then
                                 .DuelOutOfBounds -= REGENERATION_TIMER
@@ -195,7 +193,6 @@ Public Module WS_TimerBasedEvents
             RegenerationTimer = Nothing
         End Sub
     End Class
-
 
     'NOTE: Manages spell durations and DOT spells
     Public Class TSpellManager
@@ -267,7 +264,6 @@ Public Module WS_TimerBasedEvents
             For i As Integer = 0 To MAX_AURA_EFFECTs_VISIBLE - 1
                 If Not c.ActiveSpells(i) Is Nothing Then
 
-
                     'DONE: Count aura duration
                     If c.ActiveSpells(i).SpellDuration <> SPELL_DURATION_INFINITE Then
                         c.ActiveSpells(i).SpellDuration -= UPDATE_TIMER
@@ -292,7 +288,6 @@ Public Module WS_TimerBasedEvents
                         'DONE: Remove finished aura
                         If Not c.ActiveSpells(i) Is Nothing AndAlso c.ActiveSpells(i).SpellDuration <= 0 AndAlso c.ActiveSpells(i).SpellDuration <> SPELL_DURATION_INFINITE Then c.RemoveAura(i, c.ActiveSpells(i).SpellCaster)
                     End If
-
 
                 End If
             Next
@@ -354,7 +349,6 @@ Public Module WS_TimerBasedEvents
         End Sub
     End Class
 
-
     'NOTE: Manages character savings
     Public Class TCharacterSaver
         Implements IDisposable
@@ -396,5 +390,3 @@ Public Module WS_TimerBasedEvents
     'TODO: Timer for weather change
 
 End Module
-
-

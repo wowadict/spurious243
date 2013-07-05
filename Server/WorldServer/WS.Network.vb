@@ -1,4 +1,4 @@
-﻿' 
+﻿'
 ' Copyright (C) 2013 getMaNGOS <http://www.getMangos.co.uk>
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -30,14 +30,12 @@ Imports System.Security.Permissions
 Imports mangosVB.Common.BaseWriter
 Imports mangosVB.Common
 
-
 Public Module WS_Network
 
     Public Class WorldServerClass
         Inherits MarshalByRefObject
         Implements IWorld
         Implements IDisposable
-
 
         <CLSCompliant(False)> _
         Public _flagStopListen As Boolean = False
@@ -57,7 +55,6 @@ Public Module WS_Network
                 m_RemoteURI = String.Format("{0}://{1}:{2}/Cluster.rem", Config.ClusterMethod, Config.ClusterHost, Config.ClusterPort)
                 m_LocalURI = String.Format("{0}://{1}:{2}/WorldServer.rem", Config.ClusterMethod, Config.LocalHost, Config.LocalPort)
                 Cluster = Nothing
-
 
                 'Create Remoting Channel
                 Select Case Config.ClusterMethod
@@ -165,7 +162,6 @@ Public Module WS_Network
 
                 'DONE: Guild Message Of The Day
                 SendGuildMOTD(Character)
-
 
                 Log.WriteLine(LogType.USER, "[{0}:{1}] Player login complete [0x{2:X}]", Client.IP, Client.Port, GUID)
             Catch e As Exception
@@ -319,13 +315,11 @@ Public Module WS_Network
         '    Log.WriteLine(LogType.NETWORK, "[B{0:0000}] Character [0x{1:X}] left battlefield", BattlefieldID, GUID)
         'End Sub
 
-
     End Class
 
     Class ClientClass
         Inherits ClientInfo
         Implements IDisposable
-
 
         Public Character As CharacterObject
 
@@ -438,7 +432,6 @@ Public Module WS_Network
             Me.Delete()
         End Sub
 
-
         Public Sub New()
             Log.WriteLine(LogType.WARNING, "Creating debug connection!", Nothing)
             DEBUG_CONNECTION = True
@@ -452,6 +445,5 @@ Public Module WS_Network
             Port = ci.Port
         End Sub
     End Class
-
 
 End Module

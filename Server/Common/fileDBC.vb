@@ -1,4 +1,4 @@
-' 
+'
 ' Copyright (C) 2013 getMaNGOS <http://www.getMangos.co.uk>
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -55,15 +55,15 @@ Namespace DBC
 
                 If tmpRowRead <> Row Then ReadRow(Row)
 
-                Array.Copy(tmpRow, Column * 4, Buffer, 0, 4)
+                Array.Copy(tmpRow, Column * 4, buffer, 0, 4)
 
                 Select Case ValueType
                     Case DBCValueType.DBC_INTEGER
-                        Return BitConverter.ToInt32(Buffer, 0)
+                        Return BitConverter.ToInt32(buffer, 0)
                     Case DBCValueType.DBC_FLOAT
-                        Return BitConverter.ToSingle(Buffer, 0)
+                        Return BitConverter.ToSingle(buffer, 0)
                     Case DBCValueType.DBC_STRING
-                        Dim Offset As Integer = BitConverter.ToInt32(Buffer, 0)
+                        Dim Offset As Integer = BitConverter.ToInt32(buffer, 0)
                         fs.Seek(20 + Rows * RowLength + Offset, SeekOrigin.Begin)
 
                         Dim strByte As Byte = 0
@@ -81,7 +81,6 @@ Namespace DBC
 
             End Get
         End Property
-
 
     End Class
     <Description("DBC wrapper class using buffered stream for file access.")> _
@@ -110,7 +109,7 @@ Namespace DBC
         End Sub
 
         <Description("Access to item by row and column.")> _
-       Public Overrides ReadOnly Property Item(ByVal Row As Integer, ByVal Column As Integer, Optional ByVal ValueType As DBCValueType = DBCValueType.DBC_INTEGER) As Object
+        Public Overrides ReadOnly Property Item(ByVal Row As Integer, ByVal Column As Integer, Optional ByVal ValueType As DBCValueType = DBCValueType.DBC_INTEGER) As Object
             Get
                 If Row >= Rows Then Throw New ApplicationException("DBC: Row index outside file definition.")
                 If Column >= Columns Then Throw New ApplicationException("DBC: Column index outside file definition.")
@@ -143,7 +142,6 @@ Namespace DBC
             End Get
         End Property
 
-
     End Class
 
     <Description("DBC wrapper class.")> _
@@ -161,7 +159,6 @@ Namespace DBC
 
         Protected buffer(3) As Byte
         Protected tmpOffset As Long = 0
-
 
         'Default Functions
         <Description("Close file and dispose the dbc reader.")> _
@@ -242,11 +239,9 @@ Namespace DBC
         End Property
     End Class
 
-
     Public Enum DBCValueType
         DBC_STRING
         DBC_INTEGER
         DBC_FLOAT
     End Enum
 End Namespace
-

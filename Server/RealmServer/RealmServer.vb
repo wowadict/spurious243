@@ -1,4 +1,4 @@
-' 
+'
 ' Copyright (C) 2013 getMaNGOS <http://www.getMangos.co.uk>
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -30,7 +30,6 @@ Public Module RS_Main
 
     Dim WS_STATUS() As String = {"ONLINE/G", "ONLINE/R", "OFFLINE "}
     Public ConsoleColor As New ConsoleColor
-
 
     '1.10.2 - 5302
     '1.11.2 - 5462
@@ -73,9 +72,6 @@ Public Module RS_Main
     Const CMD_GRUNT_PROVESESSION As Integer = &H21     'server
     Const CMD_GRUNT_KICK As Integer = &H24             'server
 
-
-
-
     Public Enum AccountState As Byte
         'RealmServ Error Codes
         LOGIN_OK = &H0
@@ -97,7 +93,7 @@ Public Module RS_Main
 #Region "Global.Config"
     Public Config As XMLConfigFile
     <XmlRoot(ElementName:="RealmServer")> _
-        Public Class XMLConfigFile
+    Public Class XMLConfigFile
         <XmlElement(ElementName:="RSPort")> Public RSPort As Int32 = 0
         <XmlElement(ElementName:="RSHost")> Public RSHost As String = "localhost"
         <XmlElement(ElementName:="SQLUser")> Public SQLUser As String = "root"
@@ -132,9 +128,7 @@ Public Module RS_Main
             Config = oXS.Deserialize(oStmR)
             oStmR.Close()
 
-
             Console.WriteLine(".[done]")
-
 
             'DONE: Setting SQL Connection
             Database.SQLDBName = Config.SQLDBName
@@ -366,7 +360,6 @@ Public Module RS_Main
                 acc_state = AccountState.LOGIN_DBBUSY
             End Try
 
-
             'DONE: Send results to client
             Select Case acc_state
                 Case AccountState.LOGIN_OK
@@ -479,7 +472,6 @@ Public Module RS_Main
             If M1(i) <> Client.AuthEngine.M1(i) Then pass_check = False
         Next
 
-
         If pass_check Then
             Client.AuthEngine.CalculateM2(M1)
             Client.AuthEngine.CalculateNewHash()
@@ -568,7 +560,7 @@ Public Module RS_Main
             '(uint8) IsLocked
             '	0 -> none; 1 -> locked
             Converter.ToBytes(CType(0, Byte), data_response, tmp)
-            '(uint8) Realm Color 
+            '(uint8) Realm Color
             '   0 -> Green; 1 -> Red; 2 -> Offline;
             Converter.ToBytes(CType(Host.Item("ws_status"), Byte), data_response, tmp)
             '(string) Realm Name (zero terminated)
@@ -577,7 +569,7 @@ Public Module RS_Main
             '(string) Realm Address ("ip:port", zero terminated)
             Converter.ToBytes(CType(Host.Item("ws_host") & ":" & Host.Item("ws_port"), String), data_response, tmp)
             Converter.ToBytes(CType(0, Byte), data_response, tmp) '\0
-            '(float) Population 
+            '(float) Population
             '   400F -> Full; 5F -> Medium; 1.6F -> Low; 200F -> New; 2F -> High
             '   00 00 48 43 -> Recommended
             '   00 00 C8 43 -> Full
@@ -586,7 +578,7 @@ Public Module RS_Main
             Converter.ToBytes(CType(Host.Item("ws_population"), Single), data_response, tmp)
             '(byte) Number of character at this realm for this account
             Converter.ToBytes(CType(1, Byte), data_response, tmp)
-            '(byte) Timezone 
+            '(byte) Timezone
             '	UnitedKingdom = 0x0, USA = 0x1, Germany = 0x2, France = 0x3, Other = 0x4, Oceania = 0x5, Spain = 0x5
             Converter.ToBytes(CType(1, Byte), data_response, tmp)
             '(byte) Unknown (may be 2 -> TestRealm)
@@ -706,9 +698,6 @@ Public Module RS_Main
             buffer = buffer + [String].Format("[{0}] [{1}:{2}] DEBUG: Packet Dump{3}", Format(TimeOfDay, "hh:mm:ss"), Client.IP, Client.Port, vbNewLine)
         End If
 
-
-
-
         If data.Length Mod 16 = 0 Then
             For j = 0 To data.Length - 1 Step 16
                 buffer += "|  " & BitConverter.ToString(data, j, 16).Replace("-", " ")
@@ -733,7 +722,6 @@ Public Module RS_Main
 
     End Sub
 #End Region
-
 
     Sub WS_Status_Report()
         Dim result1 As DataTable = New DataTable

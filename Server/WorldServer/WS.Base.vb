@@ -1,4 +1,4 @@
-' 
+'
 ' Copyright (C) 2013 getMaNGOS <http://www.getMangos.co.uk>
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -71,7 +71,6 @@ Public Module WS_Base
             Next
         End Sub
     End Class
-
 
     Public Class BaseUnit
         Inherits BaseObject

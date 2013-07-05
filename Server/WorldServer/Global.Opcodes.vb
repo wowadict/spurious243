@@ -1,4 +1,4 @@
-' 
+'
 ' Copyright (C) 2013 getMaNGOS <http://www.getMangos.co.uk>
 '
 ' This program is free software; you can redistribute it and/or modify
@@ -1613,7 +1613,6 @@ End Enum
 
 #Region "Player.Enums"
 
-
 Public Enum Classes As Byte
     CLASS_WARRIOR = 1
     CLASS_PALADIN = 2
@@ -1864,7 +1863,6 @@ Public Enum ChatFlag As Byte
     FLAG_DND = 2
     FLAG_GM = 4
 End Enum
-
 
 #End Region
 #Region "Player.Groups"
@@ -2392,8 +2390,6 @@ Public Enum EUnitFields
     UNIT_FIELD_MAXHEALTHMODIFIER = &HE2 + EObjectFields.OBJECT_END
     UNIT_FIELD_PADDING = &HE3 + EObjectFields.OBJECT_END
     UNIT_END = &HE4 + EObjectFields.OBJECT_END                                   '  0  INTERNALMARKER
-
-
 
     UNIT_FIELD_STRENGTH = UNIT_FIELD_STAT0
     UNIT_FIELD_AGILITY = UNIT_FIELD_STAT1
@@ -3988,7 +3984,6 @@ Public Enum ChatMsg As Integer
     CHAT_BG_SYSTEM_ALLIANCE = 83
     CHAT_BG_SYSTEM_HORDE = 84
 
-
 End Enum
 
 Enum InvalidReason
@@ -4055,7 +4050,3 @@ Enum EnviromentalDamage
     DAMAGE_SLIME = 4
     DAMAGE_FIRE = 5
 End Enum
-
-
-
-
