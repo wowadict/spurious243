@@ -94,11 +94,11 @@ Public Module WS_Creatures
                 TalkScript = tmpScript.Invoke("TalkScript")
                 tmpScript.Dispose()
             Else
-                ''If Info_Str = "Directions" Then
-                ''    Dim tmpScript As New ScriptedObject("scripts\creatures\Directions.vb", "", True)
-                ''    TalkScript = tmpScript.Invoke("TalkScript")
-                ''    tmpScript.Dispose()
-                ''End If
+                If Info_Str = "Directions" Then
+                    Dim tmpScript As New ScriptedObject("scripts\creatures\Directions.vb", "", True)
+                    TalkScript = tmpScript.Invoke("TalkScript")
+                    tmpScript.Dispose()
+                End If
                 If cNpcFlags = 0 Then
                     TalkScript = Nothing
                 ElseIf cNpcFlags = NPCFlags.UNIT_NPC_FLAG_GOSSIP Then
@@ -106,9 +106,9 @@ Public Module WS_Creatures
                 Else
                     TalkScript = New TDefaultTalk
                 End If
-            End If
+                End If
 
-            CREATURESDatabase.Add(Id, Me)
+                CREATURESDatabase.Add(Id, Me)
         End Sub
         Public Sub New()
             Damage.Minimum = (0.8F * BaseAttackTime / 1000.0F) * (LevelMin * 10.0F)
@@ -440,7 +440,7 @@ Public Module WS_Creatures
                 Dim packet As New PacketClass(OPCODES.MSG_MOVE_HEARTBEAT)
                 packet.AddPackGUID(GUID)
                 packet.AddInt32(0) 'Movementflags
-                packet.AddInt16(0) '2.3.0
+                packet.AddInt8(0) '2.3.0
                 packet.AddInt32(timeGetTime)
                 packet.AddSingle(positionX)
                 packet.AddSingle(positionY)
@@ -558,7 +558,7 @@ Public Module WS_Creatures
                 Dim packet As New PacketClass(OPCODES.MSG_MOVE_HEARTBEAT)
                 packet.AddPackGUID(GUID)
                 packet.AddInt32(0) 'Movementflags
-                packet.AddInt16(0) '2.3.0
+                packet.AddInt8(0) '2.3.0
                 packet.AddInt32(timeGetTime)
                 packet.AddSingle(positionX)
                 packet.AddSingle(positionY)
@@ -583,7 +583,7 @@ Public Module WS_Creatures
                 Dim packet As New PacketClass(OPCODES.MSG_MOVE_HEARTBEAT)
                 packet.AddPackGUID(GUID)
                 packet.AddInt32(0) 'Movementflags
-                packet.AddInt16(0) ' 2.3.0
+                packet.AddInt8(0) ' 2.3.0
                 packet.AddInt32(timeGetTime)
                 packet.AddSingle(positionX)
                 packet.AddSingle(positionY)

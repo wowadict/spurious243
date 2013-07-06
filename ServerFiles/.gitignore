@@ -13,3 +13,5 @@
 mangosVB.*
 *.dll
 *.bat
+*.map
+*.dbc
