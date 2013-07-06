@@ -160,7 +160,7 @@ Public Module WC_Character
 
             'DONE: Server Message Of The Day
             SendMessageMOTD(Client, "Welcome to World of Warcraft.")
-            SendMessageMOTD(Client, String.Format("This server is using {0} v.{1}", SetColor("[MaNGOSvb]", 255, 0, 0), [Assembly].GetExecutingAssembly().GetName().Version))
+            SendMessageMOTD(Client, String.Format("This server is using {0} v.{1}", SetColor("[MaNGOSvb]", 200, 255, 200), [Assembly].GetExecutingAssembly().GetName().Version))
 
             'DONE: SMSG_CONTACT_LIST
             SendContactList(Client, Me)

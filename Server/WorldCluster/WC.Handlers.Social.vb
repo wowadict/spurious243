@@ -162,7 +162,7 @@ Public Module WC_Handlers_Social
         For Each c As KeyValuePair(Of ULong, CharacterObject) In CHARACTERs
             If Not c.Value.IsInWorld Then Continue For
             If (GetCharacterSide(c.Value.Race) <> GetCharacterSide(Client.Character.Race)) AndAlso Client.Character.Access < AccessLevel.GameMaster Then Continue For
-            If c.Value.Name.IndexOf(NamePlayer) = -1 Then Continue For
+            If UCase(c.Value.Name).IndexOf(UCase(NamePlayer)) = -1 Then Continue For
             If c.Value.Level < LevelMinimum Then Continue For
             If c.Value.Level > LevelMaximum Then Continue For
 

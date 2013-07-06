@@ -19,9 +19,12 @@
 Imports System.Runtime.InteropServices
 Imports System.Text
 Imports System.Security.Cryptography
+Imports mangosVB.Common.BaseWriter
+Imports mangosVB.Common
 
 Public Class AuthEngineClass
     Implements IDisposable
+    Public Log As New BaseWriter
 
 #Region "AuthEngine.Constructive"
     Shared Sub New()

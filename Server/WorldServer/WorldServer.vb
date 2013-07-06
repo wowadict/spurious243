@@ -181,17 +181,37 @@ Public Module WS_Main
         Console.Title = String.Format("{0} v{1}", CType([Assembly].GetExecutingAssembly().GetCustomAttributes(GetType(AssemblyTitleAttribute), False)(0), AssemblyTitleAttribute).Title, [Assembly].GetExecutingAssembly().GetName().Version)
 
         Console.ForegroundColor = System.ConsoleColor.Yellow
-        Console.WriteLine("{0}", CType([Assembly].GetExecutingAssembly().GetCustomAttributes(GetType(AssemblyProductAttribute), False)(0), AssemblyProductAttribute).Product)
-        Console.WriteLine(CType([Assembly].GetExecutingAssembly().GetCustomAttributes(GetType(AssemblyCopyrightAttribute), False)(0), AssemblyCopyrightAttribute).Copyright)
-        Console.WriteLine()
 
-        Console.ForegroundColor = System.ConsoleColor.Magenta
-        Console.WriteLine("http://www.getMangos.co.uk")
-        Console.WriteLine()
+        Console.WriteLine(" ####       ####            ###     ###   ########    #######     ######## ")
+        Console.WriteLine(" #####     #####            ####    ###  ##########  #########   ##########")
+        Console.WriteLine(" #####     #####            #####   ###  ##########  #########   ##########")
+        Console.WriteLine(" ######   ######            #####   ###  ###        ####   ####  ###       ")
+        Console.WriteLine(" ######   ######    ####    ######  ###  ###        ###     ###  ###       ")
+        Console.WriteLine(" ####### #######   ######   ######  ###  ###  ##### ###     ###  ########  ")
+        Console.WriteLine(" ### ### ### ###   ######   ####### ###  ###  ##### ###     ###  ######### ")
+        Console.WriteLine(" ### ### ### ###  ###  ###  ### ### ###  ###  ##### ###     ###   #########")
+        Console.WriteLine(" ### ####### ###  ###  ###  ###  ######  ###    ### ###     ###        ####")
+        Console.WriteLine(" ### ####### ###  ###  ###  ###  ######  ###    ### ###     ###         ###")
+        Console.WriteLine(" ###  #####  ### ########## ###   #####  ###   #### ####   ####        ####")
+        Console.WriteLine(" ###  #####  ### ########## ###   #####  #########   #########   ##########")
+        Console.WriteLine(" ###  #####  ### ###    ### ###    ####  #########   #########   ######### ")
+        Console.WriteLine(" ###   ###   ### ###    ### ###     ###   #######     #######     #######  ")
+        Console.WriteLine("")
+        Console.WriteLine(" Website: http://www.getmangos.co.uk                         ##  ##  ##### ")
+        Console.WriteLine("                                                             ##  ##  ##  ##")
+        Console.WriteLine("    Wiki: http://github.com/mangoswiki/wiki                  ##  ##  ##### ")
+        Console.WriteLine("                                                              ####   ##  ##")
+        Console.WriteLine("   Forum: http://community.getmangos.co.uk                     ##    ##### ")
+        Console.WriteLine("")
+
+        'Console.WriteLine("{0}", CType([Assembly].GetExecutingAssembly().GetCustomAttributes(GetType(AssemblyProductAttribute), False)(0), AssemblyProductAttribute).Product)
+        'Console.WriteLine(CType([Assembly].GetExecutingAssembly().GetCustomAttributes(GetType(AssemblyCopyrightAttribute), False)(0), AssemblyCopyrightAttribute).Copyright)
+        'Console.WriteLine()
+
 
         Console.ForegroundColor = System.ConsoleColor.White
-        Console.WriteLine(CType([Assembly].GetExecutingAssembly().GetCustomAttributes(GetType(System.Reflection.AssemblyTitleAttribute), False)(0), AssemblyTitleAttribute).Title)
-        Console.Write("version {0}", [Assembly].GetExecutingAssembly().GetName().Version)
+        Console.Write(CType([Assembly].GetExecutingAssembly().GetCustomAttributes(GetType(System.Reflection.AssemblyTitleAttribute), False)(0), AssemblyTitleAttribute).Title)
+        Console.WriteLine(" version {0}", [Assembly].GetExecutingAssembly().GetName().Version)
         Console.ForegroundColor = System.ConsoleColor.White
 
         Console.WriteLine("")
@@ -210,6 +230,9 @@ Public Module WS_Main
         Database.Update("SET NAMES 'utf8';")
 
 #If DEBUG Then
+        Console.ForegroundColor = System.ConsoleColor.White
+        Log.WriteLine(LogType.INFORMATION, "Running from: {0}", System.AppDomain.CurrentDomain.BaseDirectory)
+        Console.ForegroundColor = System.ConsoleColor.Gray
         Log.WriteLine(LogType.DEBUG, "Setting MySQL into debug mode..[done]")
         Database.Update("SET SESSION sql_mode='STRICT_ALL_TABLES';")
 #End If
@@ -221,8 +244,8 @@ Public Module WS_Main
         Process.GetCurrentProcess().PriorityClass = ProcessPriorityClass.High
         Log.WriteLine(LogType.WARNING, "Setting Process Priority to HIGH..[done]")
 
-        Log.WriteLine(LogType.INFORMATION, "Load Time: {0}", Format(DateDiff(DateInterval.Second, dateTimeStarted, Now), "0 seconds"))
-        Log.WriteLine(LogType.INFORMATION, "Used memory: {0}", Format(GC.GetTotalMemory(False), "### ### ##0 bytes"))
+        Log.WriteLine(LogType.INFORMATION, "   Load Time: {0}", Format(DateDiff(DateInterval.Second, dateTimeStarted, Now), "0 seconds"))
+        Log.WriteLine(LogType.INFORMATION, " Used memory: {0}", Format(GC.GetTotalMemory(False), "### ### ##0 bytes"))
 
         WaitConsoleCommand()
 

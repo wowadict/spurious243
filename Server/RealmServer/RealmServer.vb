@@ -24,6 +24,7 @@ Imports System.Net
 Imports System.Security.Cryptography
 Imports System.Reflection
 Imports mangosVB.Common
+Imports mangosVB.Common.BaseWriter
 
 Public Module RS_Main
 #Region "Global.Constants"
@@ -72,6 +73,8 @@ Public Module RS_Main
     Const CMD_GRUNT_PROVESESSION As Integer = &H21     'server
     Const CMD_GRUNT_KICK As Integer = &H24             'server
 
+    Public Log As New BaseWriter
+
     Public Enum AccountState As Byte
         'RealmServ Error Codes
         LOGIN_OK = &H0
@@ -102,6 +105,9 @@ Public Module RS_Main
         <XmlElement(ElementName:="SQLPort")> Public SQLPort As String = "3306"
         <XmlElement(ElementName:="SQLDBName")> Public SQLDBName As String = "mangosvb"
         <XmlElement(ElementName:="SQLDBType")> Public SQLDBType As SQL.DB_Type = SQL.DB_Type.MySQL
+        <XmlElement(ElementName:="LogType")> Public LogType As String = "COLORCONSOLE"
+        <XmlElement(ElementName:="LogLevel")> Public LogLevel As LogType = mangosVB.Common.BaseWriter.LogType.NETWORK
+        <XmlElement(ElementName:="LogConfig")> Public LogConfig As String = ""
     End Class
 
     Public Sub LoadConfig()
@@ -129,6 +135,10 @@ Public Module RS_Main
             oStmR.Close()
 
             Console.WriteLine(".[done]")
+
+            'DONE: Creating logger
+            Common.BaseWriter.CreateLog(Config.LogType, Config.LogConfig, Log)
+            Log.LogLevel = Config.LogLevel
 
             'DONE: Setting SQL Connection
             Database.SQLDBName = Config.SQLDBName
@@ -738,26 +748,51 @@ Public Module RS_Main
         Console.ForegroundColor = System.ConsoleColor.Gray
     End Sub
     Sub Main()
+
         Console.Title = String.Format("{0} v{1}", [Assembly].GetExecutingAssembly().GetCustomAttributes(GetType(System.Reflection.AssemblyTitleAttribute), False)(0).Title, [Assembly].GetExecutingAssembly().GetName().Version)
 
         Console.ForegroundColor = System.ConsoleColor.Yellow
-        Console.WriteLine([Assembly].GetExecutingAssembly().GetCustomAttributes(GetType(System.Reflection.AssemblyProductAttribute), False)(0).Product)
-        Console.WriteLine([Assembly].GetExecutingAssembly().GetCustomAttributes(GetType(System.Reflection.AssemblyCopyrightAttribute), False)(0).Copyright)
-        Console.WriteLine()
+
+        Console.WriteLine(" ####       ####            ###     ###   ########    #######     ######## ")
+        Console.WriteLine(" #####     #####            ####    ###  ##########  #########   ##########")
+        Console.WriteLine(" #####     #####            #####   ###  ##########  #########   ##########")
+        Console.WriteLine(" ######   ######            #####   ###  ###        ####   ####  ###       ")
+        Console.WriteLine(" ######   ######    ####    ######  ###  ###        ###     ###  ###       ")
+        Console.WriteLine(" ####### #######   ######   ######  ###  ###  ##### ###     ###  ########  ")
+        Console.WriteLine(" ### ### ### ###   ######   ####### ###  ###  ##### ###     ###  ######### ")
+        Console.WriteLine(" ### ### ### ###  ###  ###  ### ### ###  ###  ##### ###     ###   #########")
+        Console.WriteLine(" ### ####### ###  ###  ###  ###  ######  ###    ### ###     ###        ####")
+        Console.WriteLine(" ### ####### ###  ###  ###  ###  ######  ###    ### ###     ###         ###")
+        Console.WriteLine(" ###  #####  ### ########## ###   #####  ###   #### ####   ####        ####")
+        Console.WriteLine(" ###  #####  ### ########## ###   #####  #########   #########   ##########")
+        Console.WriteLine(" ###  #####  ### ###    ### ###    ####  #########   #########   ######### ")
+        Console.WriteLine(" ###   ###   ### ###    ### ###     ###   #######     #######     #######  ")
+        Console.WriteLine("")
+        Console.WriteLine(" Website: http://www.getmangos.co.uk                         ##  ##  ##### ")
+        Console.WriteLine("                                                             ##  ##  ##  ##")
+        Console.WriteLine("    Wiki: http://github.com/mangoswiki/wiki                  ##  ##  ##### ")
+        Console.WriteLine("                                                              ####   ##  ##")
+        Console.WriteLine("   Forum: http://community.getmangos.co.uk                     ##    ##### ")
+        Console.WriteLine("")
+
 
         Console.ForegroundColor = System.ConsoleColor.Magenta
-        Console.WriteLine("http://www.getMangos.co.uk")
-        Console.WriteLine()
 
         Console.ForegroundColor = System.ConsoleColor.White
-        Console.WriteLine([Assembly].GetExecutingAssembly().GetCustomAttributes(GetType(System.Reflection.AssemblyTitleAttribute), False)(0).Title)
-        Console.WriteLine("version {0}", [Assembly].GetExecutingAssembly().GetName().Version)
+        Console.Write([Assembly].GetExecutingAssembly().GetCustomAttributes(GetType(System.Reflection.AssemblyTitleAttribute), False)(0).Title)
+        Console.WriteLine(" version {0}", [Assembly].GetExecutingAssembly().GetName().Version)
         Console.WriteLine()
         Console.ForegroundColor = System.ConsoleColor.Gray
 
         Console.WriteLine("[{0}] Realm Server Starting...", Format(TimeOfDay, "hh:mm:ss"))
-
         LoadConfig()
+
+#If DEBUG Then
+        Console.ForegroundColor = System.ConsoleColor.Yellow
+        Log.WriteLine(LogType.INFORMATION, "Running from: {0}", System.AppDomain.CurrentDomain.BaseDirectory)
+        Console.ForegroundColor = System.ConsoleColor.Gray
+#End If
+
         AddHandler Database.SQLMessage, AddressOf SLQEventHandler
         Database.Connect()
 

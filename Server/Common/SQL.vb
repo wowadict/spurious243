@@ -30,7 +30,7 @@ Public Class SQL
     <CLSCompliant(False)> _
     Private MySQLConn As MySqlConnection
     Private MSSQLConn As SqlConnection
-    '    Private OracleConn As OracleConnection
+    'Private OracleConn As OracleConnection
 #End Region
 
 #Region "Events and event ID's"

@@ -7,6 +7,7 @@
 Imports System
 Imports Microsoft.VisualBasic
 Imports mangosVB.WorldServer
+Imports mangosVB.Common
 
 Namespace Scripts
 	Public Module AreaTriggers
