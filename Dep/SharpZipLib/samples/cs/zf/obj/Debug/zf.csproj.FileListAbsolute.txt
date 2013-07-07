@@ -1,0 +1,8 @@
+C:\Users\Krill\Desktop\Work\src\Dep\SharpZipLib\samples\cs\zf\bin\Debug\zf.exe
+C:\Users\Krill\Desktop\Work\src\Dep\SharpZipLib\samples\cs\zf\bin\Debug\zf.pdb
+C:\Users\Krill\Desktop\Work\src\Dep\SharpZipLib\samples\cs\zf\bin\Debug\ICSharpCode.SharpZipLib.dll
+C:\Users\Krill\Desktop\Work\src\Dep\SharpZipLib\samples\cs\zf\bin\Debug\ICSharpCode.SharpZipLib.pdb
+C:\Users\Krill\Desktop\Work\src\Dep\SharpZipLib\samples\cs\zf\bin\Debug\ICSharpCode.SharpZipLib.xml
+C:\Users\Krill\Desktop\Work\src\Dep\SharpZipLib\samples\cs\zf\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\Krill\Desktop\Work\src\Dep\SharpZipLib\samples\cs\zf\obj\Debug\zf.exe
+C:\Users\Krill\Desktop\Work\src\Dep\SharpZipLib\samples\cs\zf\obj\Debug\zf.pdb

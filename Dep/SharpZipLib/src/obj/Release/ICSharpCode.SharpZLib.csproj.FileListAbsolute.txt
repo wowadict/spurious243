@@ -1,0 +1,3 @@
+C:\Users\Krill\Desktop\Work\src\Dep\SharpZipLib\bin\ICSharpCode.SharpZipLib.dll
+C:\Users\Krill\Desktop\Work\src\Dep\SharpZipLib\src\obj\Release\ResolveAssemblyReference.cache
+C:\Users\Krill\Desktop\Work\src\Dep\SharpZipLib\src\obj\Release\ICSharpCode.SharpZipLib.dll

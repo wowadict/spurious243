@@ -1,0 +1,1 @@
+C:\Users\Krill\Desktop\Work\src\Dep\log4net-1.2.11\tests\src\obj\Release\ResolveAssemblyReference.cache

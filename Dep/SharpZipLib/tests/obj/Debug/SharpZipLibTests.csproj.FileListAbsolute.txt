@@ -1,0 +1,1 @@
+C:\Users\Krill\Desktop\Work\src\Dep\SharpZipLib\tests\obj\Debug\ResolveAssemblyReference.cache

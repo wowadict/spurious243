@@ -1,0 +1,5 @@
+C:\Users\Krill\Desktop\Work\src\Dep\SmartIrc4net\src\starksoftproxy\bin\Debug\StarkSoftProxy.dll
+C:\Users\Krill\Desktop\Work\src\Dep\SmartIrc4net\src\starksoftproxy\bin\Debug\StarkSoftProxy.pdb
+C:\Users\Krill\Desktop\Work\src\Dep\SmartIrc4net\src\starksoftproxy\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\Krill\Desktop\Work\src\Dep\SmartIrc4net\src\starksoftproxy\obj\Debug\StarkSoftProxy.dll
+C:\Users\Krill\Desktop\Work\src\Dep\SmartIrc4net\src\starksoftproxy\obj\Debug\StarkSoftProxy.pdb
