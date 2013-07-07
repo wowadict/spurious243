@@ -1396,7 +1396,7 @@ Public Module WS_Creatures
         Dim CreatureGUID As ULong = packet.GetUInt64
 
         Try
-            Dim Creature As CreatureInfo
+            Dim Creature As CreatureInfo = Nothing '(CreatureID)
 
             If CREATURESDatabase.ContainsKey(CreatureID) = False Then
                 Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_CREATURE_QUERY [Creature {2} not loaded.]", Client.IP, Client.Port, CreatureID)
@@ -1408,7 +1408,7 @@ Public Module WS_Creatures
                 Exit Sub
 
             Else
-                Log.WriteLine(LogType.WARNING, "DEBUG: Creature Name = {0}", Creature.Name)
+                Log.WriteLine(LogType.WARNING, "DEBUG: Creature Name = {0}", CREATURESDatabase(CreatureID).Name)
                 Creature = CREATURESDatabase(CreatureID)
                 'Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_CREATURE_QUERY [CreatureID={2} CreatureGUID={3:X}]", Format(TimeOfDay, "hh:mm:ss"), Client.IP, Client.Port, CreatureID, CreatureGUID - GUID_UNIT)
             End If
