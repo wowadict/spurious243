@@ -20,31 +20,31 @@
     'It can be modified using the Windows Form Designer.
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> Private Sub InitializeComponent()
-        Me.components = New System.ComponentModel.Container
+        Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Main))
         Me.SystemTrayIcon = New System.Windows.Forms.NotifyIcon(Me.components)
-        Me.GroupBox1 = New System.Windows.Forms.GroupBox
-        Me.CheckBox2 = New System.Windows.Forms.CheckBox
-        Me.CheckBox1 = New System.Windows.Forms.CheckBox
-        Me.TextBox1 = New System.Windows.Forms.TextBox
-        Me.PictureBox1 = New System.Windows.Forms.PictureBox
+        Me.GroupBox1 = New System.Windows.Forms.GroupBox()
+        Me.CheckBox2 = New System.Windows.Forms.CheckBox()
+        Me.CheckBox1 = New System.Windows.Forms.CheckBox()
+        Me.TextBox1 = New System.Windows.Forms.TextBox()
+        Me.PictureBox1 = New System.Windows.Forms.PictureBox()
         Me.RealmTimer = New System.Windows.Forms.Timer(Me.components)
         Me.WorldTimer = New System.Windows.Forms.Timer(Me.components)
-        Me.WorldProcess = New System.Diagnostics.Process
-        Me.GroupBox2 = New System.Windows.Forms.GroupBox
-        Me.TextBox3 = New System.Windows.Forms.TextBox
-        Me.Label2 = New System.Windows.Forms.Label
-        Me.TextBox2 = New System.Windows.Forms.TextBox
-        Me.Label1 = New System.Windows.Forms.Label
-        Me.RealmProcess = New System.Diagnostics.Process
-        Me.MenuStrip1 = New System.Windows.Forms.MenuStrip
-        Me.FileToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem
-        Me.MinimizeToTrayToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem
-        Me.ExitToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem
-        Me.OptionsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem
-        Me.ConfigureCongifFilesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem
-        Me.Button1 = New System.Windows.Forms.Button
-        Me.Button2 = New System.Windows.Forms.Button
+        Me.WorldProcess = New System.Diagnostics.Process()
+        Me.GroupBox2 = New System.Windows.Forms.GroupBox()
+        Me.TextBox3 = New System.Windows.Forms.TextBox()
+        Me.Label2 = New System.Windows.Forms.Label()
+        Me.TextBox2 = New System.Windows.Forms.TextBox()
+        Me.Label1 = New System.Windows.Forms.Label()
+        Me.RealmProcess = New System.Diagnostics.Process()
+        Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
+        Me.FileToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.MinimizeToTrayToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ExitToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.OptionsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ConfigureCongifFilesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.Button1 = New System.Windows.Forms.Button()
+        Me.Button2 = New System.Windows.Forms.Button()
         Me.GroupBox1.SuspendLayout()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.GroupBox2.SuspendLayout()
@@ -74,7 +74,7 @@
         Me.CheckBox2.Enabled = False
         Me.CheckBox2.Location = New System.Drawing.Point(6, 77)
         Me.CheckBox2.Name = "CheckBox2"
-        Me.CheckBox2.Size = New System.Drawing.Size(133, 18)
+        Me.CheckBox2.Size = New System.Drawing.Size(143, 18)
         Me.CheckBox2.TabIndex = 2
         Me.CheckBox2.Text = "mangosVB.WorldServer"
         Me.CheckBox2.UseVisualStyleBackColor = True
@@ -83,9 +83,9 @@
         '
         Me.CheckBox1.AutoSize = True
         Me.CheckBox1.Enabled = False
-        Me.CheckBox1.Location = New System.Drawing.Point(6, 53)
+        Me.CheckBox1.Location = New System.Drawing.Point(5, 53)
         Me.CheckBox1.Name = "CheckBox1"
-        Me.CheckBox1.Size = New System.Drawing.Size(134, 18)
+        Me.CheckBox1.Size = New System.Drawing.Size(144, 18)
         Me.CheckBox1.TabIndex = 1
         Me.CheckBox1.Text = "mangosVB.RealmServer"
         Me.CheckBox1.UseVisualStyleBackColor = True
@@ -286,7 +286,7 @@
         Me.Name = "Main"
         Me.RightToLeft = System.Windows.Forms.RightToLeft.No
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
-        Me.Text = "Spurous Control Center"
+        Me.Text = "MaNGOSVB Control Center"
         Me.GroupBox1.ResumeLayout(False)
         Me.GroupBox1.PerformLayout()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()

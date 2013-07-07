@@ -25,11 +25,11 @@ Imports System.Runtime.InteropServices
 
 ' Review the values of the assembly attributes
 
-<Assembly: AssemblyTitle("mangosVB.PacketLogger")> 
+<Assembly: AssemblyTitle("MaNGOSVB.PacketLogger")> 
 <Assembly: AssemblyDescription("Proxy like packet logger for dev purposes.")> 
-<Assembly: AssemblyCompany("Spurious TeaM")> 
-<Assembly: AssemblyProduct("Spurious Tools Pack")> 
-<Assembly: AssemblyCopyright("Copyright (C) 2008")> 
+<Assembly: AssemblyCompany("MaNGOSVB Development")> 
+<Assembly: AssemblyProduct("MaNGOSVB Tools Pack")> 
+<Assembly: AssemblyCopyright("Copyright (C) 2013")> 
 <Assembly: AssemblyTrademark("")>  
 
 'The following GUID is for the ID of the typelib if this project is exposed to COM
