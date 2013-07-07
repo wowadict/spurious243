@@ -10,6 +10,7 @@
 # Special folder that is created by the ReSharper Visual Studio Addon
 #
 
+maps
 mangosVB.*
 *.dll
 *.bat
