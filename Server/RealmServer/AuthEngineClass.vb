@@ -60,11 +60,11 @@ Public Class AuthEngineClass
     Private Sub CalculateB()
         Dim encoding1 As New UTF7Encoding
         AuthEngineClass.RAND_bytes(Me.b, 20)
-        Dim ptr1 As IntPtr = AuthEngineClass.BN_new
-        Dim ptr2 As IntPtr = AuthEngineClass.BN_new
-        Dim ptr3 As IntPtr = AuthEngineClass.BN_new
-        Dim ptr4 As IntPtr = AuthEngineClass.BN_new
-        Me.BNPublicB = AuthEngineClass.BN_new
+        Dim ptr1 As IntPtr = AuthEngineClass.BN_New
+        Dim ptr2 As IntPtr = AuthEngineClass.BN_New
+        Dim ptr3 As IntPtr = AuthEngineClass.BN_New
+        Dim ptr4 As IntPtr = AuthEngineClass.BN_New
+        Me.BNPublicB = AuthEngineClass.BN_New
         Dim ptr5 As IntPtr = AuthEngineClass.BN_CTX_new
         Array.Reverse(Me.b)
         Me.BNb = AuthEngineClass.BN_bin2bn(Me.b, Me.b.Length, IntPtr.Zero)
@@ -72,7 +72,7 @@ Public Class AuthEngineClass
         AuthEngineClass.BN_mod_exp(ptr1, Me.BNg, Me.BNb, Me.BNn, ptr5)
         AuthEngineClass.BN_mul(ptr2, Me.BNk, Me.BNv, ptr5)
         AuthEngineClass.BN_add(ptr3, ptr1, ptr2)
-        AuthEngineClass.BN_mod(Me.BNPublicB, ptr3, Me.BNn, ptr5)
+        AuthEngineClass.BN_Mod(Me.BNPublicB, ptr3, Me.BNn, ptr5)
         AuthEngineClass.BN_bn2bin(Me.BNPublicB, Me.PublicB)
         Array.Reverse(Me.PublicB)
     End Sub
@@ -93,11 +93,11 @@ Public Class AuthEngineClass
         Me.M2 = algorithm1.ComputeHash(buffer1)
     End Sub
     Private Sub CalculateS()
-        Dim ptr1 As IntPtr = AuthEngineClass.BN_new
-        Dim ptr2 As IntPtr = AuthEngineClass.BN_new
-        Dim ptr3 As IntPtr = AuthEngineClass.BN_new
-        Dim ptr4 As IntPtr = AuthEngineClass.BN_new
-        Me.BNS = AuthEngineClass.BN_new
+        Dim ptr1 As IntPtr = AuthEngineClass.BN_New
+        Dim ptr2 As IntPtr = AuthEngineClass.BN_New
+        Dim ptr3 As IntPtr = AuthEngineClass.BN_New
+        Dim ptr4 As IntPtr = AuthEngineClass.BN_New
+        Me.BNS = AuthEngineClass.BN_New
         Dim ptr5 As IntPtr = AuthEngineClass.BN_CTX_new
         Me.S = New Byte(32 - 1) {}
         AuthEngineClass.BN_mod_exp(ptr1, Me.BNv, Me.BNU, Me.BNn, ptr5)
@@ -123,7 +123,7 @@ Public Class AuthEngineClass
         Me.CalculateS()
     End Sub
     Private Sub CalculateV()
-        Me.BNv = AuthEngineClass.BN_new
+        Me.BNv = AuthEngineClass.BN_New
         Dim ptr1 As IntPtr = AuthEngineClass.BN_CTX_new
         AuthEngineClass.BN_mod_exp(Me.BNv, Me.BNg, Me.BNx, Me.BNn, ptr1)
         Me.CalculateB()
