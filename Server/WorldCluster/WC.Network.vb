@@ -67,8 +67,6 @@ Public Module WC_Network
                 Channels.ChannelServices.RegisterChannel(m_RemoteChannel, False)
                 RemotingServices.Marshal(CType(Me, ICluster), "Cluster.rem")
 
-                Log.WriteLine(LogType.INFORMATION, "Interface UP at: {0}://{1}:{2}/Cluster.rem", Config.ClusterMethod, Config.ClusterHost, Config.ClusterPort)
-
                 'Creating ping timer
                 m_TimerPing = New Timer(AddressOf Ping, Nothing, 0, 15000)
 
@@ -167,7 +165,7 @@ Public Module WC_Network
                         SyncLock CType(Worlds, ICollection).SyncRoot
                             Worlds.Remove(Map)
                             WorldsInfo.Remove(Map)
-                            Log.WriteLine(LogType.INFORMATION, "Disconnected World Server: {0:000}", Map)
+                            Log.WriteLine(LogType.INFORMATION, "Disconnected World Map: {0:000}", Map)
                         End SyncLock
                     End Try
                 End If
@@ -187,7 +185,7 @@ Public Module WC_Network
                 For Each w As KeyValuePair(Of UInteger, IWorld) In Worlds
                     Try
                         If SentPingTo.ContainsKey(WorldsInfo(w.Key)) Then
-                            Log.WriteLine(LogType.NETWORK, "World [M{0:0000}] ping: {1}ms", w.Key, SentPingTo(WorldsInfo(w.Key)))
+                            Log.WriteLine(LogType.NETWORK, "World Map {0:000} ping: {1}ms", w.Key, SentPingTo(WorldsInfo(w.Key)))
                         Else
                             MyTime = timeGetTime
                             ServerTime = w.Value.Ping(MyTime)
@@ -196,14 +194,14 @@ Public Module WC_Network
                             WorldsInfo(w.Key).Latency = Latency
                             SentPingTo(WorldsInfo(w.Key)) = Latency
 
-                            Log.WriteLine(LogType.NETWORK, "World [M{0:0000}] ping: {1}ms", w.Key, Latency)
+                            Log.WriteLine(LogType.NETWORK, "World Map {0:000} ping: {1}ms", w.Key, Latency)
 
                             'Query CPU and Memory usage
                             w.Value.ServerInfo(WorldsInfo(w.Key).CPUUsage, WorldsInfo(w.Key).MemoryUsage)
                         End If
 
                     Catch ex As Exception
-                        Log.WriteLine(LogType.WARNING, "World [M{0:0000}] down.", w.Key)
+                        Log.WriteLine(LogType.WARNING, "World Map {0:000} Unavailable!", w.Key)
 
                         DeadServers.Add(w.Key)
                     End Try
@@ -211,7 +209,7 @@ Public Module WC_Network
             End SyncLock
 
             'Notification message
-            If Worlds.Count = 0 Then Log.WriteLine(LogType.WARNING, "No world servers available!")
+            If Worlds.Count = 0 Then Log.WriteLine(LogType.WARNING, "All world servers are offline!")
 
             'Drop WorldServers
             Disconnect("NULL", DeadServers)
@@ -224,7 +222,7 @@ Public Module WC_Network
                     Latency = Math.Abs(MyTime - ServerTime)
                     Log.WriteLine(LogType.NETWORK, "Voice Server ping: {0}ms", Latency)
                 Catch ex As Exception
-                    Log.WriteLine(LogType.WARNING, "Voice Server down.")
+                    Log.WriteLine(LogType.WARNING, "Voice Server Offline.")
                     VoiceDisconnect()
                 End Try
             End If
