@@ -61,7 +61,7 @@ Public Module WS_Handlers_Misc
             Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_NAME_QUERY [GUID={2:X}]", Client.IP, Client.Port, GUID)
             Dim SMSG_NAME_QUERY_RESPONSE As New PacketClass(OPCODES.SMSG_NAME_QUERY_RESPONSE)
 
-            'RESERVED For Server Bot
+            'RESERVED For Warden Bot
             If GUID = WardenGUID Then
                 SMSG_NAME_QUERY_RESPONSE.AddUInt64(GUID)
                 SMSG_NAME_QUERY_RESPONSE.AddString(WardenNAME)
@@ -90,7 +90,7 @@ Public Module WS_Handlers_Misc
                     Exit Sub
                 Else
                     Dim MySQLQuery As New DataTable
-                    Database.Query(String.Format("SELECT char_name, char_race, char_class, char_gender FROM characters WHERE char_guid = ""{0}"";", GUID), MySQLQuery)
+                    CharacterDatabase.Query(String.Format("SELECT char_name, char_race, char_class, char_gender FROM characters WHERE char_guid = ""{0}"";", GUID), MySQLQuery)
 
                     If MySQLQuery.Rows.Count > 0 Then
                         SMSG_NAME_QUERY_RESPONSE.AddUInt64(GUID)

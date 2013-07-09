@@ -39,7 +39,7 @@ Public Module WS_Creatures
 
             'DONE: Load Item Data from MySQL
             Dim MySQLQuery As New DataTable
-            Database.Query(String.Format("SELECT * FROM creatures WHERE creature_id = {0};", CreatureID), MySQLQuery)
+            WorldDatabase.Query(String.Format("SELECT * FROM creatures WHERE creature_id = {0};", CreatureID), MySQLQuery)
 
             If MySQLQuery.Rows.Count = 0 Then
                 Log.WriteLine(LogType.FAILED, "CreatureID {0} not found in SQL database.", CreatureID)
@@ -142,7 +142,7 @@ Public Module WS_Creatures
         End Sub
         Public Sub Save()
             If found_ = False Then
-                Database.Update("INSERT INTO creatures (creature_id)  VALUES (" & Id & ");")
+                WorldDatabase.Update("INSERT INTO creatures (creature_id)  VALUES (" & Id & ");")
             End If
 
             Dim tmp As String = "UPDATE creatures SET"
@@ -187,7 +187,7 @@ Public Module WS_Creatures
             tmp = tmp & ", creature_resArcane=""" & Resistances(6) & """"
 
             tmp = tmp + String.Format(" WHERE creature_id = ""{0}"";", Id)
-            Database.Update(tmp)
+            WorldDatabase.Update(tmp)
         End Sub
         Private found_ As Boolean = False
 
@@ -363,7 +363,7 @@ Public Module WS_Creatures
         Public ReadOnly Property NPCTextID() As Integer
             Get
                 Dim MysqlResult As New DataTable
-                Database.Query(String.Format("SELECT textid FROM npc_gossip_textid WHERE creatureid = '{0}'", GUID - GUID_UNIT), MysqlResult)
+                WorldDatabase.Query(String.Format("SELECT textid FROM npc_gossip_textid WHERE creatureid = '{0}'", GUID - GUID_UNIT), MysqlResult)
                 If MysqlResult.Rows.Count > 0 Then
                     Return CType(MysqlResult.Rows(0).Item("textid"), Integer)
                 End If
@@ -375,7 +375,7 @@ Public Module WS_Creatures
         Public ReadOnly Property isWaypoint() As Boolean
             Get
                 Dim MySQLQuery As New DataTable
-                Database.Query(String.Format("SELECT Count(*) FROM creature_movement WHERE spawnid='{0}'", Me.SpawnID), MySQLQuery)
+                WorldDatabase.Query(String.Format("SELECT Count(*) FROM creature_movement WHERE spawnid='{0}'", Me.SpawnID), MySQLQuery)
                 If MySQLQuery.Rows(0).Item(0) > 0 Then
                     Return True
                 Else
@@ -866,7 +866,7 @@ Public Module WS_Creatures
         Public Function GenerateLoot(ByRef Character As CharacterObject, ByVal LootType As LootType) As Boolean
             'DONE: Loot generation
             Dim MySQLQuery As New DataTable
-            Database.Query(String.Format("SELECT * FROM loots WHERE loot_creature = {0};", ID), MySQLQuery)
+            WorldDatabase.Query(String.Format("SELECT * FROM loots WHERE loot_creature = {0};", ID), MySQLQuery)
             If MySQLQuery.Rows.Count = 0 Then Return False
 
             'TODO: Check if we're in a heroic instance!
@@ -1128,7 +1128,7 @@ Public Module WS_Creatures
             'WARNING: Use only for loading creature from DB
             If Info Is Nothing Then
                 Dim MySQLQuery As New DataTable
-                Database.Query(String.Format("SELECT * FROM spawns_creatures WHERE spawn_id = {0};", GUID_), MySQLQuery)
+                WorldDatabase.Query(String.Format("SELECT * FROM spawns_creatures WHERE spawn_id = {0};", GUID_), MySQLQuery)
                 If MySQLQuery.Rows.Count > 0 Then
                     Info = MySQLQuery.Rows(0)
                 Else
@@ -1185,7 +1185,7 @@ Public Module WS_Creatures
             End Try
         End Sub
         Public Sub New(ByVal GUID_ As ULong, ByVal ID_ As Integer)
-            'WARNING: Use only for spawning new crature
+            'WARNING: Use only for spawning new creature
 
             If Not CREATURESDatabase.ContainsKey(ID_) Then
                 Dim baseCreature As New CreatureInfo(ID_)
@@ -1205,7 +1205,7 @@ Public Module WS_Creatures
             End Try
         End Sub
         Public Sub New(ByVal ID_ As Integer)
-            'WARNING: Use only for spawning new crature
+            'WARNING: Use only for spawning new creature
 
             If Not CREATURESDatabase.ContainsKey(ID_) Then
                 Dim baseCreature As New CreatureInfo(ID_)
@@ -1229,7 +1229,7 @@ Public Module WS_Creatures
 
         End Sub
         Public Sub New(ByVal ID_ As Integer, ByVal PosX As Single, ByVal PosY As Single, ByVal PosZ As Single, ByVal Orientation As Single, ByVal Map As Integer, Optional ByVal Duration As Integer = 0)
-            'WARNING: Use only for spawning new crature
+            'WARNING: Use only for spawning new creature
 
             If Not CREATURESDatabase.ContainsKey(ID_) Then
                 Dim baseCreature As New CreatureInfo(ID_)
@@ -1510,7 +1510,7 @@ Public Module WS_Creatures
         Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_NPC_TEXT_QUERY [TextID={2}]", Client.IP, Client.Port, TextID)
 
         Dim MySQLQuery As New DataTable
-        Database.Query(String.Format("SELECT * FROM npcText WHERE entry = {0};", TextID), MySQLQuery)
+        WorldDatabase.Query(String.Format("SELECT * FROM npcText WHERE entry = {0};", TextID), MySQLQuery)
 
         'DONE: Load TextID
         Dim response As New PacketClass(OPCODES.SMSG_NPC_TEXT_UPDATE)
