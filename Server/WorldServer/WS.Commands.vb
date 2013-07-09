@@ -852,7 +852,7 @@ Public Module WS_Commands
         Return True
     End Function
 
-    <ChatCommandAttribute("GoToStart", "GOTOSTART <RACE> - Instantly teleports selected character to specified race start location.", AccessLevel.GameMaster)> _
+    <ChatCommandAttribute("Start", "Start Location <RACE> - Instantly teleports selected character to specified race start location.", AccessLevel.GameMaster)> _
     Public Function cmdGoToStart(ByRef c As CharacterObject, ByVal StringRace As String) As Boolean
         If c.TargetGUID = 0 Then
             c.CommandResponse("Select target first!")
@@ -886,7 +886,7 @@ Public Module WS_Commands
                 Case "UNDEAD", "UN"
                     Race = Races.RACE_UNDEAD
                 Case Else
-                    c.CommandResponse("Unknown race. Use DR,BE,DW,GN,HU,NE,OR,TA,TR,UN for race.")
+                    c.CommandResponse("Unknown race. Use DR, BE, DW, GN, HU, NE, OR, TA, TR, UN for race.")
                     Return True
             End Select
 
