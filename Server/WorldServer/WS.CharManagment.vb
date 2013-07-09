@@ -5277,21 +5277,21 @@ CheckXPAgain:
 
         Dim ButtonPos As Integer = 0
 
-        CharacterDatabase.Query(String.Format("SELECT * FROM playercreateinfo WHERE race = {0} AND class = {1};", CType(c.Race, Integer), CType(c.Classe, Integer)), CreateInfo)
+        WorldDatabase.Query(String.Format("SELECT * FROM playercreateinfo WHERE race = {0} AND class = {1};", CType(c.Race, Integer), CType(c.Classe, Integer)), CreateInfo)
         If CreateInfo.Rows.Count <= 0 Then
             Log.WriteLine(LogType.FAILED, "No information found in playercreateinfo table for race={0}, class={1}", c.Race, c.Classe)
         End If
         Dim CreateIndex As Integer = CreateInfo.Rows(0).Item("Index")
 
-        CharacterDatabase.Query(String.Format("SELECT * FROM playercreateinfo_bars WHERE race = {0} AND class = {1} ORDER BY button;", CType(c.Race, Integer), CType(c.Classe, Integer)), CreateInfoBars)
+        WorldDatabase.Query(String.Format("SELECT * FROM playercreateinfo_bars WHERE race = {0} AND class = {1} ORDER BY button;", CType(c.Race, Integer), CType(c.Classe, Integer)), CreateInfoBars)
         If CreateInfoBars.Rows.Count <= 0 Then
             Log.WriteLine(LogType.FAILED, "No information found in playercreateinfo_bars table for race={0}, class={1}", c.Race, c.Classe)
         End If
-        CharacterDatabase.Query(String.Format("SELECT * FROM playercreateinfo_skills WHERE indexid = {0};", CreateIndex), CreateInfoSkills)
+        WorldDatabase.Query(String.Format("SELECT * FROM playercreateinfo_skills WHERE indexid = {0};", CreateIndex), CreateInfoSkills)
         If CreateInfoSkills.Rows.Count <= 0 Then
             Log.WriteLine(LogType.FAILED, "No information found in playercreateinfo_skills table for Index={0}", CreateIndex)
         End If
-        CharacterDatabase.Query(String.Format("SELECT * FROM playercreateinfo_spells WHERE indexid = {0};", CreateIndex), CreateInfoSpells)
+        WorldDatabase.Query(String.Format("SELECT * FROM playercreateinfo_spells WHERE indexid = {0};", CreateIndex), CreateInfoSpells)
         If CreateInfoSpells.Rows.Count <= 0 Then
             Log.WriteLine(LogType.FAILED, "No information found in playercreateinfo_spells table for Index={0}", CreateIndex)
         End If
@@ -5406,14 +5406,14 @@ CheckXPAgain:
     End Sub
     Public Sub CreateCharacterItems(ByRef c As CharacterObject)
         Dim CreateInfo As New DataTable
-        CharacterDatabase.Query(String.Format("SELECT * FROM playercreateinfo WHERE race = {0} AND class = {1};", CType(c.Race, Integer), CType(c.Classe, Integer)), CreateInfo)
+        WorldDatabase.Query(String.Format("SELECT * FROM playercreateinfo WHERE race = {0} AND class = {1};", CType(c.Race, Integer), CType(c.Classe, Integer)), CreateInfo)
         If CreateInfo.Rows.Count <= 0 Then
             Log.WriteLine(LogType.FAILED, "No information found in playercreateinfo table for race={0}, class={1}", c.Race, c.Classe)
         End If
         Dim CreateIndex As Integer = CreateInfo.Rows(0).Item("Index")
 
         Dim CreateInfoItems As New DataTable
-        CharacterDatabase.Query(String.Format("SELECT * FROM playercreateinfo_items WHERE indexid = {0};", CreateIndex), CreateInfoItems)
+        WorldDatabase.Query(String.Format("SELECT * FROM playercreateinfo_items WHERE indexid = {0};", CreateIndex), CreateInfoItems)
         If CreateInfoItems.Rows.Count <= 0 Then
             Log.WriteLine(LogType.FAILED, "No information found in playercreateinfo_bars table for Index={0}", CreateIndex)
         End If
