@@ -84,7 +84,7 @@ Public Module RS_Main
     Public Config As XMLConfigFile
     <XmlRoot(ElementName:="RealmServer")> _
     Public Class XMLConfigFile
-        <XmlElement(ElementName:="RSPort")> Public RSPort As Int32 = 0
+        <XmlElement(ElementName:="RSPort")> Public RSPort As Int32 = 3724
         <XmlElement(ElementName:="RSHost")> Public RSHost As String = "127.0.0.1"
         <XmlElement(ElementName:="AccountDatabase")> Public AccountDatabase As String = "root;mangos;127.0.0.1;3306;mangos_account;MySQL"
 
