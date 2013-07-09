@@ -76,8 +76,6 @@ Public Module WS_Main
     Public Config As XMLConfigFile
     <XmlRoot(ElementName:="WorldServer")> _
     Public Class XMLConfigFile
-        '<XmlElement(ElementName:="WSPort")> Public WSPort As Integer = 4720
-        '<XmlElement(ElementName:="WSHost")> Public WSHost As String = "127.0.0.1"
         <XmlElement(ElementName:="ServerLimit")> Public ServerLimit As Integer = 10
         <XmlElement(ElementName:="XPRate")> Public XPRate As Single = 1.0
         <XmlElement(ElementName:="ManaRegenerationRate")> Public ManaRegenerationRate As Single = 1.0
@@ -90,9 +88,7 @@ Public Module WS_Main
         <XmlElement(ElementName:="SQLUser")> Public SQLUser As String = "root"
         <XmlElement(ElementName:="SQLPass")> Public SQLPass As String = "mangos"
         <XmlElement(ElementName:="SQLHost")> Public SQLHost As String = "localhost"
-        '<XmlElement(ElementName:="SQLPort")> Public SQLPort As String = "3306"
-        '<XmlElement(ElementName:="SQLDBName")> Public SQLDBName As String = "mangosvb"
-        '<XmlElement(ElementName:="SQLDBType")> Public SQLDBType As SQL.DB_Type = SQL.DB_Type.MySQL
+
 		<XmlElement(ElementName:="AccountDatabase")> Public AccountDatabase As String = "root;mangos;localhost;3306;account;MySQL"
         <XmlElement(ElementName:="CharacterDatabase")> Public CharacterDatabase As String = "root;mangos;localhost;3306;character;MySQL"
         <XmlElement(ElementName:="WorldDatabase")> Public WorldDatabase As String = "root;mangos;localhost;3306;world;MySQL"

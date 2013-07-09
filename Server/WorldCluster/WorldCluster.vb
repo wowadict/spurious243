@@ -49,8 +49,6 @@ Public Module WorldCluster
     Public Config As XMLConfigFile
     <XmlRoot(ElementName:="WorldCluster")> _
     Public Class XMLConfigFile
-        '<XmlElement(ElementName:="WSPort")> Public WSPort As Integer = 4720
-        '<XmlElement(ElementName:="WSHost")> Public WSHost As String = "127.0.0.1"
 		<XmlElement(ElementName:="WCPort")> Public WCPort As Integer = 8085
 		<XmlElement(ElementName:="WCHost")> Public WCHost As String = "127.0.0.1"
         <XmlElement(ElementName:="ServerLimit")> Public ServerLimit As Integer = 10
@@ -60,9 +58,7 @@ Public Module WorldCluster
         <XmlElement(ElementName:="SQLUser")> Public SQLUser As String = "root"
         <XmlElement(ElementName:="SQLPass")> Public SQLPass As String = "mangos"
         <XmlElement(ElementName:="SQLHost")> Public SQLHost As String = "localhost"
-        '<XmlElement(ElementName:="SQLPort")> Public SQLPort As String = "3306"
-        '<XmlElement(ElementName:="SQLDBName")> Public SQLDBName As String = "mangosvb"
-        '<XmlElement(ElementName:="SQLDBType")> Public SQLDBType As SQL.DB_Type = SQL.DB_Type.MySQL
+
 		<XmlElement(ElementName:="AccountDatabase")> Public AccountDatabase As String = "root;mangos;localhost;3306;mangos_account;MySQL"
         <XmlElement(ElementName:="CharacterDatabase")> Public CharacterDatabase As String = "root;mangos;localhost;3306;mangos_character;MySQL"
         <XmlElement(ElementName:="WorldDatabase")> Public WorldDatabase As String = "root;mangos;localhost;3306;mangos_world;MySQL"
@@ -91,14 +87,6 @@ Public Module WorldCluster
             oStmR.Close()
 
             Console.WriteLine(".[done]")
-
-            ''DONE: Setting SQL Connection
-            'Database.SQLDBName = Config.SQLDBName
-            'Database.SQLHost = Config.SQLHost
-            'Database.SQLPort = Config.SQLPort
-            'Database.SQLUser = Config.SQLUser
-            'Database.SQLPass = Config.SQLPass
-            'Database.SQLTypeServer = Config.SQLDBType
 			
 			'DONE: Setting SQL Connections
             Dim AccountDBSettings() As String = Split(Config.AccountDatabase, ";")
