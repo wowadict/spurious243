@@ -49,8 +49,8 @@ Public Module WorldCluster
     Public Config As XMLConfigFile
     <XmlRoot(ElementName:="WorldCluster")> _
     Public Class XMLConfigFile
-		<XmlElement(ElementName:="WCPort")> Public WCPort As Integer = 8085
-		<XmlElement(ElementName:="WCHost")> Public WCHost As String = "127.0.0.1"
+        <XmlElement(ElementName:="WSPort")> Public WSPort As Integer = 4720
+        <XmlElement(ElementName:="WSHost")> Public WSHost As String = "127.0.0.1"
         <XmlElement(ElementName:="ServerLimit")> Public ServerLimit As Integer = 10
         <XmlElement(ElementName:="LogType")> Public LogType As String = "COLORCONSOLE"
         <XmlElement(ElementName:="LogLevel")> Public LogLevel As LogType = mangosVB.Common.BaseWriter.LogType.NETWORK
@@ -58,10 +58,9 @@ Public Module WorldCluster
         <XmlElement(ElementName:="SQLUser")> Public SQLUser As String = "root"
         <XmlElement(ElementName:="SQLPass")> Public SQLPass As String = "mangos"
         <XmlElement(ElementName:="SQLHost")> Public SQLHost As String = "localhost"
-
-		<XmlElement(ElementName:="AccountDatabase")> Public AccountDatabase As String = "root;mangos;localhost;3306;mangos_account;MySQL"
-        <XmlElement(ElementName:="CharacterDatabase")> Public CharacterDatabase As String = "root;mangos;localhost;3306;mangos_character;MySQL"
-        <XmlElement(ElementName:="WorldDatabase")> Public WorldDatabase As String = "root;mangos;localhost;3306;mangos_world;MySQL"
+        <XmlElement(ElementName:="SQLPort")> Public SQLPort As String = "3306"
+        <XmlElement(ElementName:="SQLDBName")> Public SQLDBName As String = "mangosvb"
+        <XmlElement(ElementName:="SQLDBType")> Public SQLDBType As SQL.DB_Type = SQL.DB_Type.MySQL
         <XmlElement(ElementName:="ClusterListenMethod")> Public ClusterMethod As String = "tcp"
         <XmlElement(ElementName:="ClusterListenHost")> Public ClusterHost As String = "127.0.0.1"
         <XmlElement(ElementName:="ClusterListenPort")> Public ClusterPort As Integer = 50001
@@ -87,43 +86,14 @@ Public Module WorldCluster
             oStmR.Close()
 
             Console.WriteLine(".[done]")
-			
-			'DONE: Setting SQL Connections
-            Dim AccountDBSettings() As String = Split(Config.AccountDatabase, ";")
-            If AccountDBSettings.Length = 6 Then
-                AccountDatabase.SQLDBName = AccountDBSettings(4)
-                AccountDatabase.SQLHost = AccountDBSettings(2)
-                AccountDatabase.SQLPort = AccountDBSettings(3)
-                AccountDatabase.SQLUser = AccountDBSettings(0)
-                AccountDatabase.SQLPass = AccountDBSettings(1)
-                AccountDatabase.SQLTypeServer = CType([Enum].Parse(GetType(SQL.DB_Type), AccountDBSettings(5)), SQL.DB_Type)
-            Else
-                Console.WriteLine("Invalid connect string for the account database!")
-            End If
 
-            Dim CharacterDBSettings() As String = Split(Config.CharacterDatabase, ";")
-            If CharacterDBSettings.Length = 6 Then
-                CharacterDatabase.SQLDBName = CharacterDBSettings(4)
-                CharacterDatabase.SQLHost = CharacterDBSettings(2)
-                CharacterDatabase.SQLPort = CharacterDBSettings(3)
-                CharacterDatabase.SQLUser = CharacterDBSettings(0)
-                CharacterDatabase.SQLPass = CharacterDBSettings(1)
-                CharacterDatabase.SQLTypeServer = CType([Enum].Parse(GetType(SQL.DB_Type), CharacterDBSettings(5)), SQL.DB_Type)
-            Else
-                Console.WriteLine("Invalid connect string for the character database!")
-            End If
-
-            Dim WorldDBSettings() As String = Split(Config.WorldDatabase, ";")
-            If WorldDBSettings.Length = 6 Then
-                WorldDatabase.SQLDBName = WorldDBSettings(4)
-                WorldDatabase.SQLHost = WorldDBSettings(2)
-                WorldDatabase.SQLPort = WorldDBSettings(3)
-                WorldDatabase.SQLUser = WorldDBSettings(0)
-                WorldDatabase.SQLPass = WorldDBSettings(1)
-                WorldDatabase.SQLTypeServer = CType([Enum].Parse(GetType(SQL.DB_Type), WorldDBSettings(5)), SQL.DB_Type)
-            Else
-                Console.WriteLine("Invalid connect string for the world database!")
-            End If
+            'DONE: Setting SQL Connection
+            Database.SQLDBName = Config.SQLDBName
+            Database.SQLHost = Config.SQLHost
+            Database.SQLPort = Config.SQLPort
+            Database.SQLUser = Config.SQLUser
+            Database.SQLPass = Config.SQLPass
+            Database.SQLTypeServer = Config.SQLDBType
 
             'DONE: Creating logger
             Common.BaseWriter.CreateLog(Config.LogType, Config.LogConfig, Log)
@@ -136,30 +106,8 @@ Public Module WorldCluster
 #End Region
 
 #Region "WS.DataAccess"
-    'Public Database As New SQL
-    Public AccountDatabase As New SQL
-    Public CharacterDatabase As New SQL
-    Public WorldDatabase As New SQL
-    Public Sub AccountSQLEventHandler(ByVal MessageID As SQL.EMessages, ByVal OutBuf As String)
-        'Public Sub SLQEventHandler(ByVal MessageID As SQL.EMessages, ByVal OutBuf As String)
-        Select Case MessageID
-            Case SQL.EMessages.ID_Error
-                'Log.WriteLine(LogType.FAILED, OutBuf)
-                Log.WriteLine(LogType.FAILED, "[WORLD] " & OutBuf)
-            Case SQL.EMessages.ID_Message
-                'Log.WriteLine(LogType.SUCCESS, OutBuf)
-                Log.WriteLine(LogType.SUCCESS, "[WORLD] " & OutBuf)
-        End Select
-    End Sub
-    Public Sub CharacterSQLEventHandler(ByVal MessageID As SQL.EMessages, ByVal OutBuf As String)
-        Select Case MessageID
-            Case SQL.EMessages.ID_Error
-                Log.WriteLine(LogType.FAILED, "[CHARACTER] " & OutBuf)
-            Case SQL.EMessages.ID_Message
-                Log.WriteLine(LogType.SUCCESS, "[CHARACTER] " & OutBuf)
-        End Select
-    End Sub
-    Public Sub WorldSQLEventHandler(ByVal MessageID As SQL.EMessages, ByVal OutBuf As String)
+    Public Database As New SQL
+    Public Sub SLQEventHandler(ByVal MessageID As SQL.EMessages, ByVal OutBuf As String)
         Select Case MessageID
             Case SQL.EMessages.ID_Error
                 Log.WriteLine(LogType.FAILED, OutBuf)
@@ -201,25 +149,13 @@ Public Module WorldCluster
 
         LoadConfig()
         Console.ForegroundColor = System.ConsoleColor.Gray
-        'AddHandler Database.SQLMessage, AddressOf SLQEventHandler
-        'Database.Connect()
-        'Database.Update("SET NAMES 'utf8';")
-		AddHandler AccountDatabase.SQLMessage, AddressOf AccountSQLEventHandler
-        AddHandler CharacterDatabase.SQLMessage, AddressOf CharacterSQLEventHandler
-        AddHandler WorldDatabase.SQLMessage, AddressOf WorldSQLEventHandler
-        AccountDatabase.Connect()
-        AccountDatabase.Update("SET NAMES 'utf8';")
-        CharacterDatabase.Connect()
-        CharacterDatabase.Update("SET NAMES 'utf8';")
-        WorldDatabase.Connect()
-        WorldDatabase.Update("SET NAMES 'utf8';")
+        AddHandler Database.SQLMessage, AddressOf SLQEventHandler
+        Database.Connect()
+        Database.Update("SET NAMES 'utf8';")
 
 #If DEBUG Then
         Log.WriteLine(LogType.DEBUG, "Setting MySQL into debug mode..[done]")
-        'Database.Update("SET SESSION sql_mode='STRICT_ALL_TABLES';")
-		AccountDatabase.Update("SET SESSION sql_mode='STRICT_ALL_TABLES';")
-        CharacterDatabase.Update("SET SESSION sql_mode='STRICT_ALL_TABLES';")
-        WorldDatabase.Update("SET SESSION sql_mode='STRICT_ALL_TABLES';")
+        Database.Update("SET SESSION sql_mode='STRICT_ALL_TABLES';")
 #End If
         InitializeInternalDatabase()
         IntializePacketHandlers()
@@ -253,10 +189,8 @@ Public Module WorldCluster
                                 Log.WriteLine(LogType.WARNING, "Server shutting down...")
                                 WS.m_flagStopListen = True
                             Case "createaccount", "/createaccount"
-                                'Database.InsertSQL([String].Format("INSERT INTO accounts (account, password, email, joindate, last_ip) VALUES ('{0}', '{1}', '{2}', '{3}', '{4}')", cmd(1), cmd(2), cmd(3), Format(Now, "yyyy-MM-dd"), "0.0.0.0"))
-                                'If Database.QuerySQL("SELECT * FROM accounts WHERE account = "" & packet_account & "";") Then
-								AccountDatabase.InsertSQL([String].Format("INSERT INTO accounts (account, password, email, joindate, last_ip) VALUES ('{0}', '{1}', '{2}', '{3}', '{4}')", cmd(1), cmd(2), cmd(3), Format(Now, "yyyy-MM-dd"), "0.0.0.0"))
-                                If AccountDatabase.QuerySQL("SELECT * FROM accounts WHERE account = "" & packet_account & "";") Then
+                                Database.InsertSQL([String].Format("INSERT INTO accounts (account, password, email, joindate, last_ip) VALUES ('{0}', '{1}', '{2}', '{3}', '{4}')", cmd(1), cmd(2), cmd(3), Format(Now, "yyyy-MM-dd"), "0.0.0.0"))
+                                If Database.QuerySQL("SELECT * FROM accounts WHERE account = "" & packet_account & "";") Then
                                     Console.ForegroundColor = System.ConsoleColor.Green
                                     Console.WriteLine("[Account: " & cmd(1) & " Password: " & cmd(2) & " Email: " & cmd(3) & "] has been created.")
                                     Console.ForegroundColor = System.ConsoleColor.Gray
@@ -274,8 +208,8 @@ Public Module WorldCluster
                                 aName = Console.ReadLine
                                 Dim result As New DataTable
                                 Dim result1 As New DataTable
-                                AccountDatabase.Query("SELECT banned FROM accounts WHERE account = """ & aName & """;", result)
-                                AccountDatabase.Query("SELECT last_ip FROM accounts WHERE account = """ & aName & """;", result1)
+                                Database.Query("SELECT banned FROM accounts WHERE account = """ & aName & """;", result)
+                                Database.Query("SELECT last_ip FROM accounts WHERE account = """ & aName & """;", result1)
                                 Dim IP As String
                                 IP = result1.Rows(0).Item("last_ip")
                                 If result.Rows.Count > 0 Then
@@ -286,16 +220,16 @@ Public Module WorldCluster
                                         Console.ForegroundColor = System.ConsoleColor.Yellow
 
                                     ElseIf IP = "127.0.0.1" Then
-                                        Console.WriteLine("[{1}] Account [{0}] has the same IP Address as the host.", aName, Format(TimeOfDay, "hh:mm:ss"))
+                                        Console.WriteLine("[{1}] Account [{0}] has the same IP Adress as the host.", aName, Format(TimeOfDay, "hh:mm:ss"))
                                     ElseIf IP = "0.0.0.0" Then
                                         Console.WriteLine("[{1}] Account [{0}] does not have an IP Address.", aName, Format(TimeOfDay, "hh:mm:ss"))
                                     Else
-                                        AccountDatabase.Query("SELECT last_ip FROM accounts WHERE account = """ & aName & """;", result)
+                                        Database.Query("SELECT last_ip FROM accounts WHERE account = """ & aName & """;", result)
                                         Dim IP1 As String
                                         IP1 = result.Rows(0).Item("last_ip")
-                                        AccountDatabase.Update("UPDATE accounts SET banned = 1 WHERE account = """ & aName & """;")
+                                        Database.Update("UPDATE accounts SET banned = 1 WHERE account = """ & aName & """;")
                                         Console.WriteLine(String.Format("[{1}] IP Address [{0}] is now banned.", IP, Format(TimeOfDay, "hh:mm:ss")))
-                                        AccountDatabase.Update(String.Format("INSERT INTO `bans` VALUES ('{0}', '{1}', '{2}', '{3}');", IP1, Format(Now, "yyyy-MM-dd"), "No Reason Specified.", aName))
+                                        Database.Update(String.Format("INSERT INTO `bans` VALUES ('{0}', '{1}', '{2}', '{3}');", IP1, Format(Now, "yyyy-MM-dd"), "No Reason Specified.", aName))
                                         Console.WriteLine(String.Format("[{1}] Account [{0}] is now banned.", aName, Format(TimeOfDay, "hh:mm:ss")))
                                     End If
                                 Else
@@ -309,7 +243,7 @@ Public Module WorldCluster
                                 Console.ForegroundColor = System.ConsoleColor.Magenta
                                 aName = Console.ReadLine
                                 Dim result As New DataTable
-                                AccountDatabase.Query("SELECT banned FROM accounts WHERE account = """ & aName & """;", result)
+                                Database.Query("SELECT banned FROM accounts WHERE account = """ & aName & """;", result)
 
                                 If result.Rows.Count > 0 Then
                                     If CInt(result.Rows(0).Item("banned")) = 0 Then
@@ -317,11 +251,11 @@ Public Module WorldCluster
                                         Console.WriteLine(String.Format("[{1}] Account [{0}] is not banned.", aName, Format(TimeOfDay, "hh:mm:ss")))
                                     Else
                                         Console.ForegroundColor = System.ConsoleColor.Red
-                                        AccountDatabase.Update("UPDATE accounts SET banned = 0 WHERE account = """ & aName & """;")
-                                        AccountDatabase.Query("SELECT last_ip FROM accounts WHERE account = """ & aName & """;", result)
+                                        Database.Update("UPDATE accounts SET banned = 0 WHERE account = """ & aName & """;")
+                                        Database.Query("SELECT last_ip FROM accounts WHERE account = """ & aName & """;", result)
                                         Dim IP As String
                                         IP = result.Rows(0).Item("last_ip")
-                                        AccountDatabase.Update([String].Format("DELETE FROM `bans` WHERE `ip` = '{0}';", IP))
+                                        Database.Update([String].Format("DELETE FROM `bans` WHERE `ip` = '{0}';", IP))
                                         Console.WriteLine(String.Format("[{1}] Account [{0}] has been unbanned.", aName, Format(TimeOfDay, "hh:mm:ss")))
 
                                     End If
@@ -331,9 +265,9 @@ Public Module WorldCluster
                             Case "info", "/info"
                                 Log.WriteLine(LogType.INFORMATION, "Used memory: {0}", Format(GC.GetTotalMemory(False), "### ### ##0 bytes"))
                             Case "db.restart", "/db.restart"
-                                AccountDatabase.Restart()
+                                Database.Restart()
                             Case "db.run", "/db.run"
-                                AccountDatabase.Update(cmds(1))
+                                Database.Update(cmds(1))
                             Case "help", "/help"
                                 Console.ForegroundColor = System.ConsoleColor.Blue
                                 Console.WriteLine("'mangosVB.WorldServer' Command list:")

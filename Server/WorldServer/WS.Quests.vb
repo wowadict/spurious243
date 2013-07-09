@@ -55,7 +55,7 @@ Public Module WS_Quests
         QUEST_FLAGS_SHARABLE = 8 'Can be shared
         QUEST_FLAGS_EPIC = 32 'Unsure of content
         QUEST_FLAGS_RAID = 64 'Raid quest
-        QUEST_FLAGS_TBC = 128 'Available if TBC expansion enabled only
+        QUEST_FLAGS_TBC = 128 'Available if TBC expension enabled only
         QUEST_FLAGS_UNK2 = 256 '_DELIVER_MORE Quest needs more than normal _q-item_ drops from mobs
         QUEST_FLAGS_HIDDEN_REWARDS = 512 'Items and money rewarded only sent in SMSG_QUESTGIVER_OFFER_REWARD (not in SMSG_QUESTGIVER_QUEST_DETAILS or in client quest log(SMSG_QUEST_QUERY_RESPONSE))
         QUEST_FLAGS_UNK4 = 1024 'Unknown tbc flag
@@ -183,7 +183,7 @@ Public Module WS_Quests
             ID = QuestID
 
             Dim MySQLQuery As New DataTable
-            WorldDatabase.Query(String.Format("SELECT * FROM quests WHERE id = {0};", QuestID), MySQLQuery)
+            Database.Query(String.Format("SELECT * FROM quests WHERE id = {0};", QuestID), MySQLQuery)
 
             If MySQLQuery.Rows.Count = 0 Then Throw New ApplicationException("Quest " & QuestID & " not found in database.")
 
@@ -527,20 +527,15 @@ Public Module WS_Quests
     Public Function GetQuestMenu(ByRef c As CharacterObject, ByVal GUID As ULong) As QuestMenu
         Dim QuestMenu As New QuestMenu
 
-        'DONE: Available quests
+        'DONE: Avaible quests
         Dim MySQLQuery As New DataTable
 
         'NOTE: This is more complex query with checking requirements (may do some slowdowns)
         'Database.Query(String.Format("SELECT * FROM quests q WHERE q.NPC_Start = {0} AND q.Level_Start <= {1} AND NOT EXISTS(SELECT * FROM characters_quests WHERE char_guid = {2} AND quest_id = q.id) " & _
         '"AND (q.Required_Quest = 0 OR EXISTS(SELECT * FROM characters_quests WHERE char_guid = {2} AND quest_status = -1 AND quest_id = q.Required_Quest));", _
         'WORLD_CREATUREs(GUID).ID, c.Level + 1, c.GUID), MySQLQuery)
-        'Database.Query(String.Format("SELECT s.questid, q.Title, q.Level_Normal, q.specialflags FROM queststarters s LEFT JOIN quests q ON (s.questid=q.id) WHERE s.type = {0} AND s.typeid = {1} AND q.Level_Start <= {2} AND (q.Required_Race = 0 OR (Required_Race & {4}) > 0) AND (q.Required_Class = 0 OR (Required_Class & {5}) > 0) " & _
-        '    "AND NOT EXISTS(SELECT * FROM characters_quests WHERE char_guid = {3} AND quest_status <> -2 AND quest_id = q.id) AND (q.Required_Quest1 = 0 OR EXISTS(SELECT * FROM characters_quests WHERE char_guid = {3} AND quest_status = -1 AND quest_id = q.Required_Quest1)) " & _
-        '    "AND (q.Required_Quest2 = 0 OR EXISTS(SELECT * FROM characters_quests WHERE char_guid = {3} AND quest_status = -1 AND quest_id = q.Required_Quest2)) AND (q.Required_Quest3 = 0 OR EXISTS(SELECT * FROM characters_quests WHERE char_guid = {3} AND quest_status = -1 AND quest_id = q.Required_Quest3)) " & _
-        '    "AND (q.Required_Quest4 = 0 OR EXISTS(SELECT * FROM characters_quests WHERE char_guid = {3} AND quest_status = -1 AND quest_id = q.Required_Quest4));", _
-        '    CType(QuestGiverType.QUEST_OBJECTTYPE_CREATURE, Byte), CType(WORLD_CREATUREs(GUID), CreatureObject).ID, c.Level, c.GUID, 1 << (c.Race - 1), 1 << (c.Classe - 1)), MySQLQuery)
-        WorldDatabase.Query(String.Format("SELECT s.questid, q.Title, q.Level_Normal, q.specialflags FROM queststarters s LEFT JOIN quests q ON (s.questid=q.id) WHERE s.type = {0} AND s.typeid = {1} AND q.Level_Start <= {2} AND (q.Required_Race = 0 OR (Required_Race & {4}) > 0) AND (q.Required_Class = 0 OR (Required_Class & {5}) > 0) " & _
-            "AND NOT EXISTS(SELECT * FROM characters_quests WHERE char_guid = {3} AND quest_status <> -2 AND quest_id = q.id) AND (q.Required_Quest1 = 0 OR EXISTS(SELECT * FROM characters_quests WHERE char_guid = {3} AND quest_status = -1 AND quest_id = q.Required_Quest1)) " & _
+        Database.Query(String.Format("SELECT s.questid, q.Title, q.Level_Normal FROM queststarters s LEFT JOIN quests q ON (s.questid=q.id) WHERE s.type = {0} AND s.typeid = {1} AND q.Level_Start <= {2} AND (q.Required_Race = 0 OR (Required_Race & {4}) > 0) AND (q.Required_Class = 0 OR (Required_Class & {5}) > 0) " & _
+            "AND NOT EXISTS(SELECT * FROM characters_quests WHERE char_guid = {3} AND quest_id = q.id) AND (q.Required_Quest1 = 0 OR EXISTS(SELECT * FROM characters_quests WHERE char_guid = {3} AND quest_status = -1 AND quest_id = q.Required_Quest1)) " & _
             "AND (q.Required_Quest2 = 0 OR EXISTS(SELECT * FROM characters_quests WHERE char_guid = {3} AND quest_status = -1 AND quest_id = q.Required_Quest2)) AND (q.Required_Quest3 = 0 OR EXISTS(SELECT * FROM characters_quests WHERE char_guid = {3} AND quest_status = -1 AND quest_id = q.Required_Quest3)) " & _
             "AND (q.Required_Quest4 = 0 OR EXISTS(SELECT * FROM characters_quests WHERE char_guid = {3} AND quest_status = -1 AND quest_id = q.Required_Quest4));", _
             CType(QuestGiverType.QUEST_OBJECTTYPE_CREATURE, Byte), CType(WORLD_CREATUREs(GUID), CreatureObject).ID, c.Level, c.GUID, 1 << (c.Race - 1), 1 << (c.Classe - 1)), MySQLQuery)
@@ -553,7 +548,7 @@ Public Module WS_Quests
         Dim i As Integer
         For i = 0 To QUEST_SLOTS
             If Not c.TalkQuests(i) Is Nothing Then
-                WorldDatabase.Query(String.Format("SELECT questid FROM questfinishers WHERE type = {0} AND typeid = {1} AND questid = {2};", CType(QuestGiverType.QUEST_OBJECTTYPE_CREATURE, Byte), CType(WORLD_CREATUREs(GUID), CreatureObject).ID, c.TalkQuests(i).ID), MySQLQuery)
+                Database.Query(String.Format("SELECT questid FROM questfinishers WHERE type = {0} AND typeid = {1} AND questid = {2};", CType(QuestGiverType.QUEST_OBJECTTYPE_CREATURE, Byte), CType(WORLD_CREATUREs(GUID), CreatureObject).ID, c.TalkQuests(i).ID), MySQLQuery)
                 For Each Row As DataRow In MySQLQuery.Rows
                     QuestMenu.AddMenu(c.TalkQuests(i).Title, c.TalkQuests(i).ID, 0, QuestgiverStatus.DIALOG_STATUS_INCOMPLETE)
                 Next
@@ -571,7 +566,7 @@ Public Module WS_Quests
         'Database.Query(String.Format("SELECT * FROM quests q WHERE q.NPC_Start = -{0} AND q.Level_Start <= {1} AND NOT EXISTS(SELECT * FROM characters_quests WHERE char_guid = {2} AND quest_id = q.id) " & _
         '"AND (q.Required_Quest = 0 OR EXISTS(SELECT * FROM characters_quests WHERE char_guid = {2} AND quest_status = -1 AND quest_id = q.Required_Quest));", _
         'WORLD_GAMEOBJECTs(GUID).ID, c.Level + 1, c.GUID), MySQLQuery)
-        WorldDatabase.Query(String.Format("SELECT s.questid, q.Title, q.Level_Normal FROM queststarters s LEFT JOIN quests q ON (s.questid=q.id) WHERE s.type = {0} AND s.typeid = {1} AND q.Level_Start <= {2} AND (q.Required_Race = 0 OR (Required_Race & {4}) > 0) AND (q.Required_Class = 0 OR (Required_Class & {5}) > 0) " & _
+        Database.Query(String.Format("SELECT s.questid, q.Title, q.Level_Normal FROM queststarters s LEFT JOIN quests q ON (s.questid=q.id) WHERE s.type = {0} AND s.typeid = {1} AND q.Level_Start <= {2} AND (q.Required_Race = 0 OR (Required_Race & {4}) > 0) AND (q.Required_Class = 0 OR (Required_Class & {5}) > 0) " & _
             "AND NOT EXISTS(SELECT * FROM characters_quests WHERE char_guid = {3} AND quest_id = q.id) AND (q.Required_Quest1 = 0 OR EXISTS(SELECT * FROM characters_quests WHERE char_guid = {3} AND quest_status = -1 AND quest_id = q.Required_Quest1)) " & _
             "AND (q.Required_Quest2 = 0 OR EXISTS(SELECT * FROM characters_quests WHERE char_guid = {3} AND quest_status = -1 AND quest_id = q.Required_Quest2)) AND (q.Required_Quest3 = 0 OR EXISTS(SELECT * FROM characters_quests WHERE char_guid = {3} AND quest_status = -1 AND quest_id = q.Required_Quest3)) " & _
             "AND (q.Required_Quest4 = 0 OR EXISTS(SELECT * FROM characters_quests WHERE char_guid = {3} AND quest_status = -1 AND quest_id = q.Required_Quest4));", _
@@ -585,7 +580,7 @@ Public Module WS_Quests
         Dim i As Integer
         For i = 0 To QUEST_SLOTS
             If Not c.TalkQuests(i) Is Nothing Then
-                WorldDatabase.Query(String.Format("SELECT questid FROM questfinishers WHERE type = {0} AND typeid = {1} AND questid = {2};", CType(QuestGiverType.QUEST_OBJECTTYPE_GAMEOBJECT, Byte), WORLD_GAMEOBJECTs(GUID).ID, c.TalkQuests(i).ID), MySQLQuery)
+                Database.Query(String.Format("SELECT questid FROM questfinishers WHERE type = {0} AND typeid = {1} AND questid = {2};", CType(QuestGiverType.QUEST_OBJECTTYPE_GAMEOBJECT, Byte), WORLD_GAMEOBJECTs(GUID).ID, c.TalkQuests(i).ID), MySQLQuery)
                 For Each Row As DataRow In MySQLQuery.Rows
                     QuestMenu.AddMenu(c.TalkQuests(i).Title, c.TalkQuests(i).ID, 0, QuestgiverStatus.DIALOG_STATUS_INCOMPLETE)
                 Next
@@ -957,7 +952,7 @@ Public Module WS_Quests
 
     Public Sub LoadQuests(ByRef c As CharacterObject)
         Dim cQuests As New DataTable
-        CharacterDatabase.Query(String.Format("SELECT * FROM characters_quests q WHERE q.char_guid = {0} AND q.quest_status > -1 LIMIT 25;", c.GUID), cQuests)
+        Database.Query(String.Format("SELECT * FROM characters_quests q WHERE q.char_guid = {0} AND q.quest_status > -1 LIMIT 25;", c.GUID), cQuests)
 
         Dim i As Integer = 0
         For Each cRow As DataRow In cQuests.Rows
@@ -1140,7 +1135,7 @@ Public Module WS_Quests
     Public Function IsGameObjectUsedForQuest(ByRef Gameobject As GameObjectObject, ByRef c As CharacterObject) As Byte
         'If the item got 100% this gameobject is only used for quests.
         Dim MysqlQuery As New DataTable
-        WorldDatabase.Query(String.Format("SELECT quest, item, item_count FROM gameobject_quest_association WHERE entry = {0}", Gameobject.ID), MysqlQuery)
+        Database.Query(String.Format("SELECT quest, item, item_count FROM gameobject_quest_association WHERE entry = {0}", Gameobject.ID), MysqlQuery)
         If MysqlQuery.Rows.Count = 0 Then Return 0
 
         For Each LootRow As DataRow In MysqlQuery.Rows
@@ -1266,9 +1261,9 @@ Public Module WS_Quests
         For i = 0 To QUEST_SLOTS
             If Not c.TalkQuests(i) Is Nothing Then
                 If GuidIsCreature(cGUID) Then
-                    WorldDatabase.Query(String.Format("SELECT questid FROM questfinishers WHERE type = {0} AND typeid = {1} AND questid = {2} LIMIT 1;", CType(QuestGiverType.QUEST_OBJECTTYPE_CREATURE, Byte), CType(WORLD_CREATUREs(cGUID), CreatureObject).ID, c.TalkQuests(i).ID), MySQLQuery)
+                    Database.Query(String.Format("SELECT questid FROM questfinishers WHERE type = {0} AND typeid = {1} AND questid = {2} LIMIT 1;", CType(QuestGiverType.QUEST_OBJECTTYPE_CREATURE, Byte), CType(WORLD_CREATUREs(cGUID), CreatureObject).ID, c.TalkQuests(i).ID), MySQLQuery)
                 Else
-                    WorldDatabase.Query(String.Format("SELECT questid FROM questfinishers WHERE type = {0} AND typeid = {1} AND questid = {2} LIMIT 1;", CType(QuestGiverType.QUEST_OBJECTTYPE_GAMEOBJECT, Byte), CType(WORLD_GAMEOBJECTs(cGUID), GameObjectObject).ID, c.TalkQuests(i).ID), MySQLQuery)
+                    Database.Query(String.Format("SELECT questid FROM questfinishers WHERE type = {0} AND typeid = {1} AND questid = {2} LIMIT 1;", CType(QuestGiverType.QUEST_OBJECTTYPE_GAMEOBJECT, Byte), CType(WORLD_GAMEOBJECTs(cGUID), GameObjectObject).ID, c.TalkQuests(i).ID), MySQLQuery)
                 End If
                 If MySQLQuery.Rows.Count > 0 Then
                     If c.TalkQuests(i).Complete Then Status = QuestgiverStatus.DIALOG_STATUS_REWARD Else Status = QuestgiverStatus.DIALOG_STATUS_INCOMPLETE
@@ -1278,21 +1273,16 @@ Public Module WS_Quests
         Next
 
         'DONE: Queries are last for performance
-        If Status = QuestgiverStatus.DIALOG_STATUS_NONE OrElse Status = QuestgiverStatus.DIALOG_STATUS_INCOMPLETE Then
+        If Status = -1 Then
             'DONE: Do SQL query for available quests
             If GuidIsCreature(cGUID) Then
-                'Database.Query(String.Format("SELECT questid, specialflags FROM queststarters s LEFT JOIN quests q ON (s.questid=q.id) WHERE s.type = {0} AND s.typeid = {1} AND q.Level_Start <= {2} AND (q.Level_Normal = -1 OR q.Level_Normal > {6}) AND (q.Required_Race = 0 OR (Required_Race & {4}) > 0) AND (q.Required_Class = 0 OR (Required_Class & {5}) > 0) " & _
-                '"AND NOT EXISTS(SELECT * FROM characters_quests WHERE char_guid = {3} AND quest_status <> -2 AND quest_id = q.id) AND (q.Required_Quest1 = 0 OR EXISTS(SELECT * FROM characters_quests WHERE char_guid = {3} AND quest_status = -1 AND quest_id = q.Required_Quest1)) " & _
-                '"AND (q.Required_Quest2 = 0 OR EXISTS(SELECT * FROM characters_quests WHERE char_guid = {3} AND quest_status = -1 AND quest_id = q.Required_Quest2)) AND (q.Required_Quest3 = 0 OR EXISTS(SELECT * FROM characters_quests WHERE char_guid = {3} AND quest_status = -1 AND quest_id = q.Required_Quest3)) " & _
-                '"AND (q.Required_Quest4 = 0 OR EXISTS(SELECT * FROM characters_quests WHERE char_guid = {3} AND quest_status = -1 AND quest_id = q.Required_Quest4));", _
-                'CType(QuestGiverType.QUEST_OBJECTTYPE_CREATURE, Byte), CType(WORLD_CREATUREs(cGUID), CreatureObject).ID, c.Level, c.GUID, c.RaceMask, c.ClassMask, c.Level - 6), MySQLQuery)
-                WorldDatabase.Query(String.Format("SELECT questid, specialflags FROM queststarters s LEFT JOIN quests q ON (s.questid=q.id) WHERE s.type = {0} AND s.typeid = {1} AND q.Level_Start <= {2} AND (q.Level_Normal = -1 OR q.Level_Normal > {6}) AND (q.Required_Race = 0 OR (Required_Race & {4}) > 0) AND (q.Required_Class = 0 OR (Required_Class & {5}) > 0) " & _
-                "AND NOT EXISTS(SELECT * FROM characters_quests WHERE char_guid = {3} AND quest_status <> -2 AND quest_id = q.id) AND (q.Required_Quest1 = 0 OR EXISTS(SELECT * FROM characters_quests WHERE char_guid = {3} AND quest_status = -1 AND quest_id = q.Required_Quest1)) " & _
+                Database.Query(String.Format("SELECT questid FROM queststarters s LEFT JOIN quests q ON (s.questid=q.id) WHERE s.type = {0} AND s.typeid = {1} AND q.Level_Start <= {2} AND (q.Level_Normal = -1 OR q.Level_Normal > {6}) AND (q.Required_Race = 0 OR (Required_Race & {4}) > 0) AND (q.Required_Class = 0 OR (Required_Class & {5}) > 0) " & _
+                "AND NOT EXISTS(SELECT * FROM characters_quests WHERE char_guid = {3} AND quest_id = q.id) AND (q.Required_Quest1 = 0 OR EXISTS(SELECT * FROM characters_quests WHERE char_guid = {3} AND quest_status = -1 AND quest_id = q.Required_Quest1)) " & _
                 "AND (q.Required_Quest2 = 0 OR EXISTS(SELECT * FROM characters_quests WHERE char_guid = {3} AND quest_status = -1 AND quest_id = q.Required_Quest2)) AND (q.Required_Quest3 = 0 OR EXISTS(SELECT * FROM characters_quests WHERE char_guid = {3} AND quest_status = -1 AND quest_id = q.Required_Quest3)) " & _
                 "AND (q.Required_Quest4 = 0 OR EXISTS(SELECT * FROM characters_quests WHERE char_guid = {3} AND quest_status = -1 AND quest_id = q.Required_Quest4));", _
-                CType(QuestGiverType.QUEST_OBJECTTYPE_CREATURE, Byte), CType(WORLD_CREATUREs(cGUID), CreatureObject).ID, c.Level, c.GUID, c.RaceMask, c.ClassMask, c.Level - 6), MySQLQuery)
+                CType(QuestGiverType.QUEST_OBJECTTYPE_CREATURE, Byte), CType(WORLD_CREATUREs(cGUID), CreatureObject).ID, c.Level, c.GUID, 1 << (c.Race - 1), 1 << (c.Classe - 1), c.Level - 6), MySQLQuery)
             Else
-                WorldDatabase.Query(String.Format("SELECT questid FROM queststarters s LEFT JOIN quests q ON (s.questid=q.id) WHERE s.type = {0} AND s.typeid = {1} AND q.Level_Start <= {2} AND (q.Level_Normal = -1 OR q.Level_Normal > {6}) AND (q.Required_Race = 0 OR (Required_Race & {4}) > 0) AND (q.Required_Class = 0 OR (Required_Class & {5}) > 0) " & _
+                Database.Query(String.Format("SELECT questid FROM queststarters s LEFT JOIN quests q ON (s.questid=q.id) WHERE s.type = {0} AND s.typeid = {1} AND q.Level_Start <= {2} AND (q.Level_Normal = -1 OR q.Level_Normal > {6}) AND (q.Required_Race = 0 OR (Required_Race & {4}) > 0) AND (q.Required_Class = 0 OR (Required_Class & {5}) > 0) " & _
                 "AND NOT EXISTS(SELECT * FROM characters_quests WHERE char_guid = {3} AND quest_id = q.id) AND (q.Required_Quest1 = 0 OR EXISTS(SELECT * FROM characters_quests WHERE char_guid = {3} AND quest_status = -1 AND quest_id = q.Required_Quest1)) " & _
                 "AND (q.Required_Quest2 = 0 OR EXISTS(SELECT * FROM characters_quests WHERE char_guid = {3} AND quest_status = -1 AND quest_id = q.Required_Quest2)) AND (q.Required_Quest3 = 0 OR EXISTS(SELECT * FROM characters_quests WHERE char_guid = {3} AND quest_status = -1 AND quest_id = q.Required_Quest3)) " & _
                 "AND (q.Required_Quest4 = 0 OR EXISTS(SELECT * FROM characters_quests WHERE char_guid = {3} AND quest_status = -1 AND quest_id = q.Required_Quest4));", _
@@ -1304,11 +1294,11 @@ Public Module WS_Quests
                 'Database.Query(String.Format("SELECT q.id FROM quests q WHERE q.NPC_Start = {0} AND q.Level_Start < {1} AND NOT EXISTS(SELECT * FROM characters_quests WHERE char_guid = {2} AND quest_id = q.id) LIMIT 1;", _
                 'WORLD_CREATUREs(cGUID).ID, c.Level + 6, c.GUID), MySQLQuery)
                 If GuidIsCreature(cGUID) Then
-                    WorldDatabase.Query(String.Format("SELECT questid FROM queststarters s LEFT JOIN quests q ON (s.questid=q.id) WHERE s.type = {0} AND s.typeid = {1} AND q.Level_Start < {2} AND (q.Level_Normal = -1 OR q.Level_Normal > {6}) AND (q.Required_Race = 0 OR (Required_Race & {4}) > 0) AND (q.Required_Class = 0 OR (Required_Class & {5}) > 0) " & _
+                    Database.Query(String.Format("SELECT questid FROM queststarters s LEFT JOIN quests q ON (s.questid=q.id) WHERE s.type = {0} AND s.typeid = {1} AND q.Level_Start < {2} AND (q.Level_Normal = -1 OR q.Level_Normal > {6}) AND (q.Required_Race = 0 OR (Required_Race & {4}) > 0) AND (q.Required_Class = 0 OR (Required_Class & {5}) > 0) " & _
                     "AND NOT EXISTS(SELECT * FROM characters_quests WHERE char_guid = {3} AND quest_id = q.id);", _
                     CType(QuestGiverType.QUEST_OBJECTTYPE_CREATURE, Byte), CType(WORLD_CREATUREs(cGUID), CreatureObject).ID, c.Level + 6, c.GUID, 1 << c.RaceMask, c.ClassMask, c.Level - 6), MySQLQuery)
                 Else
-                    WorldDatabase.Query(String.Format("SELECT questid FROM queststarters s LEFT JOIN quests q ON (s.questid=q.id) WHERE s.type = {0} AND s.typeid = {1} AND q.Level_Start < {2} AND (q.Level_Normal = -1 OR q.Level_Normal > {6}) AND (q.Required_Race = 0 OR (Required_Race & {4}) > 0) AND (q.Required_Class = 0 OR (Required_Class & {5}) > 0) " & _
+                    Database.Query(String.Format("SELECT questid FROM queststarters s LEFT JOIN quests q ON (s.questid=q.id) WHERE s.type = {0} AND s.typeid = {1} AND q.Level_Start < {2} AND (q.Level_Normal = -1 OR q.Level_Normal > {6}) AND (q.Required_Race = 0 OR (Required_Race & {4}) > 0) AND (q.Required_Class = 0 OR (Required_Class & {5}) > 0) " & _
                     "AND NOT EXISTS(SELECT * FROM characters_quests WHERE char_guid = {3} AND quest_id = q.id);", _
                     CType(QuestGiverType.QUEST_OBJECTTYPE_GAMEOBJECT, Byte), CType(WORLD_GAMEOBJECTs(cGUID), GameObjectObject).ID, c.Level + 6, c.GUID, c.RaceMask, c.ClassMask, c.Level - 6), MySQLQuery)
                 End If

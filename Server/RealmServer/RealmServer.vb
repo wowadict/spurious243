@@ -84,10 +84,14 @@ Public Module RS_Main
     Public Config As XMLConfigFile
     <XmlRoot(ElementName:="RealmServer")> _
     Public Class XMLConfigFile
-        <XmlElement(ElementName:="RSPort")> Public RSPort As Int32 = 3724
-        <XmlElement(ElementName:="RSHost")> Public RSHost As String = "127.0.0.1"
-        <XmlElement(ElementName:="AccountDatabase")> Public AccountDatabase As String = "root;mangos;127.0.0.1;3306;mangos_account;MySQL"
-
+        <XmlElement(ElementName:="RSPort")> Public RSPort As Int32 = 0
+        <XmlElement(ElementName:="RSHost")> Public RSHost As String = "localhost"
+        <XmlElement(ElementName:="SQLUser")> Public SQLUser As String = "root"
+        <XmlElement(ElementName:="SQLPass")> Public SQLPass As String = "mangos"
+        <XmlElement(ElementName:="SQLHost")> Public SQLHost As String = "localhost"
+        <XmlElement(ElementName:="SQLPort")> Public SQLPort As String = "3306"
+        <XmlElement(ElementName:="SQLDBName")> Public SQLDBName As String = "mangosvb"
+        <XmlElement(ElementName:="SQLDBType")> Public SQLDBType As SQL.DB_Type = SQL.DB_Type.MySQL
         <XmlElement(ElementName:="LogType")> Public LogType As String = "COLORCONSOLE"
         <XmlElement(ElementName:="LogLevel")> Public LogLevel As LogType = mangosVB.Common.BaseWriter.LogType.NETWORK
         <XmlElement(ElementName:="LogConfig")> Public LogConfig As String = ""
@@ -124,25 +128,13 @@ Public Module RS_Main
             Log.LogLevel = Config.LogLevel
 
             'DONE: Setting SQL Connection
-             Dim AccountDBSettings() As String = Split(Config.AccountDatabase, ";")
-             If AccountDBSettings.Length = 6 Then
-                Database.SQLDBName = AccountDBSettings(4)
-                Database.SQLHost = AccountDBSettings(2)
-                Database.SQLPort = AccountDBSettings(3)
-                Database.SQLUser = AccountDBSettings(0)
-                Database.SQLPass = AccountDBSettings(1)
-                Database.SQLTypeServer = CType([Enum].Parse(GetType(SQL.DB_Type), AccountDBSettings(5)), SQL.DB_Type)
-             Else
-                Console.WriteLine("Invalid connect string for the account database!")
-             End If
+            Database.SQLDBName = Config.SQLDBName
+            Database.SQLHost = Config.SQLHost
+            Database.SQLPort = Config.SQLPort
+            Database.SQLUser = Config.SQLUser
+            Database.SQLPass = Config.SQLPass
+            Database.SQLTypeServer = Config.SQLDBType
 
-            'Database.SQLDBName = Config.SQLDBName
-            'Database.SQLHost = Config.SQLHost
-            'Database.SQLPort = Config.SQLPort
-            'Database.SQLUser = Config.SQLUser
-            'Database.SQLPass = Config.SQLPass
-            'Database.SQLTypeServer = Config.SQLDBType
-			
         Catch e As Exception
             Console.WriteLine(e.ToString)
         End Try
