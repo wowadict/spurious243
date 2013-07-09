@@ -75,8 +75,6 @@ Public Module WC_Network
                 Channels.ChannelServices.RegisterChannel(m_RemoteChannel, False)
                 RemotingServices.Marshal(CType(Me, IVoice), "VoiceServer.rem")
 
-                Log.WriteLine(LogType.INFORMATION, "Interface UP at: {0}", m_LocalURI)
-
                 'Notify Cluster About Us
                 ClusterConnect()
 
