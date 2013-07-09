@@ -61,7 +61,7 @@ Public Module WC_Handlers_Chat
                 Dim Message As String = packet.GetString()
 
                 'DONE: Handle admin/gm commands
-                If ToUser = "WARDEN" AndAlso Client.Character.Access > 0 Then
+                If ToUser = "HAILEY" AndAlso Client.Character.Access > 0 Then
                     Client.Character.GetWorld.ClientPacket(Client.Index, packet.Data)
                     Exit Sub
                 End If
