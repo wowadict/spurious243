@@ -10,6 +10,10 @@ copyrighted by [Blizzard Entertainment, Inc.][1].
 Requirements
 ------------
 
+Documentation
+-------------
+All Information about Authors and other things are in the Documentation Folder.
+
 
 Compilation Guides
 ------------------
