@@ -76,8 +76,7 @@ Public Module WC_Character
         Public Sub ReLoad()
             'DONE: Get character info from DB
             Dim MySQLQuery As New DataTable
-            'Database.Query(String.Format("SELECT * FROM characters WHERE char_guid = {0};", GUID), MySQLQuery)
-			CharacterDatabase.Query(String.Format("SELECT * FROM characters WHERE char_guid = {0};", GUID), MySQLQuery)
+            CharacterDatabase.Query(String.Format("SELECT * FROM characters WHERE char_guid = {0};", GUID), MySQLQuery)
 
             Race = CType(MySQLQuery.Rows(0).Item("char_race"), Byte)
             Classe = CType(MySQLQuery.Rows(0).Item("char_class"), Byte)
@@ -108,10 +107,10 @@ Public Module WC_Character
         Public Sub Dispose() Implements IDisposable.Dispose
             Client = Nothing
 			
-			'DONE: Update character status in database
-            'CharacterDatabase.Update(String.Format("UPDATE characters SET char_online = 0, char_logouttime = '{1}' WHERE char_guid = '{0}';", GUID, GetTimestamp(Now)))
+            'DONE: Update character status in database
+            CharacterDatabase.Update(String.Format("UPDATE characters SET char_online = 0, char_logouttime = '{1}' WHERE char_guid = '{0}';", GUID, GetTimestamp(Now)))
             
-			'NOTE: Don't leave group on normal disconnect, only on logout
+            'NOTE: Don't leave group on normal disconnect, only on logout
             If IsInGroup Then
                 'DONE: Tell the group the member is offline
                 Dim response As PacketClass = BuildPartyMemberStatsOffline(GUID)
