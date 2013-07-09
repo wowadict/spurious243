@@ -50,17 +50,20 @@ Public Module WC_Character
         Public Group As Group = Nothing
         Public GroupFlags As Byte = 0
         Public GroupInvitedFlag As Boolean = False
+
         Public ReadOnly Property IsInGroup() As Boolean
             Get
                 Return (Group IsNot Nothing) AndAlso (GroupInvitedFlag = False)
             End Get
         End Property
+
         Public ReadOnly Property IsGroupLeader() As Boolean
             Get
                 If Group Is Nothing Then Return False
                 Return (Group.Members(Group.Leader) Is Me)
             End Get
         End Property
+
         Public ReadOnly Property IsInRaid() As Boolean
             Get
                 Return ((Not (Group Is Nothing)) AndAlso (Group.Type = GroupType.RAID))
@@ -92,6 +95,7 @@ Public Module WC_Character
             PositionX = CType(MySQLQuery.Rows(0).Item("char_positionX"), Single)
             PositionY = CType(MySQLQuery.Rows(0).Item("char_positionY"), Single)
         End Sub
+
         Public Sub New(ByVal g As ULong, ByRef c As ClientClass)
             GUID = g
             Client = c
@@ -104,6 +108,7 @@ Public Module WC_Character
             CHARACTERs.Add(GUID, Me)
             CHARACTERs_Lock.ReleaseWriterLock()
         End Sub
+
         Public Sub Dispose() Implements IDisposable.Dispose
             Client = Nothing
 
@@ -184,6 +189,7 @@ Public Module WC_Character
                 Next
             Next
         End Sub
+
         Public Sub OnLogout()
             'DONE: Update character status in database
             Database.Update("UPDATE characters SET char_online = 0 WHERE char_guid = " & GUID & ";")
@@ -238,6 +244,7 @@ Public Module WC_Character
             Return GUID
         End If
     End Function
+
     Public Function GetCharacterNameByGUID(ByVal GUID As String) As String
         If CHARACTERs.ContainsKey(GUID) Then
             Return CHARACTERs(GUID).Name

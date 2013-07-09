@@ -244,8 +244,8 @@ Public Module WS_Main
         Process.GetCurrentProcess().PriorityClass = ProcessPriorityClass.High
         Log.WriteLine(LogType.WARNING, "Setting Process Priority to HIGH..[done]")
 
-        Log.WriteLine(LogType.INFORMATION, "   Load Time: {0}", Format(DateDiff(DateInterval.Second, dateTimeStarted, Now), "0 seconds"))
-        Log.WriteLine(LogType.INFORMATION, " Used memory: {0}", Format(GC.GetTotalMemory(False), "### ### ##0 bytes"))
+        Log.WriteLine(LogType.INFORMATION, " Load Time:   {0}", Format(DateDiff(DateInterval.Second, dateTimeStarted, Now), "0 seconds"))
+        Log.WriteLine(LogType.INFORMATION, " Used Memory: {0}", Format(GC.GetTotalMemory(False), "### ### ##0 bytes"))
 
         WaitConsoleCommand()
 
