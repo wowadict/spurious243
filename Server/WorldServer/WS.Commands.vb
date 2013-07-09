@@ -934,20 +934,20 @@ Public Module WS_Commands
         Return True
     End Function
 
-    <ChatCommandAttribute("telecoord", "Teleport Coordinates <MAP>,<X>,<Y>,<Z>,<ORIENTATION> - Teleports Character To Given Coordinates.", AccessLevel.GameMaster)> _
+    <ChatCommandAttribute("telecoord", "Teleport Coordinates <X>,<Y>,<Z>,<ORIENTATION>,<MAP> - Teleports Character To Given Coordinates.", AccessLevel.GameMaster)> _
     Public Function cmdPort(ByRef c As CharacterObject, ByVal Message As String) As Boolean
         If Message = "" Then Return False
 
         Dim tmp() As String
         tmp = Split(Trim(Message), ",")
 
-        Dim posMap As Integer = tmp(0)
-		Dim posX As Single = tmp(1)
+        Dim posX As Single = tmp(1)
         Dim posY As Single = tmp(2)
         Dim posZ As Single = tmp(3)
         Dim posO As Single = tmp(4)
+        Dim posMap As Integer = tmp(0)
 
-        c.Teleport(posMap, posX, posY, posZ, posO)
+        c.Teleport(posX, posY, posZ, posO, posMap)
         Return True
     End Function
 
@@ -956,11 +956,11 @@ Public Module WS_Commands
 
         If location = "" Then Return False
 
-        Dim posMap As Integer = 0
-		Dim posX As Single = 0
+        Dim posX As Single = 0
         Dim posY As Single = 0
         Dim posZ As Single = 0
         Dim posO As Single = 0
+        Dim posMap As Integer = 0
 
         If UCase(location) = "LIST" Then
             Dim cmdList As String = "Listing of available locations:" & vbNewLine
@@ -979,11 +979,11 @@ Public Module WS_Commands
         Database.Query(String.Format("SELECT * FROM world_cmdteleports WHERE name = '{0}' LIMIT 1;", location), MySQLQuery)
 
         If MySQLQuery.Rows.Count > 0 Then
-            posMap = CType(MySQLQuery.Rows(0).Item("MapId"), Integer)
-			posX = CType(MySQLQuery.Rows(0).Item("positionX"), Single)
+            posX = CType(MySQLQuery.Rows(0).Item("positionX"), Single)
             posY = CType(MySQLQuery.Rows(0).Item("positionY"), Single)
             posZ = CType(MySQLQuery.Rows(0).Item("positionZ"), Single)
-            c.Teleport(posMap, posX, posY, posZ, posO)
+            posMap = CType(MySQLQuery.Rows(0).Item("MapId"), Integer)
+            c.Teleport(posX, posY, posZ, posO, posMap)
         Else
             c.CommandResponse(String.Format("Location {0} NOT found in Database", location))
         End If
