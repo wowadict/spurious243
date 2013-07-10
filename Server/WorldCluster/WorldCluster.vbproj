@@ -10,7 +10,7 @@
     <ApplicationIcon>mangostools_Icon_64x64.ico</ApplicationIcon>
     <AssemblyKeyContainerName>
     </AssemblyKeyContainerName>
-    <AssemblyName>mangosVB.WorldCluster</AssemblyName>
+    <AssemblyName>WorldCluster</AssemblyName>
     <AssemblyOriginatorKeyFile>
     </AssemblyOriginatorKeyFile>
     <AssemblyOriginatorKeyMode>None</AssemblyOriginatorKeyMode>

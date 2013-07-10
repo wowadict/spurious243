@@ -26,7 +26,7 @@ Imports System.Runtime.InteropServices
 
 ' Review the values of the assembly attributes
 
-<Assembly: AssemblyTitle("mangosVB.RealmServer")> 
+<Assembly: AssemblyTitle("RealmServer")> 
 <Assembly: AssemblyDescription("Realm Server part of MaNGOSvb Server Emulator.")> 
 <Assembly: AssemblyCompany("getMaNGOS")> 
 <Assembly: AssemblyProduct("MaNGOSvb Server Pack")> 

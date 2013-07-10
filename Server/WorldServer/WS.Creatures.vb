@@ -129,9 +129,9 @@ Public Module WS_Creatures
                 Else
                     TalkScript = New TDefaultTalk
                 End If
-                End If
+            End If
 
-                CREATURESDatabase.Add(Id, Me)
+            CREATURESDatabase.Add(Id, Me)
         End Sub
         Public Sub New()
             Damage.Minimum = (0.8F * BaseAttackTime / 1000.0F) * (LevelMin * 10.0F)
