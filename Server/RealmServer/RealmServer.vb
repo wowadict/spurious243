@@ -84,7 +84,7 @@ Public Module RS_Main
     Public Config As XMLConfigFile
     <XmlRoot(ElementName:="RealmServer")> _
     Public Class XMLConfigFile
-        <XmlElement(ElementName:="RSPort")> Public RSPort As Int32 = 0
+        <XmlElement(ElementName:="RSPort")> Public RSPort As Int32 = 3724
         <XmlElement(ElementName:="RSHost")> Public RSHost As String = "localhost"
         <XmlElement(ElementName:="SQLUser")> Public SQLUser As String = "root"
         <XmlElement(ElementName:="SQLPass")> Public SQLPass As String = "mangos"
