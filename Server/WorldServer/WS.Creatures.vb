@@ -437,7 +437,7 @@ Public Module WS_Creatures
             Update.SetUpdateFlag(EUnitFields.UNIT_NPC_FLAGS, CREATURESDatabase(ID).cNpcFlags)
 
             Update.SetUpdateFlag(EUnitFields.UNIT_FIELD_FLAGS, cUnitFlags)
-            If Character.Access > AccessLevel.PlayerVip Then
+            If Character.Access > AccessLevel.Player Then
                 Update.SetUpdateFlag(EUnitFields.UNIT_DYNAMIC_FLAGS, cDynamicFlags Or DynamicFlags.UNIT_DYNFLAG_SPECIALINFO)
                 Update.SetUpdateFlag(EUnitFields.UNIT_FIELD_MINDAMAGE, CreatureInfo.Damage.Minimum)
                 Update.SetUpdateFlag(EUnitFields.UNIT_FIELD_MAXDAMAGE, CreatureInfo.Damage.Maximum)

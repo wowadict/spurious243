@@ -73,10 +73,9 @@ Public Module WS_Commands
     Public Enum AccessLevel As Byte
         Trial = 0
         Player = 1
-        PlayerVip = 2
-        GameMaster = 3
+        GameMaster = 2
+        Developer = 3
         Admin = 4
-        Developer = 5
     End Enum
 
     Public ChatCommands As New Dictionary(Of String, ChatCommand)
@@ -89,7 +88,7 @@ Public Module WS_Commands
     Public Delegate Function ChatCommandDelegate(ByRef c As CharacterObject, ByVal Message As String) As Boolean
 
     Public Sub RegisterChatCommands()
-        ScriptedChatCommands = New ScriptedObject("scripts\Commands.vb", "mangosVB.Commands.dll", False)
+        ScriptedChatCommands = New ScriptedObject("scripts\Commands.vb", "Commands.dll", False)
 
         For Each tmpModule As Type In [Assembly].GetExecutingAssembly.GetTypes
             For Each tmpMethod As MethodInfo In tmpModule.GetMethods
