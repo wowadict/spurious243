@@ -1213,7 +1213,34 @@ Public Module WS_Commands
 
         Return True
     End Function
+    <ChatCommandAttribute("StartCheck", "STARTCHECK - Initialize Warden anti-cheat engine for selected character.", AccessLevel.Developer)> _
+    Public Function cmdStartCheck(ByRef c As CharacterObject, ByVal Message As String) As Boolean
+#If WARDEN Then
+        If c.TargetGUID <> 0 AndAlso GuidIsPlayer(c.TargetGUID) AndAlso CHARACTERs.ContainsKey(c.TargetGUID) Then
+            MaievInit(CHARACTERs(c.TargetGUID))
+        Else
+            c.CommandResponse("No player target selected.")
+        End If
+#Else
+        c.CommandResponse("Warden is not active.")
+#End If
 
+        Return True
+    End Function
+    <ChatCommandAttribute("SendCheck", "SENDCHECK - Sends a Warden anti-cheat check packet to the selected character.", AccessLevel.Developer)> _
+    Public Function cmdSendCheck(ByRef c As CharacterObject, ByVal Message As String) As Boolean
+#If WARDEN Then
+        If c.TargetGUID <> 0 AndAlso GuidIsPlayer(c.TargetGUID) AndAlso CHARACTERs.ContainsKey(c.TargetGUID) Then
+            MaievSendCheck(CHARACTERs(c.TargetGUID))
+        Else
+            c.CommandResponse("No player target selected.")
+        End If
+#Else
+        c.CommandResponse("Warden is not active.")
+#End If
+
+        Return True
+    End Function
     <ChatCommandAttribute("Where", "WHERE - Display your position information.")> _
     Public Function cmdWhere(ByRef c As CharacterObject, ByVal Message As String) As Boolean
         c.SystemMessage(String.Format("Coords: x={0}, y={1}, z={2}, or={3}, map={4}", c.positionX, c.positionY, c.positionZ, c.orientation, c.MapID))

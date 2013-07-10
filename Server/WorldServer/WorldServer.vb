@@ -240,6 +240,10 @@ Public Module WS_Main
         IntializePacketHandlers()
         WS = New WorldServerClass
         GC.Collect()
+		
+#If WARDEN Then
+        Maiev.InitWarden()
+#End If
 
         Process.GetCurrentProcess().PriorityClass = ProcessPriorityClass.High
         Log.WriteLine(LogType.WARNING, "Setting Process Priority to HIGH..[done]")

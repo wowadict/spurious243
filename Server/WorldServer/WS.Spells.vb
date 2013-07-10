@@ -6016,7 +6016,7 @@ SkipShapeShift:
 
             Client.Character.SaveCharacter()
         Catch e As Exception
-            Log.WriteLine(LogType.FAILED, "Error learning talen: {0}{1}", vbNewLine, e.ToString)
+            Log.WriteLine(LogType.FAILED, "Error learning talent: {0}{1}", vbNewLine, e.ToString)
         End Try
     End Sub
 

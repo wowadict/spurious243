@@ -4727,6 +4727,10 @@ CheckXPAgain:
         End Property
     End Class
 
+    'Warden AntiCheat Engine
+    Public WardenData As New WardenData
+    'End Class
+
     Public Enum MirrorTimer As Byte
         FIRE = 5
         SLIME = 4

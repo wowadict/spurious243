@@ -55,7 +55,7 @@
     <BaseAddress>285212672</BaseAddress>
     <ConfigurationOverrideFile>
     </ConfigurationOverrideFile>
-    <DefineConstants>ENABLE_PPOINTS=true,LINUX=false</DefineConstants>
+    <DefineConstants>ENABLE_PPOINTS=true,LINUX=false,WARDEN=true</DefineConstants>
     <DefineDebug>true</DefineDebug>
     <DefineTrace>true</DefineTrace>
     <DebugSymbols>true</DebugSymbols>
@@ -242,7 +242,8 @@
     <Compile Include="WS.Handlers.Taxi.vb" />
     <Compile Include="WS.Handlers.Trade.vb" />
     <Compile Include="WS.Handlers.vb" />
-    <Compile Include="WS.Items.vb">
+    <Compile Include="WS.Handlers.Warden.vb" />
+    <Compile Include="WS.Items.vb" >
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="WS.Loot.vb">
@@ -270,6 +271,9 @@
     </Compile>
     <Compile Include="WS.TimerBasedEvents.vb">
       <SubType>Code</SubType>
+	</Compile>
+	<Compile Include="WS.Warden.vb">
+	  <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>

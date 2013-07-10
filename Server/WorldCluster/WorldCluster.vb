@@ -171,6 +171,7 @@ Public Module WorldCluster
         WaitConsoleCommand()
     End Sub
 
+
     Public Sub WaitConsoleCommand()
         Dim tmp As String = "", CommandList() As String, cmds() As String
         Dim cmd() As String = {}

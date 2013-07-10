@@ -36,6 +36,7 @@ Public Module WS_Handlers
         PacketHandlers(OPCODES.MSG_MOVE_TELEPORT_ACK) = CType(AddressOf OnUnhandledPacket, HandlePacket)
 
         'NOTE: These opcodes below must be exluded form Cluster
+        PacketHandlers(OPCODES.CMSG_WARDEN_DATA) = CType(AddressOf On_CMSG_WARDEN_DATA, HandlePacket)
         PacketHandlers(OPCODES.CMSG_LFM_SET_AUTOFILL) = CType(AddressOf On_CMSG_LFM_SET_AUTOFILL, HandlePacket)
         PacketHandlers(OPCODES.CMSG_LFG_SET_AUTOJOIN) = CType(AddressOf On_CMSG_LFG_SET_AUTOJOIN, HandlePacket)
 
