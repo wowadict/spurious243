@@ -103,9 +103,6 @@ Public Module WS_Commands
                         cmd.CommandDelegate = ChatCommandDelegate.CreateDelegate(GetType(ChatCommandDelegate), tmpMethod)
 
                         ChatCommands.Add(UCase(info.cmdName), cmd)
-#If DEBUG Then
-                        Log.WriteLine(mangosVB.Common.BaseWriter.LogType.INFORMATION, "Command found: {0}", UCase(info.cmdName))
-#End If
                     Next
                 End If
             Next

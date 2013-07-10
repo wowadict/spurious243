@@ -567,9 +567,7 @@ Public Module WS_Items
             ItemBonusStatValue(9) = MySQLQuery.Rows(0).Item("stat_value10")
 
             Field4 = MySQLQuery.Rows(0).Item("field4")
-            Name2 = MySQLQuery.Rows(0).Item("name2")
-            Name3 = MySQLQuery.Rows(0).Item("name3")
-            Name4 = MySQLQuery.Rows(0).Item("name4")
+
             RandomProp = MySQLQuery.Rows(0).Item("randomprop")
             RandomSuffix = MySQLQuery.Rows(0).Item("randomsuffix") ' Not sure about this one
             ZoneNameID = MySQLQuery.Rows(0).Item("ZoneNameID")
@@ -600,9 +598,6 @@ Public Module WS_Items
         'Item's visuals
         Public Model As Integer = 0
         Public Name As String = "Unknown Item"
-        Public Name2 As String = ""
-        Public Name3 As String = ""
-        Public Name4 As String = ""
         Public Quality As Integer = 0
         Public Material As Integer = 0
         Public Durability As Integer = 0
@@ -1298,9 +1293,6 @@ Public Module WS_Items
         response.AddInt32(Item.SubClass)
         response.AddInt32(-1)
         response.AddString(Item.Name)
-        response.AddInt8(0)     'Item.Name2
-        response.AddInt8(0)     'Item.Name3
-        response.AddInt8(0)     'Item.Name4
 
         response.AddInt32(Item.Model)
         response.AddInt32(Item.Quality)
