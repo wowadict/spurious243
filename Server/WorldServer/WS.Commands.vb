@@ -121,9 +121,6 @@ Public Module WS_Commands
                             cmd.CommandDelegate = ChatCommandDelegate.CreateDelegate(GetType(ChatCommandDelegate), tmpMethod)
 
                             ChatCommands.Add(UCase(info.cmdName), cmd)
-#If DEBUG Then
-                            Log.WriteLine(mangosVB.Common.BaseWriter.LogType.INFORMATION, "Command found: {0}", UCase(info.cmdName))
-#End If
                         Next
                     End If
                 Next
@@ -165,7 +162,7 @@ Public Module WS_Commands
 #End Region
 #Region "WS.Commands.InternalCommands"
 
-    <ChatCommandAttribute("Help", "HELP <CMD>" & vbNewLine & "Displays usage information about command, if no command specified - displays list of available commands.")> _
+    <ChatCommandAttribute("CommandList", "Command List" & vbNewLine & "Displays usage information about commands, if no command specified - displays list of available commands.")> _
     Public Function Help(ByRef c As CharacterObject, ByVal Message As String) As Boolean
         If Trim(Message) <> "" Then
             Dim Command As ChatCommand = CType(ChatCommands(Trim(UCase(Message))), ChatCommand)
@@ -181,7 +178,7 @@ Public Module WS_Commands
             For Each Command As KeyValuePair(Of String, ChatCommand) In ChatCommands
                 If CType(Command.Value, ChatCommand).CommandAccess <= c.Access Then cmdList += UCase(Command.Key) & ", "
             Next
-            cmdList += vbNewLine + "Use HELP <CMD> for usage information about particular command."
+            cmdList += vbNewLine + "Use CommandList <CMD> for usage information about particular command."
             c.CommandResponse(cmdList)
         End If
 
