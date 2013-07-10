@@ -363,7 +363,7 @@ Public Module WS_Main
                                 Database.Update(cmds(1))
                             Case "help", "/help"
                                 Console.ForegroundColor = System.ConsoleColor.Blue
-                                Console.WriteLine("'mangosVB.WorldServer' Command list:")
+                                Console.WriteLine("'WorldServer' Command list:")
                                 Console.ForegroundColor = System.ConsoleColor.White
                                 Console.WriteLine("---------------------------------")
                                 Console.WriteLine("")
