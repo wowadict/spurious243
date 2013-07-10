@@ -76,8 +76,8 @@ Public Module WS_Main
     Public Config As XMLConfigFile
     <XmlRoot(ElementName:="WorldServer")> _
     Public Class XMLConfigFile
-        <XmlElement(ElementName:="WSPort")> Public WSPort As Integer = 4720
-        <XmlElement(ElementName:="WSHost")> Public WSHost As String = "127.0.0.1"
+        <XmlElement(ElementName:="WSPort")> Public WSPort As Integer = 8085
+        <XmlElement(ElementName:="WSHost")> Public WSHost As String = "localhost"
         <XmlElement(ElementName:="ServerLimit")> Public ServerLimit As Integer = 10
         <XmlElement(ElementName:="XPRate")> Public XPRate As Single = 1.0
         <XmlElement(ElementName:="ManaRegenerationRate")> Public ManaRegenerationRate As Single = 1.0
@@ -101,9 +101,9 @@ Public Module WS_Main
         <XmlElement(ElementName:="CreateArenas")> Public CreateArenas As Boolean = False
         <XmlElement(ElementName:="CreateOther")> Public CreateOther As Boolean = False
         <XmlElement(ElementName:="ClusterConnectMethod")> Public ClusterMethod As String = "tcp"
-        <XmlElement(ElementName:="ClusterConnectHost")> Public ClusterHost As String = "127.0.0.1"
+        <XmlElement(ElementName:="ClusterConnectHost")> Public ClusterHost As String = "localhost"
         <XmlElement(ElementName:="ClusterConnectPort")> Public ClusterPort As Integer = 50001
-        <XmlElement(ElementName:="LocalConnectHost")> Public LocalHost As String = "127.0.0.1"
+        <XmlElement(ElementName:="LocalConnectHost")> Public LocalHost As String = "localhost"
         <XmlElement(ElementName:="LocalConnectPort")> Public LocalPort As Integer = 50002
     End Class
 

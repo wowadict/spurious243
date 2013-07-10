@@ -49,8 +49,8 @@ Public Module WorldCluster
     Public Config As XMLConfigFile
     <XmlRoot(ElementName:="WorldCluster")> _
     Public Class XMLConfigFile
-        <XmlElement(ElementName:="WSPort")> Public WSPort As Integer = 4720
-        <XmlElement(ElementName:="WSHost")> Public WSHost As String = "127.0.0.1"
+        <XmlElement(ElementName:="WSPort")> Public WSPort As Integer = 8085
+        <XmlElement(ElementName:="WSHost")> Public WSHost As String = "localhost"
         <XmlElement(ElementName:="ServerLimit")> Public ServerLimit As Integer = 10
         <XmlElement(ElementName:="LogType")> Public LogType As String = "COLORCONSOLE"
         <XmlElement(ElementName:="LogLevel")> Public LogLevel As LogType = mangosVB.Common.BaseWriter.LogType.NETWORK
@@ -62,7 +62,7 @@ Public Module WorldCluster
         <XmlElement(ElementName:="SQLDBName")> Public SQLDBName As String = "mangosvb"
         <XmlElement(ElementName:="SQLDBType")> Public SQLDBType As SQL.DB_Type = SQL.DB_Type.MySQL
         <XmlElement(ElementName:="ClusterListenMethod")> Public ClusterMethod As String = "tcp"
-        <XmlElement(ElementName:="ClusterListenHost")> Public ClusterHost As String = "127.0.0.1"
+        <XmlElement(ElementName:="ClusterListenHost")> Public ClusterHost As String = "localhost"
         <XmlElement(ElementName:="ClusterListenPort")> Public ClusterPort As Integer = 50001
         <XmlArray(ElementName:="ClusterFirewall"), XmlArrayItem(GetType(String), ElementName:="IP")> Public Firewall As New ArrayList
         <XmlElement(ElementName:="StatsEnabled")> Public StatsEnabled As Boolean = True

@@ -488,9 +488,9 @@ Public Module WC_Network
         Inherits ClientInfo
         Implements IDisposable
 
-        Public Socket As Socket
+        Public Socket As Socket = Nothing
         Public Queue As New Queue
-        Public Character As CharacterObject
+        Public Character As CharacterObject = Nothing
 
         Public SS_Hash() As Byte
         Public Encryption As Boolean = False
