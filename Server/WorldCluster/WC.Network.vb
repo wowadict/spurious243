@@ -542,6 +542,7 @@ Public Module WC_Network
             Try
                 SocketBytes = Socket.EndReceive(ar)
                 If SocketBytes = 0 Then
+                    'If Socket.Blocking Then
                     Me.Dispose()
                 Else
                     Interlocked.Add(DataTransferIn, SocketBytes)
@@ -577,6 +578,7 @@ Public Module WC_Network
 
                     ThreadPool.QueueUserWorkItem(AddressOf OnPacket)
                 End If
+                'End If
             Catch Err As Exception
 #If DEBUG Then
                 'NOTE: If it's a error here it means the connection is closed?
@@ -668,9 +670,11 @@ Public Module WC_Network
 
         Public Sub OnSendComplete(ByVal ar As IAsyncResult)
             If Not Socket Is Nothing Then
-                Dim bytesSent As Integer = Socket.EndSend(ar)
+                If Socket.Blocking Then
+                    Dim bytesSent As Integer = Socket.EndSend(ar)
 
-                Interlocked.Add(DataTransferOut, bytesSent)
+                    Interlocked.Add(DataTransferOut, bytesSent)
+                End If
             End If
         End Sub
 
