@@ -245,8 +245,11 @@ Public Module WS_Main
         Maiev.InitWarden()
 #End If
 
-        Process.GetCurrentProcess().PriorityClass = ProcessPriorityClass.High
-        Log.WriteLine(LogType.WARNING, "Setting Process Priority to HIGH..[done]")
+        If Process.GetCurrentProcess().PriorityClass = ProcessPriorityClass.High Then
+            Log.WriteLine(LogType.WARNING, "Setting Process Priority to HIGH..[done]")
+        Else
+            Log.WriteLine(LogType.WARNING, "Setting Process Priority to NORMAL..[done]")
+        End If
 
         Log.WriteLine(LogType.INFORMATION, " Load Time:   {0}", Format(DateDiff(DateInterval.Second, dateTimeStarted, Now), "0 seconds"))
         Log.WriteLine(LogType.INFORMATION, " Used Memory: {0}", Format(GC.GetTotalMemory(False), "### ### ##0 bytes"))

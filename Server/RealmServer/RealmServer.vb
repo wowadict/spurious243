@@ -812,17 +812,17 @@ Public Module RS_Main
                             End
                         Case "help", "/help"
                             Console.ForegroundColor = System.ConsoleColor.Blue
-                            Console.WriteLine("'mangosVB.RealmServer' Command list:")
+                            Console.WriteLine("'RealmServer' Command list:")
                             Console.ForegroundColor = System.ConsoleColor.White
                             Console.WriteLine("---------------------------------")
                             Console.WriteLine("")
                             Console.WriteLine("")
-                            Console.WriteLine("'help' or '/help' - Brings up the 'mangosVB.RealmServer' Command list (this).")
+                            Console.WriteLine("'help' or '/help' - Brings up the RealmServer' Command list (this).")
                             Console.WriteLine("")
-                            Console.WriteLine("'/quit' or '/shutdown' or 'off' or 'kill' or 'exit' - Shutsdown 'mangosVB.RealmServer'.")
+                            Console.WriteLine("'/quit' or '/shutdown' or 'off' or 'kill' or 'exit' - Shutsdown 'RealmServer'.")
                         Case Else
                             Console.ForegroundColor = System.ConsoleColor.DarkRed
-                            Console.WriteLine("Error!. Cannot find specified command. Please type 'help' for information on 'mangosVB.RealmServer' console commands.")
+                            Console.WriteLine("Error!. Cannot find specified command. Please type 'help' for information on 'RealmServer' console commands.")
                             Console.ForegroundColor = System.ConsoleColor.White
                     End Select
                 End If

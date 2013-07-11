@@ -162,8 +162,11 @@ Public Module WorldCluster
         WS = New WorldServerClass
         GC.Collect()
 
-        Process.GetCurrentProcess().PriorityClass = ProcessPriorityClass.High
-        Log.WriteLine(LogType.WARNING, "Setting Process Priority to HIGH..[done]")
+        If Process.GetCurrentProcess().PriorityClass = ProcessPriorityClass.High Then
+            Log.WriteLine(LogType.WARNING, "Setting Process Priority to HIGH..[done]")
+        Else
+            Log.WriteLine(LogType.WARNING, "Setting Process Priority to NORMAL..[done]")
+        End If
 
         Log.WriteLine(LogType.INFORMATION, "Load Time: {0}", Format(DateDiff(DateInterval.Second, dateTimeStarted, Now), "0 seconds"))
         Log.WriteLine(LogType.INFORMATION, "Used memory: {0}", Format(GC.GetTotalMemory(False), "### ### ##0 bytes"))
@@ -271,12 +274,12 @@ Public Module WorldCluster
                                 Database.Update(cmds(1))
                             Case "help", "/help"
                                 Console.ForegroundColor = System.ConsoleColor.Blue
-                                Console.WriteLine("'mangosVB.WorldServer' Command list:")
+                                Console.WriteLine("'WorldServer' Command list:")
                                 Console.ForegroundColor = System.ConsoleColor.White
                                 Console.WriteLine("---------------------------------")
                                 Console.WriteLine("")
                                 Console.WriteLine("")
-                                Console.WriteLine("'help' or '/help' - Brings up the 'mangosVB.WorldServer' Command list (this).")
+                                Console.WriteLine("'help' or '/help' - Brings up the 'WorldServer' Command list (this).")
                                 Console.WriteLine("")
                                 Console.WriteLine("'createaccount <user> <password> <email>' or '/createaccount <user> <password> <email>' - Creates an account with the specified username <user>, password <password>, and email <email>.")
                                 Console.WriteLine("")
@@ -290,14 +293,14 @@ Public Module WorldCluster
                                 Console.WriteLine("")
                                 Console.WriteLine("'db.run' or '/db.run' - Runs and updates database.")
                                 Console.WriteLine("")
-                                Console.WriteLine("'quit' or 'shutdown' or 'off' or 'kill' or 'exit' - Shutsdown 'mangosVB.WorldServer'.")
+                                Console.WriteLine("'quit' or 'shutdown' or 'off' or 'kill' or 'exit' - Shutsdown 'WorldServer'.")
                                 Console.WriteLine("")
                                 Console.WriteLine("'ban' or 'Ban'- Adds a Ban and IP Ban on an account.")
                                 Console.WriteLine("")
                                 Console.WriteLine("'unban' or 'Unban'- Removes a Ban and IP Ban on an account.")
                             Case Else
                                 Console.ForegroundColor = System.ConsoleColor.Red
-                                Console.WriteLine("Error! Cannot find specified command. Please type 'help' for information on 'mangosVB.WorldServer' console commands.")
+                                Console.WriteLine("Error! Cannot find specified command. Please type 'help' for information on 'WorldServer' console commands.")
                                 Console.ForegroundColor = System.ConsoleColor.White
                         End Select
                         '<<<<<<<<<<</END COMMAND STRUCTURE>>>>>>>>>>>>
