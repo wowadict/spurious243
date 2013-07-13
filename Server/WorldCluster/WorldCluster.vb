@@ -1,5 +1,5 @@
-' 
-' Copyright (C) 2008 Spurious <http://SpuriousEmu.com>
+'
+' Copyright (C) 2013 getMaNGOS <http://www.getMangos.co.uk>
 '
 ' This program is free software; you can redistribute it and/or modify
 ' it under the terms of the GNU General Public License as published by
@@ -16,7 +16,6 @@
 ' Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 '
 
-
 Imports System.Threading
 Imports System.Net.Sockets
 Imports System.Xml.Serialization
@@ -24,12 +23,10 @@ Imports System.IO
 Imports System.Net
 Imports System.Reflection
 Imports System.Runtime.CompilerServices
-Imports Spurious.Common.BaseWriter
-Imports Spurious.Common
-
+Imports mangosVB.Common.BaseWriter
+Imports mangosVB.Common
 
 Public Module WorldCluster
-
 
 #Region "Global.Variables"
     'Players' containers
@@ -52,20 +49,20 @@ Public Module WorldCluster
     Public Config As XMLConfigFile
     <XmlRoot(ElementName:="WorldCluster")> _
     Public Class XMLConfigFile
-        <XmlElement(ElementName:="WSPort")> Public WSPort As Integer = 4720
-        <XmlElement(ElementName:="WSHost")> Public WSHost As String = "127.0.0.1"
+        <XmlElement(ElementName:="WSPort")> Public WSPort As Integer = 8085
+        <XmlElement(ElementName:="WSHost")> Public WSHost As String = "localhost"
         <XmlElement(ElementName:="ServerLimit")> Public ServerLimit As Integer = 10
         <XmlElement(ElementName:="LogType")> Public LogType As String = "COLORCONSOLE"
-        <XmlElement(ElementName:="LogLevel")> Public LogLevel As LogType = Spurious.Common.BaseWriter.LogType.NETWORK
+        <XmlElement(ElementName:="LogLevel")> Public LogLevel As LogType = mangosVB.Common.BaseWriter.LogType.NETWORK
         <XmlElement(ElementName:="LogConfig")> Public LogConfig As String = ""
         <XmlElement(ElementName:="SQLUser")> Public SQLUser As String = "root"
-        <XmlElement(ElementName:="SQLPass")> Public SQLPass As String = "Spurious"
+        <XmlElement(ElementName:="SQLPass")> Public SQLPass As String = "mangos"
         <XmlElement(ElementName:="SQLHost")> Public SQLHost As String = "localhost"
         <XmlElement(ElementName:="SQLPort")> Public SQLPort As String = "3306"
-        <XmlElement(ElementName:="SQLDBName")> Public SQLDBName As String = "Spurious"
+        <XmlElement(ElementName:="SQLDBName")> Public SQLDBName As String = "mangosvb"
         <XmlElement(ElementName:="SQLDBType")> Public SQLDBType As SQL.DB_Type = SQL.DB_Type.MySQL
         <XmlElement(ElementName:="ClusterListenMethod")> Public ClusterMethod As String = "tcp"
-        <XmlElement(ElementName:="ClusterListenHost")> Public ClusterHost As String = "127.0.0.1"
+        <XmlElement(ElementName:="ClusterListenHost")> Public ClusterHost As String = "localhost"
         <XmlElement(ElementName:="ClusterListenPort")> Public ClusterPort As Integer = 50001
         <XmlArray(ElementName:="ClusterFirewall"), XmlArrayItem(GetType(String), ElementName:="IP")> Public Firewall As New ArrayList
         <XmlElement(ElementName:="StatsEnabled")> Public StatsEnabled As Boolean = True
@@ -88,9 +85,7 @@ Public Module WorldCluster
             Config = oXS.Deserialize(oStmR)
             oStmR.Close()
 
-
             Console.WriteLine(".[done]")
-
 
             'DONE: Setting SQL Connection
             Database.SQLDBName = Config.SQLDBName
@@ -111,8 +106,8 @@ Public Module WorldCluster
 #End Region
 
 #Region "WS.DataAccess"
-    Public Database As New Sql
-    Public Sub SLQEventHandler(ByVal MessageID As Sql.EMessages, ByVal OutBuf As String)
+    Public Database As New SQL
+    Public Sub SLQEventHandler(ByVal MessageID As SQL.EMessages, ByVal OutBuf As String)
         Select Case MessageID
             Case SQL.EMessages.ID_Error
                 Log.WriteLine(LogType.FAILED, OutBuf)
@@ -121,10 +116,6 @@ Public Module WorldCluster
         End Select
     End Sub
 #End Region
-
-
-
-
 
     <System.MTAThreadAttribute()> _
     Sub Main()
@@ -139,14 +130,13 @@ Public Module WorldCluster
         Console.WriteLine()
 
         Console.ForegroundColor = System.ConsoleColor.Magenta
-        Console.WriteLine("http://www.SpuriousEmu.com")
+        Console.WriteLine("http://www.getMangos.co.uk")
         Console.WriteLine()
 
         Console.ForegroundColor = System.ConsoleColor.White
         Console.WriteLine(CType([Assembly].GetExecutingAssembly().GetCustomAttributes(GetType(System.Reflection.AssemblyTitleAttribute), False)(0), AssemblyTitleAttribute).Title)
         Console.Write("version {0}", [Assembly].GetExecutingAssembly().GetName().Version)
         Console.ForegroundColor = System.ConsoleColor.White
-
 
         Console.WriteLine("")
         Console.ForegroundColor = System.ConsoleColor.Gray
@@ -172,8 +162,11 @@ Public Module WorldCluster
         WS = New WorldServerClass
         GC.Collect()
 
-        Process.GetCurrentProcess().PriorityClass = ProcessPriorityClass.High
-        Log.WriteLine(LogType.WARNING, "Setting Process Priority to HIGH..[done]")
+        If Process.GetCurrentProcess().PriorityClass = ProcessPriorityClass.High Then
+            Log.WriteLine(LogType.WARNING, "Setting Process Priority to HIGH..[done]")
+        Else
+            Log.WriteLine(LogType.WARNING, "Setting Process Priority to NORMAL..[done]")
+        End If
 
         Log.WriteLine(LogType.INFORMATION, "Load Time: {0}", Format(DateDiff(DateInterval.Second, dateTimeStarted, Now), "0 seconds"))
         Log.WriteLine(LogType.INFORMATION, "Used memory: {0}", Format(GC.GetTotalMemory(False), "### ### ##0 bytes"))
@@ -281,12 +274,12 @@ Public Module WorldCluster
                                 Database.Update(cmds(1))
                             Case "help", "/help"
                                 Console.ForegroundColor = System.ConsoleColor.Blue
-                                Console.WriteLine("'Spurious.WorldServer' Command list:")
+                                Console.WriteLine("'WorldServer' Command list:")
                                 Console.ForegroundColor = System.ConsoleColor.White
                                 Console.WriteLine("---------------------------------")
                                 Console.WriteLine("")
                                 Console.WriteLine("")
-                                Console.WriteLine("'help' or '/help' - Brings up the 'Spurious.WorldServer' Command list (this).")
+                                Console.WriteLine("'help' or '/help' - Brings up the 'WorldServer' Command list (this).")
                                 Console.WriteLine("")
                                 Console.WriteLine("'createaccount <user> <password> <email>' or '/createaccount <user> <password> <email>' - Creates an account with the specified username <user>, password <password>, and email <email>.")
                                 Console.WriteLine("")
@@ -300,14 +293,14 @@ Public Module WorldCluster
                                 Console.WriteLine("")
                                 Console.WriteLine("'db.run' or '/db.run' - Runs and updates database.")
                                 Console.WriteLine("")
-                                Console.WriteLine("'quit' or 'shutdown' or 'off' or 'kill' or 'exit' - Shutsdown 'Spurious.WorldServer'.")
+                                Console.WriteLine("'quit' or 'shutdown' or 'off' or 'kill' or 'exit' - Shutsdown 'WorldServer'.")
                                 Console.WriteLine("")
                                 Console.WriteLine("'ban' or 'Ban'- Adds a Ban and IP Ban on an account.")
                                 Console.WriteLine("")
                                 Console.WriteLine("'unban' or 'Unban'- Removes a Ban and IP Ban on an account.")
                             Case Else
                                 Console.ForegroundColor = System.ConsoleColor.Red
-                                Console.WriteLine("Error! Cannot find specified command. Please type 'help' for information on 'Spurious.WorldServer' console commands.")
+                                Console.WriteLine("Error! Cannot find specified command. Please type 'help' for information on 'WorldServer' console commands.")
                                 Console.ForegroundColor = System.ConsoleColor.White
                         End Select
                         '<<<<<<<<<<</END COMMAND STRUCTURE>>>>>>>>>>>>
@@ -324,13 +317,12 @@ Public Module WorldCluster
         EX = e.ExceptionObject
 
         Log.WriteLine(LogType.CRITICAL, EX.ToString & vbNewLine)
-        Log.WriteLine(LogType.FAILED, "Unexpected error has occured. An 'Error-yyyy-mmm-d-h-mm.log' file has been created. Please post the file in the BUG SECTION at SpuriousEmu.com (http://www.SpuriousEmu.com)!")
+        Log.WriteLine(LogType.FAILED, "Unexpected error has occured. An 'Error-yyyy-mmm-d-h-mm.log' file has been created. Please post the file in the BUG SECTION at getMaNGOS.co.uk (http://www.getMangos.co.uk/community)!")
 
         Dim tw As TextWriter
         tw = New StreamWriter(New FileStream(String.Format("Error-{0}.log", Format(Now, "yyyy-MMM-d-H-mm")), FileMode.Create))
         tw.Write(EX.ToString)
         tw.Close()
     End Sub
-
 
 End Module

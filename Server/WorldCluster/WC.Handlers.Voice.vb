@@ -1,5 +1,5 @@
-﻿' 
-' Copyright (C) 2008 Spurious <http://SpuriousEmu.com>
+﻿'
+' Copyright (C) 2013 getMaNGOS <http://www.getMangos.co.uk>
 '
 ' This program is free software; you can redistribute it and/or modify
 ' it under the terms of the GNU General Public License as published by
@@ -16,7 +16,6 @@
 ' Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 '
 
-
 Imports System.Threading
 Imports System.Net.Sockets
 Imports System.Xml.Serialization
@@ -24,15 +23,12 @@ Imports System.IO
 Imports System.Net
 Imports System.Reflection
 Imports System.Runtime.CompilerServices
-Imports Spurious.Common.BaseWriter
-Imports Spurious.Common
-
+Imports mangosVB.Common.BaseWriter
+Imports mangosVB.Common
 
 Public Module WC_Handlers_Voice
 
-
     Private VOICE_CHANNEL_ID As ULong = &H4BC500000000D1E1UL
-
 
     Public Sub SendVoiceSystemStatus(ByRef Client As ClientClass, ByRef Character As CharacterObject)
         Dim p As New PacketClass(OPCODES.SMSG_FEATURE_SYSTEM_STATUS)
@@ -82,7 +78,6 @@ Public Module WC_Handlers_Voice
         p.AddInt8(&H80)             'Debug Flags1
         p.AddInt8(&H46)             'Debug Flags2
 
-
         Client.Send(p)
         p.Dispose()
     End Sub
@@ -97,21 +92,21 @@ Public Module WC_Handlers_Voice
         If Client.Character IsNot Nothing Then
             'Only ingame chat possible
 
-            'If isVoiceEnabled Then
-            '    Dim response As New PacketClass(OPCODES.SMSG_AVAILABLE_VOICE_CHANNEL)
-            '    response.AddUInt64(VOICE_CHANNEL_ID)            'Channel ID
-            '    response.AddInt8(0)                             'Type (00=custom channel, 03=party, 04=raid?)
-            '    packet.AddString("Test Channel")                'Name (not applicable to party/raid)
-            '    response.AddUInt64(Client.Character.GUID)       'Player GUID
-            '    Client.Send(response)
-            '    response.Dispose()
-            'Else
-            '    Dim response As New PacketClass(OPCODES.SMSG_VOICE_SESSION_LEAVE)
-            '    response.AddUInt64(Client.Character.GUID)       'Player GUID
-            '    response.AddUInt64(VOICE_CHANNEL_ID)            'Channel ID
-            '    Client.Send(response)
-            '    response.Dispose()
-            'End If
+            If isVoiceEnabled Then
+                Dim response As New PacketClass(OPCODES.SMSG_AVAILABLE_VOICE_CHANNEL)
+                response.AddUInt64(VOICE_CHANNEL_ID)            'Channel ID
+                response.AddInt8(0)                             'Type (00=custom channel, 03=party, 04=raid?)
+                packet.AddString("Test Channel")                'Name (not applicable to party/raid)
+                response.AddUInt64(Client.Character.GUID)       'Player GUID
+                Client.Send(response)
+                response.Dispose()
+            Else
+                Dim response As New PacketClass(OPCODES.SMSG_VOICE_SESSION_LEAVE)
+                response.AddUInt64(Client.Character.GUID)       'Player GUID
+                response.AddUInt64(VOICE_CHANNEL_ID)            'Channel ID
+                Client.Send(response)
+                response.Dispose()
+            End If
         End If
 
     End Sub
@@ -123,8 +118,12 @@ Public Module WC_Handlers_Voice
         Log.WriteLine(LogType.DEBUG, "[{0}:{1}] CMSG_SET_ACTIVE_VOICE_CHANNEL [{2}{3}]", Client.IP, Client.Port, Type, ":" & Channel)
 
         If Type <> VoiceChannelType.NONE Then
-            If CHAT_CHANNELs.ContainsKey(Channel) And TypeOf CHAT_CHANNELs(Channel) Is VoiceChatChannelClass Then
-                CType(CHAT_CHANNELs(Channel), VoiceChatChannelClass).VoiceUpdate(Client.Character)
+            If Type <> VoiceChannelType.PARTY Then
+                If Type <> VoiceChannelType.CHANNEL Then
+                    If CHAT_CHANNELs.ContainsKey(Channel) And TypeOf CHAT_CHANNELs(Channel) Is VoiceChatChannelClass Then
+                        CType(CHAT_CHANNELs(Channel), VoiceChatChannelClass).VoiceUpdate(Client.Character)
+                    End If
+                End If
             End If
         End If
     End Sub
@@ -151,6 +150,5 @@ Public Module WC_Handlers_Voice
             CType(CHAT_CHANNELs(ChannelName), VoiceChatChannelClass).VoiceDisable(Client.Character)
         End If
     End Sub
-
 
 End Module

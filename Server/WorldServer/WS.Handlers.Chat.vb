@@ -1,5 +1,5 @@
-﻿' 
-' Copyright (C) 2008 Spurious <http://SpuriousEmu.com>
+﻿'
+' Copyright (C) 2013 getMaNGOS <http://www.getMangos.co.uk>
 '
 ' This program is free software; you can redistribute it and/or modify
 ' it under the terms of the GNU General Public License as published by
@@ -18,10 +18,9 @@
 
 Imports System.Threading
 Imports System.Collections.Generic
-Imports Spurious.Common.BaseWriter
+Imports mangosVB.Common.BaseWriter
 
 Public Module WS_Handlers_Chat
-
 
     Public Function GetChatFlag(ByVal c As CharacterObject) As Byte
         If c.GM Then
@@ -52,20 +51,18 @@ Public Module WS_Handlers_Chat
                 Client.Character.SendChatMessage(Client.Character, Message, msgType, msgLanguage, "", True)
                 Exit Select
 
-
             Case ChatMsg.CHAT_MSG_GUILD
                 Dim Message As String = packet.GetString()
 
-                'DONE: Broadcast to party
+                'DONE: Broadcast to guild
                 BroadcastChatMessageGuild(Client.Character, Message, msgLanguage, Client.Character.GuildID)
                 Exit Select
             Case ChatMsg.CHAT_MSG_OFFICER
                 Dim Message As String = packet.GetString()
 
-                'DONE: Broadcast to party
+                'DONE: Broadcast to officer chat
                 BroadcastChatMessageOfficer(Client.Character, Message, msgLanguage, Client.Character.GuildID)
                 Exit Select
-
 
             Case ChatMsg.CHAT_MSG_AFK
                 Dim Message As String = packet.GetString()
@@ -89,17 +86,16 @@ Public Module WS_Handlers_Chat
                 Client.Character.SendCharacterUpdate()
                 Exit Select
 
-
             Case ChatMsg.CHAT_MSG_WHISPER
                 Dim ToUser As String = UCase(packet.GetString())
                 If (packet.Data.Length - 1) < (14 + ToUser.Length) Then Exit Sub
                 Dim Message As String = packet.GetString()
 
                 'DONE: Handle admin/gm commands
-                If ToUser = "WARDEN" AndAlso Client.Character.Access > 0 Then
-                    Dim toWarden As PacketClass = BuildChatMessage(WardenGUID, Message, ChatMsg.CHAT_MSG_REPLY, LANGUAGES.LANG_UNIVERSAL)
-                    Client.Send(toWarden)
-                    toWarden.Dispose()
+                If ToUser = "HAILEY" AndAlso Client.Character.Access > 0 Then
+                    Dim toHailey As PacketClass = BuildChatMessage(HaileyGUID, Message, ChatMsg.CHAT_MSG_REPLY, LANGUAGES.LANG_UNIVERSAL)
+                    Client.Send(toHailey)
+                    toHailey.Dispose()
 
                     OnCommand(Client, Message)
                     Exit Sub
@@ -118,6 +114,5 @@ Public Module WS_Handlers_Chat
         End Select
 
     End Sub
-
 
 End Module

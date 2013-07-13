@@ -1,5 +1,5 @@
-' 
-' Copyright (C) 2008 Spurious <http://SpuriousEmu.com>
+'
+' Copyright (C) 2013 getMaNGOS <http://www.getMangos.co.uk>
 '
 ' This program is free software; you can redistribute it and/or modify
 ' it under the terms of the GNU General Public License as published by
@@ -16,7 +16,6 @@
 ' Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 '
 
-
 Imports System
 Imports System.IO
 Imports System.Threading
@@ -25,14 +24,12 @@ Imports System.Net.Sockets
 Imports System.Runtime.Remoting
 Imports System.Runtime.CompilerServices
 Imports System.Security.Permissions
-Imports Spurious.Common.BaseWriter
-Imports Spurious.Common
-
+Imports mangosVB.Common.BaseWriter
+Imports mangosVB.Common
 
 Public Module WC_Network
 
 #Region "WS.Sockets"
-
 
     Public WS As WorldServerClass
 
@@ -60,7 +57,6 @@ Public Module WC_Network
 
                 Log.WriteLine(LogType.SUCCESS, "Listening on {0} on port {1}", Net.IPAddress.Parse(Config.WSHost), Config.WSPort)
 
-
                 'Create Remoting Channel
                 Select Case Config.ClusterMethod
                     Case "ipc"
@@ -70,9 +66,6 @@ Public Module WC_Network
                 End Select
                 Channels.ChannelServices.RegisterChannel(m_RemoteChannel, False)
                 RemotingServices.Marshal(CType(Me, ICluster), "Cluster.rem")
-
-                Log.WriteLine(LogType.INFORMATION, "Interface UP at: {0}://{1}:{2}/Cluster.rem", Config.ClusterMethod, Config.ClusterHost, Config.ClusterPort)
-
 
                 'Creating ping timer
                 m_TimerPing = New Timer(AddressOf Ping, Nothing, 0, 15000)
@@ -172,7 +165,7 @@ Public Module WC_Network
                         SyncLock CType(Worlds, ICollection).SyncRoot
                             Worlds.Remove(Map)
                             WorldsInfo.Remove(Map)
-                            Log.WriteLine(LogType.INFORMATION, "Disconnected World Server: {0:000}", Map)
+                            Log.WriteLine(LogType.INFORMATION, "Disconnected World Map: {0:000}", Map)
                         End SyncLock
                     End Try
                 End If
@@ -192,7 +185,7 @@ Public Module WC_Network
                 For Each w As KeyValuePair(Of UInteger, IWorld) In Worlds
                     Try
                         If SentPingTo.ContainsKey(WorldsInfo(w.Key)) Then
-                            Log.WriteLine(LogType.NETWORK, "World [M{0:0000}] ping: {1}ms", w.Key, SentPingTo(WorldsInfo(w.Key)))
+                            Log.WriteLine(LogType.NETWORK, "World Map {0:000} ping: {1}ms", w.Key, SentPingTo(WorldsInfo(w.Key)))
                         Else
                             MyTime = timeGetTime
                             ServerTime = w.Value.Ping(MyTime)
@@ -201,14 +194,14 @@ Public Module WC_Network
                             WorldsInfo(w.Key).Latency = Latency
                             SentPingTo(WorldsInfo(w.Key)) = Latency
 
-                            Log.WriteLine(LogType.NETWORK, "World [M{0:0000}] ping: {1}ms", w.Key, Latency)
+                            Log.WriteLine(LogType.NETWORK, "World Map {0:000} ping: {1}ms", w.Key, Latency)
 
                             'Query CPU and Memory usage
                             w.Value.ServerInfo(WorldsInfo(w.Key).CPUUsage, WorldsInfo(w.Key).MemoryUsage)
                         End If
 
                     Catch ex As Exception
-                        Log.WriteLine(LogType.WARNING, "World [M{0:0000}] down.", w.Key)
+                        Log.WriteLine(LogType.WARNING, "World Map {0:000} Unavailable!", w.Key)
 
                         DeadServers.Add(w.Key)
                     End Try
@@ -216,7 +209,7 @@ Public Module WC_Network
             End SyncLock
 
             'Notification message
-            If Worlds.Count = 0 Then Log.WriteLine(LogType.WARNING, "No world servers available!")
+            If Worlds.Count = 0 Then Log.WriteLine(LogType.WARNING, "All world servers are offline!")
 
             'Drop WorldServers
             Disconnect("NULL", DeadServers)
@@ -229,7 +222,7 @@ Public Module WC_Network
                     Latency = Math.Abs(MyTime - ServerTime)
                     Log.WriteLine(LogType.NETWORK, "Voice Server ping: {0}ms", Latency)
                 Catch ex As Exception
-                    Log.WriteLine(LogType.WARNING, "Voice Server down.")
+                    Log.WriteLine(LogType.WARNING, "Voice Server Offline.")
                     VoiceDisconnect()
                 End Try
             End If
@@ -273,7 +266,6 @@ Public Module WC_Network
 
             CLIENTs(ID).Character.ChatFlag = Flag
         End Sub
-
 
         Public Sub Broadcast(ByVal p As PacketClass)
             CHARACTERs_Lock.AcquireReaderLock(DEFAULT_LOCK_TIMEOUT)
@@ -323,7 +315,6 @@ Public Module WC_Network
         Public Sub BroadcastGuildOfficers(ByVal GuildID As Long, ByVal Data() As Byte) Implements Common.ICluster.BroadcastRaid
             'TODO: Not implement yet
         End Sub
-
 
         Public Function InstanceCheck(ByVal Client As ClientClass, ByVal MapID As UInteger) As Boolean
             If (Not WS.Worlds.ContainsKey(MapID)) Then
@@ -433,12 +424,6 @@ Public Module WC_Network
             End SyncLock
         End Sub
 
-
-
-
-
-
-
         Public Sub VoiceConnect(ByVal URI As String, ByVal Host As UInteger, ByVal Port As UShort, ByVal Key As Byte()) Implements Common.ICluster.VoiceConnect
             Try
                 VoiceDisconnect()
@@ -473,8 +458,6 @@ Public Module WC_Network
             p.Dispose()
         End Sub
 
-
-
     End Class
 
     Class WorldInfo
@@ -493,20 +476,17 @@ Public Module WC_Network
 #End Region
 #Region "WS.Analyzer"
 
-
     Public Enum AccessLevel As Byte
         Trial = 0
         Player = 1
-        PlayerVip = 2
-        GameMaster = 3
+        GameMaster = 2
+        Developer = 3
         Admin = 4
-        Developer = 5
     End Enum
 
     Class ClientClass
         Inherits ClientInfo
         Implements IDisposable
-
 
         Public Socket As Socket = Nothing
         Public Queue As New Queue
@@ -533,7 +513,6 @@ Public Module WC_Network
 
             Return ci
         End Function
-
 
         Public Sub OnConnect(ByVal state As Object)
             IP = CType(Socket.RemoteEndPoint, IPEndPoint).Address
@@ -563,6 +542,7 @@ Public Module WC_Network
             Try
                 SocketBytes = Socket.EndReceive(ar)
                 If SocketBytes = 0 Then
+                    'If Socket.Blocking Then
                     Me.Dispose()
                 Else
                     Interlocked.Add(DataTransferIn, SocketBytes)
@@ -598,6 +578,7 @@ Public Module WC_Network
 
                     ThreadPool.QueueUserWorkItem(AddressOf OnPacket)
                 End If
+                'End If
             Catch Err As Exception
 #If DEBUG Then
                 'NOTE: If it's a error here it means the connection is closed?
@@ -689,9 +670,11 @@ Public Module WC_Network
 
         Public Sub OnSendComplete(ByVal ar As IAsyncResult)
             If Not Socket Is Nothing Then
-                Dim bytesSent As Integer = Socket.EndSend(ar)
+                If Socket.Blocking Then
+                    Dim bytesSent As Integer = Socket.EndSend(ar)
 
-                Interlocked.Add(DataTransferOut, bytesSent)
+                    Interlocked.Add(DataTransferOut, bytesSent)
+                End If
             End If
         End Sub
 
@@ -747,12 +730,12 @@ Public Module WC_Network
         End Sub
 
         Public Sub EnQueue(ByVal state As Object)
-            While CHARACTERS.Count > Config.ServerLimit
+            While CHARACTERs.Count > Config.ServerLimit
                 If Not Me.Socket.Connected Then Exit Sub
 
                 Dim response_full As New PacketClass(OPCODES.SMSG_AUTH_RESPONSE)
                 response_full.AddInt8(AuthResponseCodes.AUTH_WAIT_QUEUE)
-                response_full.AddInt32(CLIENTs.Count - CHARACTERS.Count)            'amount of players in queue
+                response_full.AddInt32(CLIENTs.Count - CHARACTERs.Count)            'amount of players in queue
                 Me.Send(response_full)
 
                 Log.WriteLine(LogType.INFORMATION, "[{1}:{2}] AUTH_WAIT_QUEUE: Server limit reached!", Me.IP, Me.Port)
@@ -761,15 +744,7 @@ Public Module WC_Network
             SendLoginOK(Me)
         End Sub
     End Class
-    
-
 
 #End Region
-
-
-
-
-
-
 
 End Module

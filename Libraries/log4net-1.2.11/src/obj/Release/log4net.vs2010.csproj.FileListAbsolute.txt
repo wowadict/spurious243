@@ -1,0 +1,4 @@
+C:\Users\Krill\Desktop\Work\src\Dep\log4net-1.2.11\build\bin\net\1.0\release\log4net.dll
+C:\Users\Krill\Desktop\Work\src\Dep\log4net-1.2.11\build\bin\net\1.0\release\log4net.xml
+C:\Users\Krill\Desktop\Work\src\Dep\log4net-1.2.11\src\obj\Release\ResolveAssemblyReference.cache
+C:\Users\Krill\Desktop\Work\src\Dep\log4net-1.2.11\src\obj\Release\log4net.dll

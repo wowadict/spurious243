@@ -1,0 +1,5 @@
+C:\Users\Krill\Desktop\Work\src\Dep\SmartIrc4net\examples\stresstest\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\Krill\Desktop\Work\src\bin\debug\stresstest.exe
+C:\Users\Krill\Desktop\Work\src\bin\debug\stresstest.pdb
+C:\Users\Krill\Desktop\Work\src\Dep\SmartIrc4net\examples\stresstest\obj\Debug\stresstest.exe
+C:\Users\Krill\Desktop\Work\src\Dep\SmartIrc4net\examples\stresstest\obj\Debug\stresstest.pdb

@@ -1,5 +1,5 @@
-' 
-' Copyright (C) 2008 Spurious <http://SpuriousEmu.com>
+'
+' Copyright (C) 2013 getMaNGOS <http://www.getMangos.co.uk>
 '
 ' This program is free software; you can redistribute it and/or modify
 ' it under the terms of the GNU General Public License as published by
@@ -24,12 +24,10 @@ Imports System.Net
 Imports System.Reflection
 Imports System.Runtime.CompilerServices
 Imports System.Collections.Generic
-Imports Spurious.Common.BaseWriter
-Imports Spurious.Common
-
+Imports mangosVB.Common.BaseWriter
+Imports mangosVB.Common
 
 Public Module WS_Main
-
 
 #Region "Global.Variables"
     'Players' containers
@@ -37,7 +35,7 @@ Public Module WS_Main
     Public CHARACTERs As New Dictionary(Of ULong, CharacterObject)
     Public CHARACTERs_Lock As New ReaderWriterLock
 
-    'Worlds containers    
+    'Worlds containers
     Public WORLD_CREATUREs_Lock As New ReaderWriterLock
     Public WORLD_CREATUREs As New Dictionary(Of ULong, CreatureObject)
     Public WORLD_GAMEOBJECTs As New Dictionary(Of ULong, GameObjectObject)
@@ -78,8 +76,8 @@ Public Module WS_Main
     Public Config As XMLConfigFile
     <XmlRoot(ElementName:="WorldServer")> _
     Public Class XMLConfigFile
-        <XmlElement(ElementName:="WSPort")> Public WSPort As Integer = 4720
-        <XmlElement(ElementName:="WSHost")> Public WSHost As String = "127.0.0.1"
+        <XmlElement(ElementName:="WSPort")> Public WSPort As Integer = 8085
+        <XmlElement(ElementName:="WSHost")> Public WSHost As String = "localhost"
         <XmlElement(ElementName:="ServerLimit")> Public ServerLimit As Integer = 10
         <XmlElement(ElementName:="XPRate")> Public XPRate As Single = 1.0
         <XmlElement(ElementName:="ManaRegenerationRate")> Public ManaRegenerationRate As Single = 1.0
@@ -87,13 +85,13 @@ Public Module WS_Main
         <XmlElement(ElementName:="GlobalAuction")> Public GlobalAuction As Boolean = False
         <XmlElement(ElementName:="SaveTimer")> Public SaveTimer As Integer = 120000
         <XmlElement(ElementName:="LogType")> Public LogType As String = "COLORCONSOLE"
-        <XmlElement(ElementName:="LogLevel")> Public LogLevel As LogType = Spurious.Common.BaseWriter.LogType.NETWORK
+        <XmlElement(ElementName:="LogLevel")> Public LogLevel As LogType = mangosVB.Common.BaseWriter.LogType.NETWORK
         <XmlElement(ElementName:="LogConfig")> Public LogConfig As String = ""
         <XmlElement(ElementName:="SQLUser")> Public SQLUser As String = "root"
-        <XmlElement(ElementName:="SQLPass")> Public SQLPass As String = "Spurious"
+        <XmlElement(ElementName:="SQLPass")> Public SQLPass As String = "mangos"
         <XmlElement(ElementName:="SQLHost")> Public SQLHost As String = "localhost"
         <XmlElement(ElementName:="SQLPort")> Public SQLPort As String = "3306"
-        <XmlElement(ElementName:="SQLDBName")> Public SQLDBName As String = "Spurious"
+        <XmlElement(ElementName:="SQLDBName")> Public SQLDBName As String = "mangosvb"
         <XmlElement(ElementName:="SQLDBType")> Public SQLDBType As SQL.DB_Type = SQL.DB_Type.MySQL
         <XmlArray(ElementName:="ScriptsCompiler"), XmlArrayItem(GetType(String), ElementName:="Include")> Public CompilerInclude As New ArrayList
         <XmlArray(ElementName:="HandledMaps"), XmlArrayItem(GetType(String), ElementName:="Map")> Public Maps As New ArrayList
@@ -103,9 +101,9 @@ Public Module WS_Main
         <XmlElement(ElementName:="CreateArenas")> Public CreateArenas As Boolean = False
         <XmlElement(ElementName:="CreateOther")> Public CreateOther As Boolean = False
         <XmlElement(ElementName:="ClusterConnectMethod")> Public ClusterMethod As String = "tcp"
-        <XmlElement(ElementName:="ClusterConnectHost")> Public ClusterHost As String = "127.0.0.1"
+        <XmlElement(ElementName:="ClusterConnectHost")> Public ClusterHost As String = "localhost"
         <XmlElement(ElementName:="ClusterConnectPort")> Public ClusterPort As Integer = 50001
-        <XmlElement(ElementName:="LocalConnectHost")> Public LocalHost As String = "127.0.0.1"
+        <XmlElement(ElementName:="LocalConnectHost")> Public LocalHost As String = "localhost"
         <XmlElement(ElementName:="LocalConnectPort")> Public LocalPort As Integer = 50002
     End Class
 
@@ -120,7 +118,15 @@ Public Module WS_Main
                     FileName = Trim(arg.Substring(arg.IndexOf("=") + 1))
                 End If
             Next
-
+            'Make sure a config file exists
+            If System.IO.File.Exists(FileName) = False Then
+                Console.ForegroundColor = ConsoleColor.Red
+                Console.WriteLine("[{0}] Cannot Continue. {1} does not exist.", Format(TimeOfDay, "hh:mm:ss"), FileName)
+                Console.WriteLine("Please copy the ini files into the same directory as the Server exe files.")
+                Console.WriteLine("Press any key to exit server: ")
+                Console.ReadKey()
+                End
+            End If
             'Load config
             Console.Write("[{0}] Loading Configuration from {1}...", Format(TimeOfDay, "hh:mm:ss"), FileName)
 
@@ -135,9 +141,7 @@ Public Module WS_Main
             Config = oXS.Deserialize(oStmR)
             oStmR.Close()
 
-
             Console.WriteLine(".[done]")
-
 
             'DONE: Setting SQL Connection
             Database.SQLDBName = Config.SQLDBName
@@ -169,7 +173,6 @@ Public Module WS_Main
     End Sub
 #End Region
 
-
     <System.MTAThreadAttribute()> _
     Sub Main()
         timeBeginPeriod(1)  'Set timeGetTime to a accuracy of 1ms
@@ -178,17 +181,37 @@ Public Module WS_Main
         Console.Title = String.Format("{0} v{1}", CType([Assembly].GetExecutingAssembly().GetCustomAttributes(GetType(AssemblyTitleAttribute), False)(0), AssemblyTitleAttribute).Title, [Assembly].GetExecutingAssembly().GetName().Version)
 
         Console.ForegroundColor = System.ConsoleColor.Yellow
-        Console.WriteLine("{0}", CType([Assembly].GetExecutingAssembly().GetCustomAttributes(GetType(AssemblyProductAttribute), False)(0), AssemblyProductAttribute).Product)
-        Console.WriteLine(CType([Assembly].GetExecutingAssembly().GetCustomAttributes(GetType(AssemblyCopyrightAttribute), False)(0), AssemblyCopyrightAttribute).Copyright)
-        Console.WriteLine()
 
-        Console.ForegroundColor = System.ConsoleColor.Magenta
-        Console.WriteLine("http://www.SpuriousEmu.com")
-        Console.WriteLine()
+        Console.WriteLine(" ####       ####            ###     ###   ########    #######     ######## ")
+        Console.WriteLine(" #####     #####            ####    ###  ##########  #########   ##########")
+        Console.WriteLine(" #####     #####            #####   ###  ##########  #########   ##########")
+        Console.WriteLine(" ######   ######            #####   ###  ###        ####   ####  ###       ")
+        Console.WriteLine(" ######   ######    ####    ######  ###  ###        ###     ###  ###       ")
+        Console.WriteLine(" ####### #######   ######   ######  ###  ###  ##### ###     ###  ########  ")
+        Console.WriteLine(" ### ### ### ###   ######   ####### ###  ###  ##### ###     ###  ######### ")
+        Console.WriteLine(" ### ### ### ###  ###  ###  ### ### ###  ###  ##### ###     ###   #########")
+        Console.WriteLine(" ### ####### ###  ###  ###  ###  ######  ###    ### ###     ###        ####")
+        Console.WriteLine(" ### ####### ###  ###  ###  ###  ######  ###    ### ###     ###         ###")
+        Console.WriteLine(" ###  #####  ### ########## ###   #####  ###   #### ####   ####        ####")
+        Console.WriteLine(" ###  #####  ### ########## ###   #####  #########   #########   ##########")
+        Console.WriteLine(" ###  #####  ### ###    ### ###    ####  #########   #########   ######### ")
+        Console.WriteLine(" ###   ###   ### ###    ### ###     ###   #######     #######     #######  ")
+        Console.WriteLine("")
+        Console.WriteLine(" Website: http://www.getmangos.co.uk                         ##  ##  ##### ")
+        Console.WriteLine("                                                             ##  ##  ##  ##")
+        Console.WriteLine("    Wiki: http://github.com/mangoswiki/wiki                  ##  ##  ##### ")
+        Console.WriteLine("                                                              ####   ##  ##")
+        Console.WriteLine("   Forum: http://community.getmangos.co.uk                     ##    ##### ")
+        Console.WriteLine("")
+
+        'Console.WriteLine("{0}", CType([Assembly].GetExecutingAssembly().GetCustomAttributes(GetType(AssemblyProductAttribute), False)(0), AssemblyProductAttribute).Product)
+        'Console.WriteLine(CType([Assembly].GetExecutingAssembly().GetCustomAttributes(GetType(AssemblyCopyrightAttribute), False)(0), AssemblyCopyrightAttribute).Copyright)
+        'Console.WriteLine()
+
 
         Console.ForegroundColor = System.ConsoleColor.White
-        Console.WriteLine(CType([Assembly].GetExecutingAssembly().GetCustomAttributes(GetType(System.Reflection.AssemblyTitleAttribute), False)(0), AssemblyTitleAttribute).Title)
-        Console.Write("version {0}", [Assembly].GetExecutingAssembly().GetName().Version)
+        Console.Write(CType([Assembly].GetExecutingAssembly().GetCustomAttributes(GetType(System.Reflection.AssemblyTitleAttribute), False)(0), AssemblyTitleAttribute).Title)
+        Console.WriteLine(" version {0}", [Assembly].GetExecutingAssembly().GetName().Version)
         Console.ForegroundColor = System.ConsoleColor.White
 
         Console.WriteLine("")
@@ -207,6 +230,9 @@ Public Module WS_Main
         Database.Update("SET NAMES 'utf8';")
 
 #If DEBUG Then
+        Console.ForegroundColor = System.ConsoleColor.White
+        Log.WriteLine(LogType.INFORMATION, "Running from: {0}", System.AppDomain.CurrentDomain.BaseDirectory)
+        Console.ForegroundColor = System.ConsoleColor.Gray
         Log.WriteLine(LogType.DEBUG, "Setting MySQL into debug mode..[done]")
         Database.Update("SET SESSION sql_mode='STRICT_ALL_TABLES';")
 #End If
@@ -214,19 +240,25 @@ Public Module WS_Main
         IntializePacketHandlers()
         WS = New WorldServerClass
         GC.Collect()
+		
+#If WARDEN Then
+        Maiev.InitWarden()
+#End If
 
-        Process.GetCurrentProcess().PriorityClass = ProcessPriorityClass.High
-        Log.WriteLine(LogType.WARNING, "Setting Process Priority to HIGH..[done]")
+        If Process.GetCurrentProcess().PriorityClass = ProcessPriorityClass.High Then
+            Log.WriteLine(LogType.WARNING, "Setting Process Priority to HIGH..[done]")
+        Else
+            Log.WriteLine(LogType.WARNING, "Setting Process Priority to NORMAL..[done]")
+        End If
 
-        Log.WriteLine(LogType.INFORMATION, "Load Time: {0}", Format(DateDiff(DateInterval.Second, dateTimeStarted, Now), "0 seconds"))
-        Log.WriteLine(LogType.INFORMATION, "Used memory: {0}", Format(GC.GetTotalMemory(False), "### ### ##0 bytes"))
+        Log.WriteLine(LogType.INFORMATION, " Load Time:   {0}", Format(DateDiff(DateInterval.Second, dateTimeStarted, Now), "0 seconds"))
+        Log.WriteLine(LogType.INFORMATION, " Used Memory: {0}", Format(GC.GetTotalMemory(False), "### ### ##0 bytes"))
 
         WaitConsoleCommand()
 
         Regenerator.Dispose()
         AreaTriggers.Dispose()
     End Sub
-
 
     Public Sub WaitConsoleCommand()
         Dim tmp As String = "", CommandList() As String, cmds() As String
@@ -338,12 +370,12 @@ Public Module WS_Main
                                 Database.Update(cmds(1))
                             Case "help", "/help"
                                 Console.ForegroundColor = System.ConsoleColor.Blue
-                                Console.WriteLine("'Spurious.WorldServer' Command list:")
+                                Console.WriteLine("'WorldServer' Command list:")
                                 Console.ForegroundColor = System.ConsoleColor.White
                                 Console.WriteLine("---------------------------------")
                                 Console.WriteLine("")
                                 Console.WriteLine("")
-                                Console.WriteLine("'help' or '/help' - Brings up the 'Spurious.WorldServer' Command list (this).")
+                                Console.WriteLine("'help' or '/help' - Brings up the 'mangosVB.WorldServer' Command list (this).")
                                 Console.WriteLine("")
                                 Console.WriteLine("'createaccount <user> <password> <email>' or '/createaccount <user> <password> <email>' - Creates an account with the specified username <user>, password <password>, and email <email>.")
                                 Console.WriteLine("")
@@ -357,14 +389,14 @@ Public Module WS_Main
                                 Console.WriteLine("")
                                 Console.WriteLine("'db.run' or '/db.run' - Runs and updates database.")
                                 Console.WriteLine("")
-                                Console.WriteLine("'quit' or 'shutdown' or 'off' or 'kill' or 'exit' - Shutsdown 'Spurious.WorldServer'.")
+                                Console.WriteLine("'quit' or 'shutdown' or 'off' or 'kill' or 'exit' - Shutsdown 'mangosVB.WorldServer'.")
                                 Console.WriteLine("")
                                 Console.WriteLine("'ban' or 'Ban'- Adds a Ban and IP Ban on an account.")
                                 Console.WriteLine("")
                                 Console.WriteLine("'unban' or 'Unban'- Removes a Ban and IP Ban on an account.")
                             Case Else
                                 Console.ForegroundColor = System.ConsoleColor.DarkRed
-                                Console.WriteLine("Error! Cannot find specified command. Please type 'help' for information on 'Spurious.WorldServer' console commands.")
+                                Console.WriteLine("Error! Cannot find specified command. Please type 'help' for information on 'mangosVB.WorldServer' console commands.")
                                 Console.ForegroundColor = System.ConsoleColor.Gray
                         End Select
                         '<<<<<<<<<<</END COMMAND STRUCTURE>>>>>>>>>>>>
@@ -381,13 +413,12 @@ Public Module WS_Main
         EX = e.ExceptionObject
 
         Log.WriteLine(LogType.CRITICAL, EX.ToString & vbNewLine)
-        Log.WriteLine(LogType.FAILED, "Unexpected error has occured. An 'Error-yyyy-mmm-d-h-mm.log' file has been created. Please post the file in the BUG SECTION at SpuriousEmu.com (http://www.SpuriousEmu.com)!")
+        Log.WriteLine(LogType.FAILED, "Unexpected error has occured. An 'Error-yyyy-mmm-d-h-mm.log' file has been created. Please post the file in the BUG SECTION at getMaNGOS.co.uk (http://www.getMangos.co.uk/community)!")
 
         Dim tw As TextWriter
         tw = New StreamWriter(New FileStream(String.Format("Error-{0}.log", Format(Now, "yyyy-MMM-d-H-mm")), FileMode.Create))
         tw.Write(EX.ToString)
         tw.Close()
     End Sub
-
 
 End Module

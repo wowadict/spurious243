@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type='text/xsl' href='_UpgradeReport_Files/UpgradeReport.xslt'?><UpgradeLog>
+<Properties><Property Name="Solution" Value="ICSharpCode.SharpZLib">
+</Property><Property Name="Solution File" Value="C:\Users\Krill\Desktop\Work\src\Dep\SharpZipLib\ICSharpCode.SharpZLib.sln">
+</Property><Property Name="Date" Value="Sunday, July 07, 2013">
+</Property><Property Name="Time" Value="3:37 AM">
+</Property><Property Name="Log Number" Value="2">
+</Property></Properties><Event ErrorLevel="0" Project="SharpZipLibTests" Source="tests\SharpZipLibTests.csproj" Description="The project file does not require conversion.">
+</Event><Event ErrorLevel="3" Project="SharpZipLibTests" Source="tests\SharpZipLibTests.csproj" Description="No Conversion Required">
+</Event><Event ErrorLevel="0" Project="ICSharpCode.SharpZLib" Source="src\ICSharpCode.SharpZLib.csproj" Description="The project file does not require conversion.">
+</Event><Event ErrorLevel="3" Project="ICSharpCode.SharpZLib" Source="src\ICSharpCode.SharpZLib.csproj" Description="No Conversion Required">
+</Event><Event ErrorLevel="0" Project="" Source="ICSharpCode.SharpZLib.sln" Description="Solution converted successfully">
+</Event><Event ErrorLevel="3" Project="" Source="ICSharpCode.SharpZLib.sln" Description="Converted">
+</Event></UpgradeLog>

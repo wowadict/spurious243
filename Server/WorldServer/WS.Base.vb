@@ -1,5 +1,5 @@
-' 
-' Copyright (C) 2008 Spurious <http://SpuriousEmu.com>
+'
+' Copyright (C) 2013 getMaNGOS <http://www.getMangos.co.uk>
 '
 ' This program is free software; you can redistribute it and/or modify
 ' it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@
 ' Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 '
 
-Imports Spurious.Common.BaseWriter
+Imports mangosVB.Common.BaseWriter
 Imports System.Threading
 Imports System.Collections.Generic
 
@@ -71,7 +71,6 @@ Public Module WS_Base
             Next
         End Sub
     End Class
-
 
     Public Class BaseUnit
         Inherits BaseObject
@@ -347,7 +346,7 @@ NextAura:
         Public SpellDuration As Integer = 0
         Public SpellCaster As BaseUnit = Nothing
 
-        Public StackCount As integer = 0
+        Public StackCount As Integer = 0
 
         Public Aura1 As ApplyAuraHandler = Nothing
         Public Aura2 As ApplyAuraHandler = Nothing

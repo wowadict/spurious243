@@ -1,0 +1,11 @@
+C:\Users\Krill\Desktop\Work\serverOne\Tools\DBCReader\DBCReader\bin\Debug\DBCReader.exe
+C:\Users\Krill\Desktop\Work\serverOne\Tools\DBCReader\DBCReader\bin\Debug\DBCReader.pdb
+C:\Users\Krill\Desktop\Work\serverOne\Tools\DBCReader\DBCReader\bin\Debug\DBCReader.xml
+C:\Users\Krill\Desktop\Work\serverOne\Tools\DBCReader\DBCReader\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\Krill\Desktop\Work\serverOne\Tools\DBCReader\DBCReader\obj\Debug\DBCReader.Form1.resources
+C:\Users\Krill\Desktop\Work\serverOne\Tools\DBCReader\DBCReader\obj\Debug\DBCReader.Resources.resources
+C:\Users\Krill\Desktop\Work\serverOne\Tools\DBCReader\DBCReader\obj\Debug\GenerateResource.read.1.tlog
+C:\Users\Krill\Desktop\Work\serverOne\Tools\DBCReader\DBCReader\obj\Debug\GenerateResource.write.1.tlog
+C:\Users\Krill\Desktop\Work\serverOne\Tools\DBCReader\DBCReader\obj\Debug\DBCReader.exe
+C:\Users\Krill\Desktop\Work\serverOne\Tools\DBCReader\DBCReader\obj\Debug\DBCReader.xml
+C:\Users\Krill\Desktop\Work\serverOne\Tools\DBCReader\DBCReader\obj\Debug\DBCReader.pdb

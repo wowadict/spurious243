@@ -1,0 +1,9 @@
+C:\Users\Krill\Desktop\Work\src\Dep\SmartIrc4net\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\Krill\Desktop\Work\src\Dep\SmartIrc4net\bin\debug\Meebey.SmartIrc4net.dll
+C:\Users\Krill\Desktop\Work\src\Dep\SmartIrc4net\bin\debug\Meebey.SmartIrc4net.pdb
+C:\Users\Krill\Desktop\Work\src\Dep\SmartIrc4net\bin\debug\log4net.dll
+C:\Users\Krill\Desktop\Work\src\Dep\SmartIrc4net\bin\debug\StarkSoftProxy.dll
+C:\Users\Krill\Desktop\Work\src\Dep\SmartIrc4net\bin\debug\StarkSoftProxy.pdb
+C:\Users\Krill\Desktop\Work\src\Dep\SmartIrc4net\bin\debug\log4net.xml
+C:\Users\Krill\Desktop\Work\src\Dep\SmartIrc4net\obj\Debug\Meebey.SmartIrc4net.dll
+C:\Users\Krill\Desktop\Work\src\Dep\SmartIrc4net\obj\Debug\Meebey.SmartIrc4net.pdb

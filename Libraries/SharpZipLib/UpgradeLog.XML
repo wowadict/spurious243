@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type='text/xsl' href='_UpgradeReport_Files/UpgradeReport.xslt'?><UpgradeLog>
+<Properties><Property Name="Solution" Value="SharpZipAll">
+</Property><Property Name="Solution File" Value="C:\Users\Krill\Desktop\Work\src\Dep\SharpZipLib\SharpZipAll.sln">
+</Property><Property Name="Date" Value="Sunday, July 07, 2013">
+</Property><Property Name="Time" Value="3:31 AM">
+</Property></Properties><Event ErrorLevel="0" Project="SharpZipLibTests" Source="tests\SharpZipLibTests.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="SharpZipLibTests" Source="tests\SharpZipLibTests.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="ICSharpCode.SharpZLib" Source="src\ICSharpCode.SharpZLib.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="ICSharpCode.SharpZLib" Source="src\ICSharpCode.SharpZLib.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="sz" Source="samples\cs\sz\sz.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="sz" Source="samples\cs\sz\sz.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="zf" Source="samples\cs\zf\zf.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="zf" Source="samples\cs\zf\zf.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="tar" Source="samples\cs\tar\tar.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="tar" Source="samples\cs\tar\tar.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="" Source="SharpZipAll.sln" Description="Solution converted successfully">
+</Event><Event ErrorLevel="3" Project="" Source="SharpZipAll.sln" Description="Converted">
+</Event><Event ErrorLevel="0" Project="SharpZipLibTests" Source="tests\SharpZipLibTests.csproj" Description="Scan complete: Upgrade not required for project files.">
+</Event><Event ErrorLevel="0" Project="ICSharpCode.SharpZLib" Source="src\ICSharpCode.SharpZLib.csproj" Description="Scan complete: Upgrade not required for project files.">
+</Event><Event ErrorLevel="0" Project="sz" Source="samples\cs\sz\sz.csproj" Description="Scan complete: Upgrade not required for project files.">
+</Event><Event ErrorLevel="0" Project="zf" Source="samples\cs\zf\zf.csproj" Description="Scan complete: Upgrade not required for project files.">
+</Event><Event ErrorLevel="0" Project="tar" Source="samples\cs\tar\tar.csproj" Description="Scan complete: Upgrade not required for project files.">
+</Event></UpgradeLog>

@@ -1,5 +1,5 @@
-' 
-' Copyright (C) 2008 Spurious <http://SpuriousEmu.com>
+'
+' Copyright (C) 2013 getMaNGOS <http://www.getMangos.co.uk>
 '
 ' This program is free software; you can redistribute it and/or modify
 ' it under the terms of the GNU General Public License as published by
@@ -16,8 +16,7 @@
 ' Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 '
 
-Imports Spurious.Common.BaseWriter
-
+Imports mangosVB.Common.BaseWriter
 
 Public Module WS_Quests
     Const QUEST_OBJECTIVES_COUNT As Integer = 3
@@ -41,7 +40,7 @@ Public Module WS_Quests
         DIALOG_STATUS_REWARD2 = 7                ' Quest has been finished. - Yellow Question ? Mark (No yellow dot on the minimap?)
         DIALOG_STATUS_REWARD = 8                ' Quest has been finished. - Yellow Question ? Mark
     End Enum
-    Public Enum QuestObjectiveFlag 'These flags are custom and are only used for Spurious
+    Public Enum QuestObjectiveFlag 'These flags are custom and are only used for MangosVB
         QUEST_OBJECTIVE_KILL = 1 'You have to kill creatures
         QUEST_OBJECTIVE_EXPLORE = 2 'You have to explore an area
         QUEST_OBJECTIVE_ESCORT = 4 'You have to escort someone
@@ -112,8 +111,6 @@ Public Module WS_Quests
         QUEST_PARTY_MSG_HAVE_QUEST = 7
         QUEST_PARTY_MSG_FINISH_QUEST = 8
     End Enum
-
-
 
 #Region "Quests.DataTypes"
 
@@ -291,8 +288,6 @@ Public Module WS_Quests
             QuestScript = MySQLQuery.Rows(0).Item("QuestScript")
         End Sub
     End Class
-
-
 
     'WARNING: These are used only for CharManagment
     Public Class BaseQuest
@@ -528,7 +523,6 @@ Public Module WS_Quests
 
 #End Region
 #Region "Quests.HelpingSubs"
-
 
     Public Function GetQuestMenu(ByRef c As CharacterObject, ByVal GUID As ULong) As QuestMenu
         Dim QuestMenu As New QuestMenu
@@ -956,7 +950,6 @@ Public Module WS_Quests
         packet.Dispose()
     End Sub
 
-
     Public Sub LoadQuests(ByRef c As CharacterObject)
         Dim cQuests As New DataTable
         Database.Query(String.Format("SELECT * FROM characters_quests q WHERE q.char_guid = {0} AND q.quest_status > -1 LIMIT 25;", c.GUID), cQuests)
@@ -989,7 +982,6 @@ Public Module WS_Quests
 #End Region
 #Region "Quests.Events"
 
-
     'DONE: Kill quest events
     Public Sub OnQuestKill(ByRef c As CharacterObject, ByRef Creature As CreatureObject)
         'HANDLERS: Added to DealDamage sub
@@ -1017,7 +1009,6 @@ Public Module WS_Quests
                 End If
             End If
         Next i
-
 
         Exit Sub  'For now next is disabled
 
@@ -1185,7 +1176,6 @@ Public Module WS_Quests
         If Count = 0 Then Count = 1
         Dim i As Integer, j As Byte
 
-
         'DONE: Check quests needing that item
         For i = 0 To QUEST_SLOTS
             If (Not c.TalkQuests(i) Is Nothing) AndAlso (c.TalkQuests(i).ObjectiveFlags And QuestObjectiveFlag.QUEST_OBJECTIVE_ITEM) Then
@@ -1211,7 +1201,6 @@ Public Module WS_Quests
 
         If Count = 0 Then Count = 1
         Dim i As Integer, j As Byte
-
 
         'DONE: Check quests needing that item
         For i = 0 To QUEST_SLOTS
@@ -1257,10 +1246,8 @@ Public Module WS_Quests
         Next i
     End Sub
 
-
 #End Region
 #Region "Quests.OpcodeHandlers"
-
 
     Public Function GetQuestgiverStatus(ByVal c As CharacterObject, ByVal cGUID As ULong) As QuestgiverStatus
         'DONE: Invoke scripted quest status
@@ -1511,7 +1498,6 @@ Public Module WS_Quests
                     If c.TalkCurrentQuest Is Nothing Then c.TalkCurrentQuest = New QuestInfo(QuestID)
                     If c.TalkCurrentQuest.ID <> QuestID Then c.TalkCurrentQuest = New QuestInfo(QuestID)
 
-
                     If c.TalkQuests(i).Complete Then
                         'DONE: Show completion dialog
                         If (c.TalkQuests(i).ObjectiveFlags And QuestObjectiveFlag.QUEST_OBJECTIVE_ITEM) Then
@@ -1524,7 +1510,6 @@ Public Module WS_Quests
                         'DONE: Just show incomplete text with disabled complete button
                         SendQuestRequireItems(c.Client, c.TalkCurrentQuest, QuestGiverGUID, c.TalkQuests(i))
                     End If
-
 
                     Exit For
                 End If
@@ -1607,7 +1592,6 @@ Public Module WS_Quests
                 End If
             Next
 
-
             'DONE: Adding reward choice
             If Client.Character.TalkCurrentQuest.RewardItems(RewardIndex) <> 0 Then
                 Dim tmpItem As New ItemObject(Client.Character.TalkCurrentQuest.RewardItems(RewardIndex), Client.Character.GUID)
@@ -1642,14 +1626,16 @@ Public Module WS_Quests
             End If
 
             'DONE: Remove quest
-            For i = 0 To QUEST_SLOTS
+            Try
+                For i = 0 To QUEST_SLOTS
+                Next
                 If Not Client.Character.TalkQuests Is Nothing Then
-                    If Client.Character.TalkQuests(i).ID = Client.Character.TalkCurrentQuest.ID Then
-                        Client.Character.TalkCompleteQuest(i)
-                        Exit For
-                    End If
                 End If
-            Next
+            Catch ex As Exception
+                If Client.Character.TalkQuests(i).ID Then
+                End If
+                Client.Character.TalkCompleteQuest(i)
+            End Try
 
             'DONE: XP Calculations
             Dim xp As Integer = Client.Character.TalkCurrentQuest.RewardXP
@@ -1687,8 +1673,6 @@ Public Module WS_Quests
             Log.WriteLine(LogType.CRITICAL, "Error while choosing reward.{0}", vbNewLine & e.ToString)
         End Try
     End Sub
-
-
 
     Const QUEST_SHARING_DISTANCE As Integer = 10
     Public Sub On_CMSG_PUSHQUESTTOPARTY(ByRef packet As PacketClass, ByRef Client As ClientClass)
@@ -1729,7 +1713,6 @@ Public Module WS_Quests
                         End If
                     End If
 
-
                     'DONE: Send error if present
                     If message <> QuestPartyPushError.QUEST_PARTY_MSG_SHARRING_QUEST Then
                         Dim errorPacket As New PacketClass(OPCODES.MSG_QUEST_PUSH_RESULT)
@@ -1761,9 +1744,6 @@ Public Module WS_Quests
         'response.Dispose()
     End Sub
 
-
 #End Region
-
-
 
 End Module

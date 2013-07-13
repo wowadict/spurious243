@@ -1,5 +1,5 @@
-﻿' 
-' Copyright (C) 2008 Spurious <http://SpuriousEmu.com>
+﻿'
+' Copyright (C) 2013 getMaNGOS <http://www.getMangos.co.uk>
 '
 ' This program is free software; you can redistribute it and/or modify
 ' it under the terms of the GNU General Public License as published by
@@ -27,9 +27,8 @@ Imports System.Runtime.Remoting
 Imports System.Runtime.CompilerServices
 Imports System.Collections.Generic
 Imports System.Security.Permissions
-Imports Spurious.Common.BaseWriter
-Imports Spurious.Common
-
+Imports mangosVB.Common.BaseWriter
+Imports mangosVB.Common
 
 Public Module WS_Network
 
@@ -38,12 +37,13 @@ Public Module WS_Network
         Implements IWorld
         Implements IDisposable
 
-
         <CLSCompliant(False)> _
         Public _flagStopListen As Boolean = False
         Private m_RemoteChannel As Channels.IChannel = Nothing
         Private m_RemoteURI As String = ""
         Private m_LocalURI As String = ""
+        Private LastPing As Integer = 0
+        Private m_Connection As Timer
         Private m_TimerCPU As Timer
         Private LastInfo As Date
         Private LastCPUTime As Double = 0.0F
@@ -56,7 +56,6 @@ Public Module WS_Network
                 m_LocalURI = String.Format("{0}://{1}:{2}/WorldServer.rem", Config.ClusterMethod, Config.LocalHost, Config.LocalPort)
                 Cluster = Nothing
 
-
                 'Create Remoting Channel
                 Select Case Config.ClusterMethod
                     Case "ipc"
@@ -67,8 +66,6 @@ Public Module WS_Network
 
                 Channels.ChannelServices.RegisterChannel(m_RemoteChannel, False)
                 RemotingServices.Marshal(CType(Me, IWorld), "WorldServer.rem")
-
-                Log.WriteLine(LogType.INFORMATION, "Interface UP at: {0}", m_LocalURI)
 
                 'Notify Cluster About Us
                 ClusterConnect()
@@ -135,6 +132,10 @@ Public Module WS_Network
         Public Sub ClientDisconnect(ByVal ID As UInteger) Implements Common.IWorld.ClientDisconnect
             Log.WriteLine(LogType.NETWORK, "[{0:000000}] Client disconnected", ID)
 
+            If CLIENTs(ID).Character IsNot Nothing Then
+                CLIENTs(ID).Character.Save()
+            End If
+
             CLIENTs(ID).Delete()
             CLIENTs.Remove(ID)
         End Sub
@@ -160,7 +161,6 @@ Public Module WS_Network
                 'DONE: Guild Message Of The Day
                 SendGuildMOTD(Character)
 
-
                 Log.WriteLine(LogType.USER, "[{0}:{1}] Player login complete [0x{2:X}]", Client.IP, Client.Port, GUID)
             Catch e As Exception
                 Log.WriteLine(LogType.FAILED, "Error on login: {0}", e.ToString)
@@ -183,12 +183,24 @@ Public Module WS_Network
 
         Public Function Ping(ByVal Timestamp As Integer) As Integer Implements Common.IWorld.Ping
             'Log.WriteLine(LogType.DEBUG, "Cluster ping: [{0}ms]", timeGetTime - Timestamp)
+            LastPing = timeGetTime
             Return timeGetTime
         End Function
 
+        Public Sub CheckConnection(ByVal State As Object)
+            If (timeGetTime - LastPing) > 40000 Then
+                If Cluster IsNot Nothing Then
+                    Log.WriteLine(LogType.FAILED, "Cluster timed out. Reconnecting")
+                    ClusterDisconnect()
+                End If
+                ClusterConnect()
+                LastPing = timeGetTime
+            End If
+        End Sub
+
         Public Sub CheckCPU(ByVal State As Object)
             Dim TimeSinceLastCheck As TimeSpan = Now.Subtract(LastInfo)
-            UsageCPU = (Process.GetCurrentProcess().TotalProcessorTime.TotalMilliseconds - LastCPUTime) / TimeSinceLastCheck.TotalMilliseconds
+            UsageCPU = ((Process.GetCurrentProcess().TotalProcessorTime.TotalMilliseconds - LastCPUTime) / TimeSinceLastCheck.TotalMilliseconds) * 100
             LastInfo = Now
             LastCPUTime = Process.GetCurrentProcess().TotalProcessorTime.TotalMilliseconds
         End Sub
@@ -286,12 +298,26 @@ Public Module WS_Network
             Return p.Data
         End Function
 
+        'Battlefield Implementation! (Unfinished)
+
+        'Public Sub BattlefieldCreate(ByVal BattlefieldID As Integer, ByVal BattlefieldMapType As Byte, ByVal Map As UInteger) Implements Common.IWorld.BattlefieldCreate
+        '   Log.WriteLine(LogType.NETWORK, "[B{0:0000}] Battlefield created", BattlefieldID)
+        'End Sub
+        'Public Sub BattlefieldDelete(ByVal BattlefieldID As Integer) Implements Common.IWorld.BattlefieldDelete
+        '    Log.WriteLine(LogType.NETWORK, "[B{0:0000}] Battlefield deleted", BattlefieldID)
+        'End Sub
+        'Public Sub BattlefieldJoin(ByVal BattlefieldID As Integer, ByVal GUID As ULong) Implements Common.IWorld.BattlefieldJoin
+        '    Log.WriteLine(LogType.NETWORK, "[B{0:0000}] Character [0x{1:X}] joined battlefield", BattlefieldID, GUID)
+        'End Sub
+        'Public Sub BattlefieldLeave(ByVal BattlefieldID As Integer, ByVal GUID As ULong) Implements Common.IWorld.BattlefieldLeave
+        '    Log.WriteLine(LogType.NETWORK, "[B{0:0000}] Character [0x{1:X}] left battlefield", BattlefieldID, GUID)
+        'End Sub
+
     End Class
 
     Class ClientClass
         Inherits ClientInfo
         Implements IDisposable
-
 
         Public Character As CharacterObject
 
@@ -383,8 +409,8 @@ Public Module WS_Network
         Private Sub Dispose() Implements System.IDisposable.Dispose
             Log.WriteLine(LogType.NETWORK, "Connection from [{0}:{1}] disposed", IP, Port)
 
-            CLIENTs.Remove(Index)
             WS.Cluster.ClientDrop(Index)
+            CLIENTs.Remove(Index)
             If Not Me.Character Is Nothing Then
                 Me.Character.Client = Nothing
                 Me.Character.Dispose()
@@ -404,7 +430,6 @@ Public Module WS_Network
             Me.Delete()
         End Sub
 
-
         Public Sub New()
             Log.WriteLine(LogType.WARNING, "Creating debug connection!", Nothing)
             DEBUG_CONNECTION = True
@@ -418,6 +443,5 @@ Public Module WS_Network
             Port = ci.Port
         End Sub
     End Class
-
 
 End Module

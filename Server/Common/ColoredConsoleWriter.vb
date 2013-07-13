@@ -1,5 +1,5 @@
-' 
-' Copyright (C) 2008 Spurious <http://SpuriousEmu.com>
+'
+' Copyright (C) 2013 getMaNGOS <http://www.getMangos.co.uk>
 '
 ' This program is free software; you can redistribute it and/or modify
 ' it under the terms of the GNU General Public License as published by
@@ -17,7 +17,6 @@
 '
 Imports System.Runtime.InteropServices
 Imports System.Runtime.CompilerServices
-
 
 'Using this logging type, all logs are displayed in console.
 'Writting commands is done trought console.
@@ -45,6 +44,8 @@ Public Class ColoredConsoleWriter
                 Console.ForegroundColor = ConsoleColor.Red
             Case LogType.CRITICAL
                 Console.ForegroundColor = ConsoleColor.DarkRed
+            Case LogType.DATABASE
+                Console.ForegroundColor = ConsoleColor.DarkMagenta
         End Select
 
         If arg Is Nothing Then
@@ -75,8 +76,9 @@ Public Class ColoredConsoleWriter
                 Console.ForegroundColor = ConsoleColor.Red
             Case LogType.CRITICAL
                 Console.ForegroundColor = ConsoleColor.DarkRed
+            Case LogType.DATABASE
+                Console.ForegroundColor = ConsoleColor.DarkMagenta
         End Select
-
 
         If arg Is Nothing Then
             Console.WriteLine("[" & Format(TimeOfDay, "hh:mm:ss") & "] " & formatStr)
@@ -85,7 +87,5 @@ Public Class ColoredConsoleWriter
         End If
         Console.ForegroundColor = ConsoleColor.Gray
     End Sub
-
-
 
 End Class
